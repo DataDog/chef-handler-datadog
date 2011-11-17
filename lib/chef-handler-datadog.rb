@@ -20,10 +20,11 @@ class DataDog < Chef::Handler
     end
   
     event_title = ""
+    run_time = pluralize(run_status.elapsed_time, "second")
     if run_status.success?
-      event_title << "Chef completed in #{run_status.elapsed_time} seconds on #{run_status.node.name} "
+      event_title << "Chef completed in #{run_time} on #{run_status.node.name} "
     else
-      event_title << "Chef failed in #{run_status.elapsed_time} seconds on #{run_status.node.name} "
+      event_title << "Chef failed in #{run_time} on #{run_status.node.name} "
     end
 
     event_data = "Chef updated #{run_status.updated_resources.length} resources out of #{run_status.all_resources.length} resources total."
@@ -49,6 +50,22 @@ class DataDog < Chef::Handler
       Chef::Log.error("Data to be submitted was:")
       Chef::Log.error(event_title)
       Chef::Log.error(event_data)
+    end
+  end
+
+  private
+
+  def pluralize(number, noun)
+    begin
+      case number
+      when 0 <= number and number < 1
+        "less than 1 #{noun}"
+      else
+        number.round.to_s + " #{nound}s"
+      end
+    rescue
+      Chef::Log.warn("Cannot make #{number} more legible")
+      "#{number} #{noun}s"
     end
   end
 end

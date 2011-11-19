@@ -61,7 +61,7 @@ class DataDog < Chef::Handler
       when 0 <= number and number < 1
         "less than 1 #{noun}"
       else
-        number.round.to_s + " #{nound}s"
+        number.round.to_s + " #{noun}s"
       end
     rescue
       Chef::Log.warn("Cannot make #{number} more legible")

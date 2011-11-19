@@ -3,7 +3,7 @@ require 'chef'
 require 'chef/handler'
 require 'dogapi'
 
-class DataDog < Chef::Handler
+class Datadog < Chef::Handler
   def initialize(api_key)
     @api_key = api_key
     @dog = Dogapi::Client.new(api_key)
@@ -16,7 +16,7 @@ class DataDog < Chef::Handler
       @dog.emit_point("chef.resources.updated", run_status.updated_resources.length, :host => run_status.node.name)
       @dog.emit_point("chef.resources.elapsed_time", run_status.elapsed_time, :host => run_status.node.name)
     rescue Errno::ECONNREFUSED => e
-      Chef::Log.error("Could not send metrics to DataDog. Connection error:\n" + e)
+      Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
     end
   
     event_title = ""
@@ -41,7 +41,7 @@ class DataDog < Chef::Handler
       event_data << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
     end
 
-    # Submit the details back to DataDog
+    # Submit the details back to Datadog
     begin
       @dog.emit_event(Dogapi::Event.new(event_data, :msg_title => event_title), :host => run_status.node.name)
       # TODO: add chef roles to set the node's #tags in newsfeed
@@ -58,10 +58,10 @@ class DataDog < Chef::Handler
   def pluralize(number, noun)
     begin
       case number
-      when 0 <= number and number < 1
+      when 0..1
         "less than 1 #{noun}"
       else
-        number.round.to_s + " #{noun}s"
+        "#{number.round} #{noun}s"
       end
     rescue
       Chef::Log.warn("Cannot make #{number} more legible")

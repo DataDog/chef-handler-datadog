@@ -15,7 +15,7 @@ class Datadog < Chef::Handler
       @dog.emit_point("chef.resources.total", run_status.all_resources.length, :host => run_status.node.name)
       @dog.emit_point("chef.resources.updated", run_status.updated_resources.length, :host => run_status.node.name)
       @dog.emit_point("chef.resources.elapsed_time", run_status.elapsed_time, :host => run_status.node.name)
-    rescue Errno::ECONNREFUSED => e
+    rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
       Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
     end
   
@@ -45,7 +45,7 @@ class Datadog < Chef::Handler
     begin
       @dog.emit_event(Dogapi::Event.new(event_data, :msg_title => event_title), :host => run_status.node.name)
       # TODO: add chef roles to set the node's #tags in newsfeed
-    rescue Errno::ECONNREFUSED => e
+    rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
       Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
       Chef::Log.error("Data to be submitted was:")
       Chef::Log.error(event_title)

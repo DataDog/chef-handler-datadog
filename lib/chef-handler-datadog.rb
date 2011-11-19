@@ -4,9 +4,14 @@ require 'chef/handler'
 require 'dogapi'
 
 class Datadog < Chef::Handler
-  def initialize(api_key)
-    @api_key = api_key
-    @dog = Dogapi::Client.new(api_key)
+  
+  # For the tags to work, the client must have created an Application Key on the 
+  # "Account Settings" page here: https://app.datadoghq.com/account/settings
+  # It should be passed along from the node/role/environemnt attributes, as the default is nil.
+  def initialize(opts = {})
+    @api_key = opts[:api_key]
+    @application_key = opts[:application_key]
+    @dog = Dogapi::Client.new(@api_key, application_key = @application_key)
   end
 
   def report
@@ -43,13 +48,30 @@ class Datadog < Chef::Handler
 
     # Submit the details back to Datadog
     begin
+      # Send the Event data
       @dog.emit_event(Dogapi::Event.new(event_data, :msg_title => event_title), :host => run_status.node.name)
-      # TODO: add chef roles to set the node's #tags in newsfeed
+
+      # Get the current list of tags, remove any "role:" entries
+      host_tags = @dog.host_tags(node.name)[1]["tags"]
+      host_tags.delete_if {|tag| tag.start_with?('role:') }
+
+      # Get list of chef roles, rename them to tag format
+      chef_roles = node.run_list.roles
+      chef_roles.collect! {|role| "role:" + role }
+
+      # Combine (union) both arrays. Removes dupes, preserves non-chef tags.
+      new_host_tags = host_tags | chef_roles
+
+      # Replace all tags with the new tags
+      @dog.update_tags(node.name, new_host_tags)
+
     rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
       Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
       Chef::Log.error("Data to be submitted was:")
       Chef::Log.error(event_title)
       Chef::Log.error(event_data)
+      Chef::Log.error("Tags to be set for this run:")
+      Chef::Log.error(new_host_tags)
     end
   end
 

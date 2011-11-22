@@ -27,6 +27,8 @@ class Datadog < Chef::Handler
     event_title = ""
     run_time = pluralize(run_status.elapsed_time, "second")
     if run_status.success?
+      alert_type = "success"
+      event_priority = "low"
       event_title << "Chef completed in #{run_time} on #{run_status.node.name} "
     else
       event_title << "Chef failed in #{run_time} on #{run_status.node.name} "
@@ -42,6 +44,8 @@ class Datadog < Chef::Handler
     end
 
     if run_status.failed?
+      alert_type = "error"
+      event_priority = "normal"
       event_data << "\n@@@\n#{run_status.formatted_exception}\n@@@\n"
       event_data << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
     end
@@ -49,7 +53,13 @@ class Datadog < Chef::Handler
     # Submit the details back to Datadog
     begin
       # Send the Event data
-      @dog.emit_event(Dogapi::Event.new(event_data, :msg_title => event_title), :host => run_status.node.name)
+      @dog.emit_event(Dogapi::Event.new(event_data, 
+                                        :msg_title => event_title, 
+                                        :event_type => 'config_management.run',
+                                        :event_object => run_status.node.name,
+                                        :alert_type => alert_type,
+                                        :priority => event_priority
+                                        ), :host => run_status.node.name)
 
       # Get the current list of tags, remove any "role:" entries
       host_tags = @dog.host_tags(node.name)[1]["tags"]

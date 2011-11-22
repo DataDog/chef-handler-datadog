@@ -4,8 +4,8 @@ require 'chef/handler'
 require 'dogapi'
 
 class Datadog < Chef::Handler
-  
-  # For the tags to work, the client must have created an Application Key on the 
+
+  # For the tags to work, the client must have created an Application Key on the
   # "Account Settings" page here: https://app.datadoghq.com/account/settings
   # It should be passed along from the node/role/environemnt attributes, as the default is nil.
   def initialize(opts = {})
@@ -23,7 +23,7 @@ class Datadog < Chef::Handler
     rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
       Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
     end
-  
+
     event_title = ""
     run_time = pluralize(run_status.elapsed_time, "second")
     if run_status.success?
@@ -38,7 +38,7 @@ class Datadog < Chef::Handler
     if run_status.updated_resources.length.to_i > 0
       event_data << "\n@@@\n"
       run_status.updated_resources.each do |r|
-        event_data << "- #{r.to_s} (#{r.defined_at})\n"
+        event_data << "- #{r.to_s} (#{defined_at(r)})\n"
       end
       event_data << "\n@@@\n"
     end
@@ -53,8 +53,8 @@ class Datadog < Chef::Handler
     # Submit the details back to Datadog
     begin
       # Send the Event data
-      @dog.emit_event(Dogapi::Event.new(event_data, 
-                                        :msg_title => event_title, 
+      @dog.emit_event(Dogapi::Event.new(event_data,
+                                        :msg_title => event_title,
                                         :event_type => 'config_management.run',
                                         :event_object => run_status.node.name,
                                         :alert_type => alert_type,
@@ -100,4 +100,22 @@ class Datadog < Chef::Handler
       "#{number} #{noun}s"
     end
   end
+
+## This function is to mimic behavior built into a later version of chef than 0.9.x
+## Source is here: https://github.com/opscode/chef/blob/master/chef/lib/chef/resource.rb#L415-424
+## Including this based on help from schisamo
+  def defined_at(resource)
+    cookbook_name = resource.cookbook_name
+    recipe_name = resource.recipe_name
+    source_line = resource.source_line
+    if cookbook_name && recipe_name && source_line
+      "#{cookbook_name}::#{recipe_name} line #{source_line.split(':')[1]}"
+    elsif source_line
+      file, line_no = source_line.split(':')
+      "#{file} line #{line_no}"
+    else
+      "dynamically defined"
+    end
+  end
+
 end

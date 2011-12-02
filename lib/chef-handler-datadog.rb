@@ -58,7 +58,8 @@ class Datadog < Chef::Handler
                                         :event_type => 'config_management.run',
                                         :event_object => run_status.node.name,
                                         :alert_type => alert_type,
-                                        :priority => event_priority
+                                        :priority => event_priority,
+                                        :source_type_name => 'chef',
                                         ), :host => run_status.node.name)
 
       # Get the current list of tags, remove any "role:" entries

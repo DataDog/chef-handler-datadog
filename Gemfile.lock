@@ -68,7 +68,7 @@ PLATFORMS
 DEPENDENCIES
   bundler (~> 1.0.0)
   chef (>= 0.9.18)
-  dogapi (>= 1.2.3)
+  dogapi (~> 1.2)
   jeweler (~> 1.6.4)
   rcov
   rdoc

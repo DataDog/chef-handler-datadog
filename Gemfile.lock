@@ -1,12 +1,12 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    bunny (0.7.8)
-    chef (0.10.4)
+    bunny (0.7.9)
+    chef (0.10.8)
       bunny (>= 0.6.0)
       erubis
       highline
-      json (>= 1.4.4, <= 1.5.2)
+      json (>= 1.4.4, <= 1.6.1)
       mixlib-authentication (>= 1.1.0)
       mixlib-cli (>= 1.1.0)
       mixlib-config (>= 1.1.2)
@@ -18,16 +18,16 @@ GEM
       rest-client (>= 1.0.4, < 1.7.0)
       treetop (~> 1.4.9)
       uuidtools
-    dogapi (1.2.3)
+    dogapi (1.2.8)
       json (>= 1.5.1)
     erubis (2.7.0)
     git (1.2.5)
-    highline (1.6.8)
+    highline (1.6.11)
     jeweler (1.6.4)
       bundler (~> 1.0)
       git (>= 1.2.5)
       rake
-    json (1.5.2)
+    json (1.6.1)
     mime-types (1.17.2)
     mixlib-authentication (1.1.4)
       mixlib-log
@@ -49,12 +49,16 @@ GEM
       yajl-ruby
     polyglot (0.3.3)
     rake (0.9.2.2)
-    rcov (0.9.11)
-    rdoc (3.11)
+    rcov (1.0.0)
+    rdoc (3.12)
       json (~> 1.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
-    shoulda (2.11.3)
+    shoulda (3.0.1)
+      shoulda-context (~> 1.0.0)
+      shoulda-matchers (~> 1.0.0)
+    shoulda-context (1.0.0)
+    shoulda-matchers (1.0.0)
     systemu (2.2.0)
     treetop (1.4.10)
       polyglot
@@ -66,9 +70,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  bundler (~> 1.0.0)
+  bundler (>= 1.0.0)
   chef (>= 0.9.18)
-  dogapi (~> 1.2)
+  dogapi (>= 1.2)
   jeweler (~> 1.6.4)
   rcov
   rdoc

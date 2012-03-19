@@ -49,3 +49,7 @@ pkg
 
 # For rubinius:
 #*.rbc
+
+chef-handler-datadog.gemspec
+json
+rake

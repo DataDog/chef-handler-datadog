@@ -1,8 +1,8 @@
 source "http://rubygems.org"
 
 # Add dependencies required to use your gem here.
-gem "dogapi", ">= 1.2"
 gem "chef", ">= 0.9.18"
+gem "dogapi", ">= 1.2"
 
 # Add dependencies to develop your gem here.
 # Include everything needed to run rake, tests, features, etc.

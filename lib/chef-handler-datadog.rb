@@ -63,8 +63,8 @@ class Datadog < Chef::Handler
                                         ), :host => run_status.node.name)
 
       # Get the current list of tags, remove any "role:" entries
-      host_tags = @dog.host_tags(node.name)[1]["tags"]
-      host_tags.delete_if {|tag| tag.start_with?('role:') } unless host_tags.nil?
+      host_tags = @dog.host_tags(node.name)[1]["tags"] || []
+      host_tags.delete_if {|tag| tag.start_with?('role:') }
 
       # Get list of chef roles, rename them to tag format
       chef_roles = node.run_list.roles

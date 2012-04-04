@@ -70,6 +70,12 @@ class Datadog < Chef::Handler
       chef_roles = node.run_list.roles
       chef_roles.collect! {|role| "role:" + role }
 
+      # Get the chef environment (as long as it's not '_default')
+      if node.respond_to?('chef_environment') && node.chef_environment != '_default'
+        host_tags.delete_if {|tag| tag.start_with?('env:') }
+        host_tags << "env:" + node.chef_environment
+      end
+
       # Combine (union) both arrays. Removes dupes, preserves non-chef tags.
       new_host_tags = host_tags | chef_roles
 

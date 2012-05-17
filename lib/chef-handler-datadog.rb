@@ -12,18 +12,15 @@ class Datadog < Chef::Handler
     @api_key = opts[:api_key]
     @application_key = opts[:application_key]
     # If we're on ec2, use the instance by default, unless instructed otherwise
-    @use_ec2_instance_id = opts[:use_ec2_instance_id] rescue true
+    @use_ec2_instance_id = !opts[:use_ec2_instance_id] || opts.has_key?(:use_ec2_instance_id) && opts[:use_ec2_instance_id]
     @dog = Dogapi::Client.new(@api_key, application_key = @application_key)
   end
 
   def report
     hostname = run_status.node.name
-    begin
-      hostname = run_status.node.ec2.instance_id if @use_ec2_instance_id and run_status.node.attribute?("ec2")
-    rescue
-      Chef::Log.error("Want to use ec2 instance-id as hostname but cannot find it")
+    if @use_ec2_instance_id && run_status.node.attribute?("ec2") && run_status.node.ec2.attribute?("instance_id")
+      hostname = run_status.node.ec2.instance_id
     end
-       
 
     # Send the metrics
     begin

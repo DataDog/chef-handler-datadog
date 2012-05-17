@@ -11,15 +11,25 @@ class Datadog < Chef::Handler
   def initialize(opts = {})
     @api_key = opts[:api_key]
     @application_key = opts[:application_key]
+    # If we're on ec2, use the instance by default, unless instructed otherwise
+    @use_ec2_instance_id = opts[:use_ec2_instance_id] rescue true
     @dog = Dogapi::Client.new(@api_key, application_key = @application_key)
   end
 
   def report
+    hostname = run_status.node.name
+    begin
+      hostname = run_status.node.ec2.instance_id if @use_ec2_instance_id and run_status.node.attribute?("ec2")
+    rescue
+      Chef::Log.error("Want to use ec2 instance-id as hostname but cannot find it")
+    end
+       
+
     # Send the metrics
     begin
-      @dog.emit_point("chef.resources.total", run_status.all_resources.length, :host => run_status.node.name)
-      @dog.emit_point("chef.resources.updated", run_status.updated_resources.length, :host => run_status.node.name)
-      @dog.emit_point("chef.resources.elapsed_time", run_status.elapsed_time, :host => run_status.node.name)
+      @dog.emit_point("chef.resources.total", run_status.all_resources.length, :host => hostname)
+      @dog.emit_point("chef.resources.updated", run_status.updated_resources.length, :host => hostname)
+      @dog.emit_point("chef.resources.elapsed_time", run_status.elapsed_time, :host => hostname)
     rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
       Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
     end
@@ -29,9 +39,9 @@ class Datadog < Chef::Handler
     if run_status.success?
       alert_type = "success"
       event_priority = "low"
-      event_title << "Chef completed in #{run_time} on #{run_status.node.name} "
+      event_title << "Chef completed in #{run_time} on #{hostname} "
     else
-      event_title << "Chef failed in #{run_time} on #{run_status.node.name} "
+      event_title << "Chef failed in #{run_time} on #{hostname} "
     end
 
     event_data = "Chef updated #{run_status.updated_resources.length} resources out of #{run_status.all_resources.length} resources total."
@@ -56,11 +66,11 @@ class Datadog < Chef::Handler
       @dog.emit_event(Dogapi::Event.new(event_data,
                                         :msg_title => event_title,
                                         :event_type => 'config_management.run',
-                                        :event_object => run_status.node.name,
+                                        :event_object => hostname,
                                         :alert_type => alert_type,
                                         :priority => event_priority,
                                         :source_type_name => 'chef'
-                                        ), :host => run_status.node.name)
+                                        ), :host => hostname)
 
       # Get the current list of tags, remove any "role:" entries
       host_tags = @dog.host_tags(node.name)[1]["tags"] || []

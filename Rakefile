@@ -20,7 +20,7 @@ Jeweler::Tasks.new do |gem|
   gem.summary = %Q{Chef Handler for DataDog events and metrics}
   gem.description = %Q{This Handler will report the events and metrics for a chef-client run to DataDog.}
   gem.email = "packages@datadoghq.com"
-  gem.authors = ["Mike Fiedler", "Adam Jacob"]
+  gem.authors = ["Mike Fiedler", "Adam Jacob", "Alexis Le-Quoc"]
   # dependencies defined in Gemfile
 end
 Jeweler::RubygemsDotOrgTasks.new

@@ -2,6 +2,10 @@
 
 An Exception and Report Handler for Chef.
 
+== Using chef-handler-datadog
+
+The [Chef integration page](https://app.datadoghq.com/accounts/settings#integrations) has detailed instructions.
+
 == Contributing to chef-handler-datadog
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet

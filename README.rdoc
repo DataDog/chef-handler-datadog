@@ -2,6 +2,7 @@
 
 An Exception and Report Handler for Chef.
 
+{<img src="https://secure.travis-ci.org/DataDog/chef-handler-datadog.png?branch=master" alt="Build Status" />}[http://travis-ci.org/DataDog/chef-handler-datadog]
 == Using chef-handler-datadog
 
 The [Chef integration page](https://app.datadoghq.com/accounts/settings#integrations) has detailed instructions.

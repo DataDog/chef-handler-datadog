@@ -8,7 +8,8 @@ class Datadog < Chef::Handler
   # For the tags to work, the client must have created an Application Key on the
   # "Account Settings" page here: https://app.datadoghq.com/account/settings
   # It should be passed along from the node/role/environemnt attributes, as the default is nil.
-  def initialize(opts = {})
+  def initialize(opts = nil)
+    opts = opts || {}
     @api_key = opts[:api_key]
     @application_key = opts[:application_key]
     # If we're on ec2, use the instance by default, unless instructed otherwise

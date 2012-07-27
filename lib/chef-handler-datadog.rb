@@ -13,7 +13,7 @@ class Datadog < Chef::Handler
     @api_key = opts[:api_key]
     @application_key = opts[:application_key]
     # If we're on ec2, use the instance by default, unless instructed otherwise
-    @use_ec2_instance_id = !opts.has_key(:use_ec2_instance_id) || opts.has_key?(:use_ec2_instance_id) && opts[:use_ec2_instance_id]
+    @use_ec2_instance_id = !opts.has_key?(:use_ec2_instance_id) || opts.has_key?(:use_ec2_instance_id) && opts[:use_ec2_instance_id]
     @dog = Dogapi::Client.new(@api_key, application_key = @application_key)
   end
 

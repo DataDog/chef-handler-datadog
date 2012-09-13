@@ -53,3 +53,4 @@ pkg
 chef-handler-datadog.gemspec
 json
 rake
+Gemfile.lock

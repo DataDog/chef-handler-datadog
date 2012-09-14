@@ -1,14 +1,4 @@
 source "http://rubygems.org"
 
-# Add dependencies required to use your gem here.
-gem "chef", ">= 0.9.18"
-gem "dogapi", ">= 1.2"
-
-# Add dependencies to develop your gem here.
-# Include everything needed to run rake, tests, features, etc.
-group :development do
-  gem "shoulda", ">= 0"
-  gem "bundler", ">= 1.0.0"
-  gem "jeweler", "~> 1.6.4"
-  gem "rdoc", ">= 0"
-end
+# Specify your gem's dependencies in chef-handler-datadog.gemspec
+gemspec

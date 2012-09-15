@@ -30,6 +30,7 @@ class Chef
           @dog.emit_point("chef.resources.total", run_status.all_resources.length, :host => hostname)
           @dog.emit_point("chef.resources.updated", run_status.updated_resources.length, :host => hostname)
           @dog.emit_point("chef.resources.elapsed_time", run_status.elapsed_time, :host => hostname)
+          Chef::Log.debug("Submitted chef metrics back to Datadog")
         rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
           Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
         end
@@ -71,6 +72,7 @@ class Chef
                                             :priority => event_priority,
                                             :source_type_name => 'chef'
                                             ), :host => hostname)
+          Chef::Log.debug("Submitted Chef event to Datadog for #{hostname}")
 
           # Get the current list of tags, remove any "role:" entries
           host_tags = @dog.host_tags(node.name)[1]["tags"] || []
@@ -91,6 +93,7 @@ class Chef
 
           # Replace all tags with the new tags
           @dog.update_tags(node.name, new_host_tags)
+          Chef::Log.debug("Updated #{node.name}'s tags to #{new_host_tags}")
 
         rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
           Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)

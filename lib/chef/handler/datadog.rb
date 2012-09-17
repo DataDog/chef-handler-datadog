@@ -75,7 +75,7 @@ class Chef
           Chef::Log.debug("Submitted Chef event to Datadog for #{hostname}")
 
           # Get the current list of tags, remove any "role:" entries
-          host_tags = @dog.host_tags(node.name)[1]["tags"] || []
+          host_tags = @dog.host_tags(hostname)[1]["tags"] || []
           host_tags.delete_if {|tag| tag.start_with?('role:') }
 
           # Get list of chef roles, rename them to tag format
@@ -92,8 +92,8 @@ class Chef
           new_host_tags = host_tags | chef_roles
 
           # Replace all tags with the new tags
-          @dog.update_tags(node.name, new_host_tags)
-          Chef::Log.debug("Updated #{node.name}'s tags to #{new_host_tags}")
+          @dog.update_tags(hostname, new_host_tags)
+          Chef::Log.debug("Updated #{hostname}'s tags to #{new_host_tags}")
 
         rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
           Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)

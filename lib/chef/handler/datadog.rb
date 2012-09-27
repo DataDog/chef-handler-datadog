@@ -64,15 +64,31 @@ class Chef
         # Submit the details back to Datadog
         begin
           # Send the Event data
-          @dog.emit_event(Dogapi::Event.new(event_data,
-                                            :msg_title => event_title,
-                                            :event_type => 'config_management.run',
-                                            :event_object => hostname,
-                                            :alert_type => alert_type,
-                                            :priority => event_priority,
-                                            :source_type_name => 'chef'
-                                            ), :host => hostname)
-          Chef::Log.debug("Submitted Chef event to Datadog for #{hostname}")
+          evt = @dog.emit_event(Dogapi::Event.new(event_data,
+                                                  :msg_title => event_title,
+                                                  :event_type => 'config_management.run',
+                                                  :event_object => hostname,
+                                                  :alert_type => alert_type,
+                                                  :priority => event_priority,
+                                                  :source_type_name => 'chef'
+                                                  ), :host => hostname)
+          begin
+            # FIXME nice-to-have: abstract format of return value away a bit
+            # in dogapi directly. See https://github.com/DataDog/dogapi-rb/issues/18
+            if evt.length < 2
+              Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
+            else
+              # [http_response_code, {"event" => {"url" => "...", ...}}]
+              # 2xx means ok
+              if evt[0].to_i / 100 != 2
+                Chef::Log.warn("Could not submit event to Datadog (HTTP call failed): #{evt[0]}")
+              else
+                Chef::Log.debug("Successfully submitted Chef event to Datadog for #{hostname} at #{evt[1]['event']['url']}")
+              end
+            end
+          rescue
+            Chef::Log.warn("Could not determine whether chef run was successfully submitted to Datadog: #{evt}")
+          end
 
           # Get the current list of tags, remove any "role:" entries
           host_tags = @dog.host_tags(hostname)[1]["tags"] || []
@@ -92,8 +108,21 @@ class Chef
           new_host_tags = host_tags | chef_roles
 
           # Replace all tags with the new tags
-          @dog.update_tags(hostname, new_host_tags)
-          Chef::Log.debug("Updated #{hostname}'s tags to #{new_host_tags}")
+          rc = @dog.update_tags(hostname, new_host_tags)
+          begin
+            # See FIXME above about why I feel dirty repeating this code here
+            if evt.length < 2
+              Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
+            else
+              if rc[0].to_i / 100 != 2
+                Chef::Log.warn("Could not submit #{chef_roles} tags for #{hostname} to Datadog")
+              else
+                Chef::Log.debug("Successfully updated #{hostname}'s tags to #{new_host_tags.join(', ')}")
+              end
+            end
+          rescue
+            Chef::Log.warn("Could not determine whether #{hostname}'s tags were successfully submitted to Datadog: #{rc}")
+          end
 
         rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
           Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)

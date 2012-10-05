@@ -107,23 +107,26 @@ class Chef
           # Combine (union) both arrays. Removes dupes, preserves non-chef tags.
           new_host_tags = host_tags | chef_roles
 
-          # Replace all tags with the new tags
-          rc = @dog.update_tags(hostname, new_host_tags)
-          begin
-            # See FIXME above about why I feel dirty repeating this code here
-            if evt.length < 2
-              Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
-            else
-              if rc[0].to_i / 100 != 2
-                Chef::Log.warn("Could not submit #{chef_roles} tags for #{hostname} to Datadog")
+          if @application_key.nil?
+            Chef::Log.warn("You need an application key to let Chef tag your nodes in Datadog. Visit https://app.datadoghq.com/account/settings#api to create one and update your datadog attributes in the datadog cookbook.")
+          else
+            # Replace all tags with the new tags
+            rc = @dog.update_tags(hostname, new_host_tags)
+            begin
+              # See FIXME above about why I feel dirty repeating this code here
+              if evt.length < 2
+                Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
               else
-                Chef::Log.debug("Successfully updated #{hostname}'s tags to #{new_host_tags.join(', ')}")
+                if rc[0].to_i / 100 != 2
+                  Chef::Log.warn("Could not submit #{chef_roles} tags for #{hostname} to Datadog")
+                else
+                  Chef::Log.debug("Successfully updated #{hostname}'s tags to #{new_host_tags.join(', ')}")
+                end
               end
+            rescue
+              Chef::Log.warn("Could not determine whether #{hostname}'s tags were successfully submitted to Datadog: #{rc}")
             end
-          rescue
-            Chef::Log.warn("Could not determine whether #{hostname}'s tags were successfully submitted to Datadog: #{rc}")
           end
-
         rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
           Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
           Chef::Log.error("Data to be submitted was:")

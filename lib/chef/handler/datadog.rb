@@ -114,7 +114,7 @@ class Chef
             rc = @dog.update_tags(hostname, new_host_tags)
             begin
               # See FIXME above about why I feel dirty repeating this code here
-              if evt.length < 2
+              if rc.length < 2
                 Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
               else
                 if rc[0].to_i / 100 != 2

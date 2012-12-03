@@ -92,6 +92,14 @@ class Chef
 
           # Get the current list of tags, remove any "role:" entries
           host_tags = @dog.host_tags(hostname)[1]["tags"] || []
+
+          # Add the explicit tags from node attributes
+          if node.datadog.tags.kind_of?(Array)
+            node.datadog.tags.each do |tag|
+              host_tags << tag
+            end
+          end
+
           host_tags.delete_if {|tag| tag.start_with?('role:') }
 
           # Get list of chef roles, rename them to tag format

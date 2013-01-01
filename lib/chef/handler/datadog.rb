@@ -92,15 +92,15 @@ class Chef
 
           # Get the current list of tags, remove any "role:" entries
           host_tags = @dog.host_tags(hostname)[1]["tags"] || []
-          host_tags.delete_if {|tag| tag.start_with?('role:') }
+          host_tags.delete_if { |tag| tag.start_with?('role:') }
 
           # Get list of chef roles, rename them to tag format
           chef_roles = node.run_list.roles
-          chef_roles.collect! {|role| "role:" + role }
+          chef_roles.collect! { |role| "role:" + role }
 
           # Get the chef environment (as long as it's not '_default')
           if node.respond_to?('chef_environment') && node.chef_environment != '_default'
-            host_tags.delete_if {|tag| tag.start_with?('env:') }
+            host_tags.delete_if { |tag| tag.start_with?('env:') }
             host_tags << "env:" + node.chef_environment
           end
 
@@ -108,7 +108,10 @@ class Chef
           new_host_tags = host_tags | chef_roles
 
           if @application_key.nil?
-            Chef::Log.warn("You need an application key to let Chef tag your nodes in Datadog. Visit https://app.datadoghq.com/account/settings#api to create one and update your datadog attributes in the datadog cookbook.")
+            Chef::Log.warn("You need an application key to let Chef tag your nodes " \
+              "in Datadog. Visit https://app.datadoghq.com/account/settings#api to " \
+              "create one and update your datadog attributes in the datadog cookbook."
+            )
           else
             # Replace all tags with the new tags
             rc = @dog.update_tags(hostname, new_host_tags)

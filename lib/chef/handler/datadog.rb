@@ -108,7 +108,10 @@ class Chef
           new_host_tags = host_tags | chef_roles
 
           if @application_key.nil?
-            Chef::Log.warn("You need an application key to let Chef tag your nodes in Datadog. Visit https://app.datadoghq.com/account/settings#api to create one and update your datadog attributes in the datadog cookbook.")
+            Chef::Log.warn("You need an application key to let Chef tag your nodes " \
+              "in Datadog. Visit https://app.datadoghq.com/account/settings#api to " \
+              "create one and update your datadog attributes in the datadog cookbook."
+            )
           else
             # Replace all tags with the new tags
             rc = @dog.update_tags(hostname, new_host_tags)

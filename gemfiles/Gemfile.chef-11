@@ -1,0 +1,5 @@
+ource 'https://rubygems.org'
+
+gem 'chef', '~> 11.2'
+
+gemspec :path => '..'

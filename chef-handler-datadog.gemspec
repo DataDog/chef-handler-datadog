@@ -23,6 +23,6 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'travis-lint'
 
   gem.authors       = ["Mike Fiedler", "Adam Jacob", "Alexis Le-Quoc"]
-  gem.email         = ["packages@datadoghq.com"]
+  gem.email         = ["package@datadoghq.com"]
   gem.homepage      = "http://www.datadoghq.com/"
 end

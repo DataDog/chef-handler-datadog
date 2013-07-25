@@ -6,7 +6,7 @@ An Exception and Report Handler for Chef.
 
 ## Using chef-handler-datadog
 
-The [Chef integration page](https://app.datadoghq.com/accounts/settings#integrations) has detailed instructions.
+The Datadog Docs on [Chef](http://docs.datadoghq.com/guides/chef/#deployhandler) has detailed instructions.
 
 ## Contributing to chef-handler-datadog
 
@@ -20,4 +20,4 @@ The [Chef integration page](https://app.datadoghq.com/accounts/settings#integrat
 
 ## Copyright
 
-Copyright (c) 2012 Datadog, Inc. See LICENSE.txt for further details.
+Copyright (c) 2012-2013 Datadog, Inc. See LICENSE.txt for further details.

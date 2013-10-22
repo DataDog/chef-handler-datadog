@@ -53,3 +53,8 @@ pkg
 json
 rake
 Gemfile.lock
+
+# For Ruby Managers:
+.ruby-gemset
+.ruby-version
+.rvmrc

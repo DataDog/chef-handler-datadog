@@ -21,3 +21,10 @@ RDoc::Task.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+require 'tailor/rake_task'
+Tailor::RakeTask.new do |task|
+  task.file_set('lib/**/*.rb', "code") do |style|
+    style.max_line_length 160, :level => :warn
+  end
+end

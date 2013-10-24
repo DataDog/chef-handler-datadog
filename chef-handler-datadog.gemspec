@@ -13,9 +13,9 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
   gem.extra_rdoc_files = ['README.md', 'LICENSE.txt']
 
-  gem.add_dependency 'chef', ">= 10", "<= 12"
   gem.add_dependency 'dogapi', ">= 1.2"
 
+  gem.add_development_dependency 'chef', ">= 10", "<= 12"
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'shoulda'
   gem.add_development_dependency 'bundler'

@@ -20,6 +20,7 @@ class Chef
       end
 
       def report
+        # resolve correct hostname
         hostname = run_status.node.name
         if @use_ec2_instance_id && run_status.node.attribute?("ec2") && run_status.node.ec2.attribute?("instance_id")
           hostname = run_status.node.ec2.instance_id
@@ -35,6 +36,7 @@ class Chef
           Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
         end
 
+        # Build the correct event
         event_title = ""
         run_time = pluralize(run_status.elapsed_time, "second")
         if run_status.success?
@@ -122,7 +124,7 @@ class Chef
                 Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
               else
                 if rc[0].to_i / 100 != 2
-                  Chef::Log.warn("Could not submit #{chef_roles} tags for #{hostname} to Datadog")
+                  Chef::Log.warn("Could not submit #{new_host_tags} tags for #{hostname} to Datadog: #{evt}")
                 else
                   Chef::Log.debug("Successfully updated #{hostname}'s tags to #{new_host_tags.join(', ')}")
                 end
@@ -157,8 +159,9 @@ class Chef
         end
       end
 
+    # TODO: Remove this once confirmed that Chef 0.9.x is no longer used.
     ## This function is to mimic behavior built into a later version of chef than 0.9.x
-    ## Source is here: https://github.com/opscode/chef/blob/master/chef/lib/chef/resource.rb#L415-424
+    ## Source is here: https://github.com/opscode/chef/blob/19bc40b148f3862ce88d044e600d01a9838c60bc/chef/lib/chef/resource.rb#L375-L384
     ## Including this based on help from schisamo
       def defined_at(resource)
         cookbook_name = resource.cookbook_name

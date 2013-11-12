@@ -159,24 +159,6 @@ class Chef
         end
       end
 
-    # TODO: Remove this once confirmed that Chef 0.9.x is no longer used.
-    ## This function is to mimic behavior built into a later version of chef than 0.9.x
-    ## Source is here: https://github.com/opscode/chef/blob/19bc40b148f3862ce88d044e600d01a9838c60bc/chef/lib/chef/resource.rb#L375-L384
-    ## Including this based on help from schisamo
-      def defined_at(resource)
-        cookbook_name = resource.cookbook_name
-        recipe_name = resource.recipe_name
-        source_line = resource.source_line
-        if cookbook_name && recipe_name && source_line
-          "#{cookbook_name}::#{recipe_name} line #{source_line.split(':')[1]}"
-        elsif source_line
-          file, line_no = source_line.split(':')
-          "#{file} line #{line_no}"
-        else
-          "dynamically defined"
-        end
-      end
-
     end #end class Datadog
   end #end class Handler
 end #end class Chef

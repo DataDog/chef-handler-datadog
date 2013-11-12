@@ -1,5 +1,10 @@
 Changes
 =======
+
+# 0.3.0 / Unreleased
+
+
+
 # 0.2.0 / 2013-10-31
 
 * [BUGFIX] moved Chef gem dependency to development, [#34][] [@miketheman][]

@@ -21,3 +21,7 @@ The Datadog Docs on [Chef](http://docs.datadoghq.com/guides/chef/#deployhandler)
 ## Copyright
 
 Copyright (c) 2012-2013 Datadog, Inc. See LICENSE.txt for further details.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/DataDog/chef-handler-datadog/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+

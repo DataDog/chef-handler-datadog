@@ -7,16 +7,17 @@ class Chef
   class Handler
     class Datadog < Chef::Handler
 
+      attr_reader :config
+
       # For the tags to work, the client must have created an Application Key on the
       # "Account Settings" page here: https://app.datadoghq.com/account/settings
       # It should be passed along from the node/role/environemnt attributes, as the default is nil.
-      def initialize(opts = nil)
-        opts = opts || {}
-        @api_key = opts[:api_key]
-        @application_key = opts[:application_key]
+      def initialize(config = {})
+        @config = config
         # If we're on ec2, use the instance by default, unless instructed otherwise
-        @use_ec2_instance_id = !opts.has_key?(:use_ec2_instance_id) || opts.has_key?(:use_ec2_instance_id) && opts[:use_ec2_instance_id]
-        @dog = Dogapi::Client.new(@api_key, application_key = @application_key)
+        @use_ec2_instance_id = !config.has_key?(:use_ec2_instance_id) || config.has_key?(:use_ec2_instance_id) && config[:use_ec2_instance_id]
+        # If *any* api_key is not provided, this will fail immediately.
+        @dog = Dogapi::Client.new(config[:api_key], config[:application_key])
       end
 
       def report
@@ -110,7 +111,7 @@ class Chef
           # Combine (union) both arrays. Removes dupes, preserves non-chef tags.
           new_host_tags = host_tags | chef_roles
 
-          if @application_key.nil?
+          if self.config[:application_key].nil?
             Chef::Log.warn("You need an application key to let Chef tag your nodes " \
               "in Datadog. Visit https://app.datadoghq.com/account/settings#api to " \
                 "create one and update your datadog attributes in the datadog cookbook."

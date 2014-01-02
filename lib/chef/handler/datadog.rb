@@ -82,14 +82,14 @@ class Chef
             Chef::Log.warn("Could not determine whether chef run was successfully submitted to Datadog: #{evt}")
           end
 
-          new_host_tags = get_combined_tags(hostname, node)
-
           if self.config[:application_key].nil?
             Chef::Log.warn("You need an application key to let Chef tag your nodes " \
               "in Datadog. Visit https://app.datadoghq.com/account/settings#api to " \
                 "create one and update your datadog attributes in the datadog cookbook."
             )
           else
+            new_host_tags = get_combined_tags(hostname, node)
+
             # Replace all tags with the new tags
             rc = @dog.update_tags(hostname, new_host_tags)
             begin

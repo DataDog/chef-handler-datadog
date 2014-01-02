@@ -82,22 +82,7 @@ class Chef
             Chef::Log.warn("Could not determine whether chef run was successfully submitted to Datadog: #{evt}")
           end
 
-          # Get the current list of tags, remove any "role:" entries
-          host_tags = @dog.host_tags(hostname)[1]["tags"] || []
-          host_tags.delete_if { |tag| tag.start_with?('role:') }
-
-          # Get list of chef roles, rename them to tag format
-          chef_roles = node.run_list.roles
-          chef_roles.collect! { |role| "role:" + role }
-
-          # Get the chef environment (as long as it's not '_default')
-          if node.respond_to?('chef_environment') && node.chef_environment != '_default'
-            host_tags.delete_if { |tag| tag.start_with?('env:') }
-            host_tags << "env:" + node.chef_environment
-          end
-
-          # Combine (union) both arrays. Removes dupes, preserves non-chef tags.
-          new_host_tags = host_tags | chef_roles
+          new_host_tags = get_combined_tags(hostname, node)
 
           if self.config[:application_key].nil?
             Chef::Log.warn("You need an application key to let Chef tag your nodes " \
@@ -145,6 +130,42 @@ class Chef
         Chef::Log.debug('Submitted Chef metrics back to Datadog')
       rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
         Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
+      end
+
+      # Call Datadog API for a given hostname and retrieve the current list
+      # of Datadog tags - not the same as Chef 'tags' - rather all tags in
+      # are `key:value` e.g. `role:database-master`.
+      # Build up an array of Datadog tags to send back
+      #
+      # @param hostname [String]
+      # @return [Array] an array of current Datadog tags, roles, env
+      def get_combined_tags(hostname, node)
+        host_tags = get_host_tags(hostname)
+        host_tags << get_node_env(node)
+
+        chef_roles = get_node_roles(node)
+        chef_tags = get_node_tags(node)
+
+        # Combine (union) all arrays. Removes dupes, preserves non-Chef tags.
+        host_tags | chef_roles | chef_tags
+      end
+
+      # Get current tags, drop any that will be replaced
+      def get_host_tags(hostname)
+        tags = @dog.host_tags(hostname)[1]['tags'] || []
+        tags.delete_if { |tag| tag.start_with?('role:', 'env:', 'tag:') }
+      end
+
+      def get_node_roles(node)
+        node.run_list.roles.map! { |role| 'role:' + role }
+      end
+
+      def get_node_env(node)
+        'env:' + node.chef_environment if node.respond_to?('chef_environment')
+      end
+
+      def get_node_tags(node)
+        node.tags.map! { |tag| 'tag:' + tag }
       end
 
       def pluralize(number, noun)

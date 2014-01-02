@@ -23,14 +23,7 @@ class Chef
         hostname = select_hostname(run_status.node)
 
         # Send the metrics
-        begin
-          @dog.emit_point("chef.resources.total", run_status.all_resources.length, :host => hostname)
-          @dog.emit_point("chef.resources.updated", run_status.updated_resources.length, :host => hostname)
-          @dog.emit_point("chef.resources.elapsed_time", run_status.elapsed_time, :host => hostname)
-          Chef::Log.debug("Submitted chef metrics back to Datadog")
-        rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
-          Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
-        end
+        emit_metrics_to_datadog(hostname, run_status)
 
         # Build the correct event
         event_title = ""
@@ -140,6 +133,19 @@ class Chef
       end
 
       private
+
+      # Emit Chef metrics to Datadog
+      #
+      # @param hostname [String] resolved hostname to attach to series
+      # @param run_status [Chef::RunStatus] current run status
+      def emit_metrics_to_datadog(hostname, run_status)
+        @dog.emit_point('chef.resources.total', run_status.all_resources.length, :host => hostname)
+        @dog.emit_point('chef.resources.updated', run_status.updated_resources.length, :host => hostname)
+        @dog.emit_point('chef.resources.elapsed_time', run_status.elapsed_time, :host => hostname)
+        Chef::Log.debug('Submitted Chef metrics back to Datadog')
+      rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
+        Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
+      end
 
       def pluralize(number, noun)
         begin

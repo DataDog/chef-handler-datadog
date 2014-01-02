@@ -5,6 +5,7 @@ Changes
 
 * [MISC] **Breaking Change**: Chef 0.9.x is no longer supported. Extra code implemented for 0.9 versions has been removed. [@miketheman][]
 * [OPTIMIZE] Refactor hostname resolution to its own method, simplify `report` method. [@miketheman][]
+* [OPTIMIZE] Refactor metrics reporting to its own method, simplify `report` method. [@miketheman][]
 * [MISC] Converted `opts` to an instance variable of `config` to reduce the amount of instance variables passing around. [@miketheman][]
 
 # 0.2.0 / 2013-10-31

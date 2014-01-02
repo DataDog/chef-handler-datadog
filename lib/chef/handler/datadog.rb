@@ -14,18 +14,13 @@ class Chef
       # It should be passed along from the node/role/environemnt attributes, as the default is nil.
       def initialize(config = {})
         @config = config
-        # If we're on ec2, use the instance by default, unless instructed otherwise
-        @use_ec2_instance_id = !config.has_key?(:use_ec2_instance_id) || config.has_key?(:use_ec2_instance_id) && config[:use_ec2_instance_id]
         # If *any* api_key is not provided, this will fail immediately.
         @dog = Dogapi::Client.new(config[:api_key], config[:application_key])
       end
 
       def report
         # resolve correct hostname
-        hostname = run_status.node.name
-        if @use_ec2_instance_id && run_status.node.attribute?("ec2") && run_status.node.ec2.attribute?("instance_id")
-          hostname = run_status.node.ec2.instance_id
-        end
+        hostname = select_hostname(run_status.node)
 
         # Send the metrics
         begin
@@ -160,6 +155,23 @@ class Chef
         end
       end
 
+      # Select which hostname to report back to Datadog.
+      # Makes decision based on inputs from `config` and when absent, use the
+      # node's `ec2` attribute existence to make the decision.
+      #
+      # @param node [Chef::Node] from `run_status`, can feasibly any `node`
+      # @return [String] the hostname decided upon
+      def select_hostname(node)
+        use_ec2_instance_id = !config.key?(:use_ec2_instance_id) ||
+                                (config.key?(:use_ec2_instance_id) &&
+                                  config[:use_ec2_instance_id])
+
+        if use_ec2_instance_id && node.attribute?('ec2') && node.ec2.attribute?('instance_id')
+          node.ec2.instance_id
+        else
+          node.name
+        end
+      end
     end #end class Datadog
   end #end class Handler
 end #end class Chef

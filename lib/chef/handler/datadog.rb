@@ -82,7 +82,8 @@ class Chef
             Chef::Log.warn("Could not determine whether chef run was successfully submitted to Datadog: #{evt}")
           end
 
-          if self.config[:application_key].nil?
+          # Update tags
+          if config[:application_key].nil?
             Chef::Log.warn("You need an application key to let Chef tag your nodes " \
               "in Datadog. Visit https://app.datadoghq.com/account/settings#api to " \
                 "create one and update your datadog attributes in the datadog cookbook."
@@ -95,10 +96,10 @@ class Chef
             begin
               # See FIXME above about why I feel dirty repeating this code here
               if rc.length < 2
-                Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
+                Chef::Log.warn("Unexpected response from Datadog Event API: #{rc}")
               else
                 if rc[0].to_i / 100 != 2
-                  Chef::Log.warn("Could not submit #{new_host_tags} tags for #{hostname} to Datadog: #{evt}")
+                  Chef::Log.warn("Could not submit #{new_host_tags} tags for #{hostname} to Datadog: #{rc}")
                 else
                   Chef::Log.debug("Successfully updated #{hostname}'s tags to #{new_host_tags.join(', ')}")
                 end

@@ -10,6 +10,10 @@ Changes
 * [OPTIMIZE] Refactor tagging get/set to own methods, simplify `report` method. [@miketheman][]
 * [MISC] Converted `opts` to an instance variable of `config` to reduce the amount of instance variables passing around. [@miketheman][]
 
+Testing changes:
+* Removed Tailor testing in favor of Rubocop
+* Added Appraisals with specific Chef versions to be tested
+
 # 0.2.0 / 2013-10-31
 
 * [BUGFIX] moved Chef gem dependency to development, [#34][] [@miketheman][]

@@ -15,12 +15,16 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'dogapi', ">= 1.2"
 
+  gem.add_development_dependency 'appraisal', '~> 1.0.0.beta2'
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'chef', ">= 10", "<= 12"
+  gem.add_development_dependency 'dotenv'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'
-  gem.add_development_dependency 'tailor', '~> 1.3'
-  gem.add_development_dependency 'travis-lint'
+  gem.add_development_dependency 'rubocop'
+  gem.add_development_dependency 'simplecov'
+  gem.add_development_dependency 'vcr'
+  gem.add_development_dependency 'webmock'
 
   gem.authors       = ["Mike Fiedler", "Adam Jacob", "Alexis Le-Quoc"]
   gem.email         = ["package@datadoghq.com"]

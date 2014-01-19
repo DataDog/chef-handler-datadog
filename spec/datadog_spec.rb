@@ -1,15 +1,11 @@
 # encoding: utf-8
 require 'spec_helper'
+require 'pry'
 
 describe Chef::Handler::Datadog, :vcr => :new_episodes do
   # The #report method currently long and clunky, and we need to simulate a
   # Chef run to test all aspects of this, as well as push values into the test.
   before(:all) do
-    @handler = Chef::Handler::Datadog.new(
-      :api_key         => API_KEY,
-      :application_key => APPLICATION_KEY,
-    )
-
     # This is used in validating that requests have actually been made,
     # as in a 'Fucntional test'. We've recorded the tests with VCR, and use
     # these to assert that the final product is correct. This is also
@@ -19,6 +15,13 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     EVENTS_ENDPOINT   = BASE_URL + '/api/v1/events'
     HOST_TAG_ENDPOINT = BASE_URL + '/api/v1/tags/hosts/'
     METRICS_ENDPOINT  = BASE_URL + '/api/v1/series'
+  end
+
+  before(:each) do
+    @handler = Chef::Handler::Datadog.new(
+      :api_key         => API_KEY,
+      :application_key => APPLICATION_KEY,
+    )
   end
 
   describe 'reports metrics event and sets tags' do
@@ -164,6 +167,35 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
           'env:hostile', 'role:highlander', 'tag:the_one_and_only'
           ]),
       )).to have_been_made.times(1)
+    end
+  end
+
+  describe 'handles no application_key' do
+    before(:each) do
+      @node = Chef::Node.build('chef.handler.datadog.test-noapp')
+
+      @node.send(:chef_environment, 'hostile')
+      @node.send(:run_list, 'role[highlander]')
+      @node.normal.tags = ['the_one_and_only']
+
+      @events = Chef::EventDispatch::Dispatcher.new
+      @run_context = Chef::RunContext.new(@node, {}, @events)
+      @run_status = Chef::RunStatus.new(@node, @events)
+
+      @expected_time = Time.now
+      Time.stub(:now).and_return(@expected_time, @expected_time + 5)
+      @run_status.start_clock
+      @run_status.stop_clock
+
+      @run_status.run_context = @run_context
+    end
+
+    it 'fails when no application key is provided' do
+      @handler.config[:application_key] = nil
+
+      # TODO: figure out how to capture output of Chef::Log
+      # Run the report, catch the error
+      expect { @handler.run_report_unsafe(@run_status) }.to raise_error
     end
   end
 

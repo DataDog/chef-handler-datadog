@@ -89,6 +89,7 @@ class Chef
               "in Datadog. Visit https://app.datadoghq.com/account/settings#api to " \
                 "create one and update your datadog attributes in the datadog cookbook."
             )
+            fail ArgumentError, 'Missing Datadog Application Key'
           else
             new_host_tags = get_combined_tags(hostname, node)
 

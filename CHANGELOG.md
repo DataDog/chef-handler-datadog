@@ -13,6 +13,7 @@ Changes
 Testing changes:
 * Removed Tailor testing in favor of Rubocop
 * Added Appraisals with specific Chef versions to be tested
+* Added RSpec testing via VCR and Webmock
 
 # 0.2.0 / 2013-10-31
 

@@ -1,6 +1,5 @@
 # encoding: utf-8
 require 'spec_helper'
-require 'pry'
 
 describe Chef::Handler::Datadog, :vcr => :new_episodes do
   # The #report method currently long and clunky, and we need to simulate a

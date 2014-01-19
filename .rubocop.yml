@@ -33,4 +33,4 @@ CyclomaticComplexity:
 # continue, this should drop. However, the goal of 10 lines in a method may
 # be a little lofty.
 MethodLength:
-  Max: 77
+  Max: 78

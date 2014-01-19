@@ -26,11 +26,11 @@ class Chef
         emit_metrics_to_datadog(hostname, run_status)
 
         # Build the correct event
-        event_title = ""
-        run_time = pluralize(run_status.elapsed_time, "second")
+        event_title = ''
+        run_time = pluralize(run_status.elapsed_time, 'second')
         if run_status.success?
-          alert_type = "success"
-          event_priority = "low"
+          alert_type = 'success'
+          event_priority = 'low'
           event_title << "Chef completed in #{run_time} on #{hostname} "
         else
           event_title << "Chef failed in #{run_time} on #{hostname} "
@@ -46,8 +46,8 @@ class Chef
         end
 
         if run_status.failed?
-          alert_type = "error"
-          event_priority = "normal"
+          alert_type = 'error'
+          event_priority = 'normal'
           event_data << "\n@@@\n#{run_status.formatted_exception}\n@@@\n"
           event_data << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
         end
@@ -110,10 +110,10 @@ class Chef
           end
         rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
           Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
-          Chef::Log.error("Data to be submitted was:")
+          Chef::Log.error('Data to be submitted was:')
           Chef::Log.error(event_title)
           Chef::Log.error(event_data)
-          Chef::Log.error("Tags to be set for this run:")
+          Chef::Log.error('Tags to be set for this run:')
           Chef::Log.error(new_host_tags)
         end
       end

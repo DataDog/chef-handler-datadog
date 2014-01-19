@@ -1,0 +1,29 @@
+# We want to continue to support Ruby 1.8.x for now
+HashSyntax:
+  EnforcedStyle: hash_rockets
+
+# 80 characters is a nice goal, but not worht currently changing in existing
+# code for the sake fo changing it is not worth our time.
+LineLength:
+  Max: 150
+
+#####
+# These exceptions are good goals to attain, and probably will over time,
+# so periodic disabling and re-running to inspect values is suggested.
+
+# TODO: Main class is currently over 100 lines of code, making comprehending
+# it harder. With refactors and simplifications, we can bring this down,
+# but for now, let's not make it too much worse.
+ClassLength:
+  Max: 160
+
+# TODO: this is currently down to 12 from 22, and should be a constant
+# goal to reduce method complexity. The accepted goal is 6.
+CyclomaticComplexity:
+  Max: 12
+
+# TODO: The main method `report` is now down from 85 lines. As refactors
+# continue, this should drop. However, the goal of 10 lines in a method may
+# be a little lofty.
+MethodLength:
+  Max: 77

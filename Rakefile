@@ -8,6 +8,9 @@ require 'rake/clean'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
+task :default => [:cops]
+
+CLEAN.include(['coverage/', 'doc/', 'pkg/'])
 
 RSpec::Core::RakeTask.new(:spec)
 

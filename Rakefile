@@ -8,7 +8,6 @@ require 'rake/clean'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
-task :default => :test
 
 RSpec::Core::RakeTask.new(:spec)
 

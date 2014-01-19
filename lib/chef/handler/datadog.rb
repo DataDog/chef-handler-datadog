@@ -171,17 +171,15 @@ class Chef
       end
 
       def pluralize(number, noun)
-        begin
-          case number
-          when 0..1
-            "less than 1 #{noun}"
-          else
-            "#{number.round} #{noun}s"
-          end
-        rescue
-          Chef::Log.warn("Cannot make #{number} more legible")
-          "#{number} #{noun}s"
+        case number
+        when 0..1
+          "less than 1 #{noun}"
+        else
+          "#{number.round} #{noun}s"
         end
+      rescue
+        Chef::Log.warn("Cannot make #{number} more legible")
+        "#{number} #{noun}s"
       end
 
       # Select which hostname to report back to Datadog.

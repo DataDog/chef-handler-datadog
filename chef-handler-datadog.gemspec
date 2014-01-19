@@ -1,3 +1,4 @@
+# encoding: utf-8
 require File.expand_path('../lib/chef-handler-datadog', __FILE__)
 
 Gem::Specification.new do |gem|

@@ -66,7 +66,7 @@ class Chef
           ), :host => hostname)
 
           begin
-            # FIXME nice-to-have: abstract format of return value away a bit
+            # FIXME: nice-to-have: abstract format of return value away a bit
             # in dogapi directly. See https://github.com/DataDog/dogapi-rb/issues/18
             if evt.length < 2
               Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
@@ -201,6 +201,6 @@ class Chef
           node.name
         end
       end
-    end #end class Datadog
-  end #end class Handler
-end #end class Chef
+    end # end class Datadog
+  end # end class Handler
+end # end class Chef

@@ -10,6 +10,7 @@ Changes
 * [OPTIMIZE] Refactor tagging get/set to own methods, simplify `report` method. [@miketheman][]
 * [MISC] Converted `opts` to an instance variable of `config` to reduce the amount of instance variables passing around. [@miketheman][]
 * [OPTIMIZE] Don't try to tag node when Application Key isn't provided, [#31][] [@miketheman][]
+* [OPTIMIZE] Only load in the parts of the Chef gem that are used. [@miketheman][]
 
 Testing suite: [#18][], [@miketheman][]
 * Removed Tailor testing in favor of Rubocop

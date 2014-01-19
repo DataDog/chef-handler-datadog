@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'rubygems'
-require 'chef'
 require 'chef/handler'
+require 'chef/log'
 require 'dogapi'
 
 class Chef

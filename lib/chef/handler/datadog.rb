@@ -38,19 +38,20 @@ class Chef
         end
 
         event_data = "Chef updated #{run_status.updated_resources.length} resources out of #{run_status.all_resources.length} resources total."
-        if run_status.updated_resources.length.to_i > 0
-          event_data << "\n@@@\n"
-          run_status.updated_resources.each do |r|
-            event_data << "- #{r.to_s} (#{defined_at(r)})\n"
-          end
-          event_data << "\n@@@\n"
-        end
 
         if run_status.failed?
           alert_type = 'error'
           event_priority = 'normal'
           event_data << "\n@@@\n#{run_status.formatted_exception}\n@@@\n"
           event_data << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
+        end
+
+        if run_status.updated_resources.length.to_i > 0
+          event_data << "\n@@@\n"
+          run_status.updated_resources.each do |r|
+            event_data << "- #{r.to_s} (#{defined_at(r)})\n"
+          end
+          event_data << "\n@@@\n"
         end
 
         # Submit the details back to Datadog

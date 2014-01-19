@@ -11,6 +11,7 @@ Changes
 * [MISC] Converted `opts` to an instance variable of `config` to reduce the amount of instance variables passing around. [@miketheman][]
 * [OPTIMIZE] Don't try to tag node when Application Key isn't provided, [#31][] [@miketheman][]
 * [OPTIMIZE] Only load in the parts of the Chef gem that are used. [@miketheman][]
+* [OPTIMIZE] Change order in which event_data is constructed, to not lose the full backtrace, [#37][] [@miketheman][]
 
 Testing suite: [#18][], [@miketheman][]
 * Removed Tailor testing in favor of Rubocop
@@ -32,6 +33,7 @@ And all other versions were prior to this. See git history for more.
 [#18]: https://github.com/DataDog/chef-handler-datadog/issues/18
 [#31]: https://github.com/DataDog/chef-handler-datadog/issues/31
 [#34]: https://github.com/DataDog/chef-handler-datadog/issues/34
+[#37]: https://github.com/DataDog/chef-handler-datadog/issues/37
 [#39]: https://github.com/DataDog/chef-handler-datadog/issues/39
 [@alq]: https://github.com/alq
 [@miketheman]: https://github.com/miketheman

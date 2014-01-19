@@ -6,8 +6,8 @@ require 'dogapi'
 
 class Chef
   class Handler
+    # Datadog handler to send Chef run details to Datadog
     class Datadog < Chef::Handler
-
       attr_reader :config
 
       # For the tags to work, the client must have created an Application Key on the

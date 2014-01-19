@@ -242,12 +242,37 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     end
   end
 
-    # TODO: updated resources
-    # before(:each) do
-    #   # all_resources = [Chef::Resource.new('whiskers'), Chef::Resource.new('paws')]
-    #   # # all_resources.first.updated_by_last_action(true)
-    #   # @run_context.resource_collection.all_resources.replace(all_resources)
-    # end
+  describe 'updated resources' , focus:true do
+    before(:each) do
+      @node = Chef::Node.build('chef.handler.datadog.test-resources')
+      @node.send(:chef_environment, 'resources')
+      @events = Chef::EventDispatch::Dispatcher.new
+      @run_context = Chef::RunContext.new(@node, {}, @events)
+      @run_status = Chef::RunStatus.new(@node, @events)
+
+      all_resources = [Chef::Resource.new('whiskers'), Chef::Resource.new('paws')]
+      all_resources.first.updated_by_last_action(true)
+      @run_context.resource_collection.all_resources.replace(all_resources)
+
+      @expected_time = Time.now
+      Time.stub(:now).and_return(@expected_time, @expected_time + 8)
+      @run_status.start_clock
+      @run_status.stop_clock
+
+      @run_status.run_context = @run_context
+
+      # Run the report
+      @handler.run_report_unsafe(@run_status)
+    end
+
+    it 'posts an event' do
+      expect(a_request(:post, EVENTS_ENDPOINT).with(
+        :query => { 'api_key' => @handler.config[:api_key] },
+        :body => hash_including(:msg_text => 'Chef updated 1 resources out of 2 resources total.'),
+        :body => hash_including(:msg_title => "Chef completed in 8 seconds on #{@node.name} "),
+      )).to have_been_made.times(1)
+    end
+  end
 
     # TODO: test failures:
     # @run_status.exception = Exception.new('Boy howdy!')

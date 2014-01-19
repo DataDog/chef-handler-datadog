@@ -1,7 +1,6 @@
 # encoding: utf-8
 require 'rubygems'
 require 'chef/handler'
-require 'chef/log'
 require 'dogapi'
 
 class Chef
@@ -49,7 +48,7 @@ class Chef
         if run_status.updated_resources.length.to_i > 0
           event_data << "\n@@@\n"
           run_status.updated_resources.each do |r|
-            event_data << "- #{r.to_s} (#{defined_at(r)})\n"
+            event_data << "- #{r.to_s} (#{r.defined_at})\n"
           end
           event_data << "\n@@@\n"
         end

@@ -242,7 +242,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     end
   end
 
-  describe 'updated resources' , focus:true do
+  describe 'updated resources' do
     before(:each) do
       @node = Chef::Node.build('chef.handler.datadog.test-resources')
       @node.send(:chef_environment, 'resources')

@@ -57,12 +57,12 @@ class Chef
         begin
           # Send the Event data
           evt = @dog.emit_event(Dogapi::Event.new(event_data,
-            :msg_title => event_title,
-            :event_type => 'config_management.run',
-            :event_object => hostname,
-            :alert_type => alert_type,
-            :priority => event_priority,
-            :source_type_name => 'chef'
+                                                  :msg_title => event_title,
+                                                  :event_type => 'config_management.run',
+                                                  :event_object => hostname,
+                                                  :alert_type => alert_type,
+                                                  :priority => event_priority,
+                                                  :source_type_name => 'chef'
           ), :host => hostname)
 
           begin

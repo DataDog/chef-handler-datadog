@@ -1,7 +1,7 @@
 Changes
 =======
 
-# 0.3.0 / Unreleased
+# 0.3.0 / 2014-01-23
 
 * [MISC] **Breaking Change**: Chef 0.9.x is no longer supported. Extra code implemented for 0.9 versions has been removed. [@miketheman][]
 * [BUGFIX] Report correct response when failing to submit tags, [#39][] [@miketheman][]

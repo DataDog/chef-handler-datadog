@@ -9,8 +9,8 @@ AllCops:
 HashSyntax:
   EnforcedStyle: hash_rockets
 
-# 80 characters is a nice goal, but not worht currently changing in existing
-# code for the sake fo changing it is not worth our time.
+# 80 characters is a nice goal, but not worth currently changing in existing
+# code for the sake of changing it to conform to a length set in 1928 (IBM).
 LineLength:
   Max: 150
 

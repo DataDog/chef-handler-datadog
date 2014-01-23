@@ -3,15 +3,15 @@
 require 'rubygems'
 require 'bundler/gem_tasks'
 
+require 'appraisal'
+require 'rake/clean'
 require 'rspec/core/rake_task'
-require 'tailor/rake_task'
+require 'rubocop/rake_task'
 
-task :default => :test
+task :default => [:cops, :spec]
+
+CLEAN.include(['coverage/', 'doc/', 'pkg/'])
 
 RSpec::Core::RakeTask.new(:spec)
 
-Tailor::RakeTask.new do |task|
-  task.file_set('lib/**/*.rb', "code") do |style|
-    style.max_line_length 160, :level => :warn
-  end
-end
+Rubocop::RakeTask.new(:cops)

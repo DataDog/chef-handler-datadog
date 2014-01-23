@@ -1,6 +1,11 @@
 language: ruby
 rvm:
   - 1.9.3
+bundler_args: --without=localdev
 gemfile:
-  - gemfiles/Gemfile.chef-11
-  - gemfiles/Gemfile.chef-10
+  - gemfiles/chef_10.14.0.gemfile
+  - gemfiles/chef_10.26.0.gemfile
+  - gemfiles/chef_10.30.2.gemfile
+  - gemfiles/chef_11.8.2.gemfile
+env:
+  - API_KEY=somefakeapikey APPLICATION_KEY=somefakeapplicationkey

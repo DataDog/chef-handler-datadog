@@ -29,9 +29,6 @@ pkg
 #
 .DS_Store
 
-# For RVM
-.rvmrc
-
 # For TextMate
 *.tmproj
 # tmtags
@@ -53,8 +50,12 @@ pkg
 json
 rake
 Gemfile.lock
+gemfiles/*.lock
 
 # For Ruby Managers:
 .ruby-gemset
 .ruby-version
 .rvmrc
+
+# Any environment-specific files
+.env

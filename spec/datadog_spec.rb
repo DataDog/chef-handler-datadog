@@ -60,7 +60,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         )).to have_been_made.times(1)
       end
 
-      it 'sets priortiy correctly' do
+      it 'sets priority correctly' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
           :query => { 'api_key' => @handler.config[:api_key] },
           :body => hash_including(:priority => 'low'),

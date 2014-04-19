@@ -1,9 +1,11 @@
 AllCops:
-  Includes:
+  Include:
     - chef-handler-datadog.gemspec
     - Appraisals
     - Gemfile
     - Rakefile
+  Exclude:
+    - spec/*.rb
 
 # We want to continue to support Ruby 1.8.x for now
 HashSyntax:

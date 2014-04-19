@@ -3,8 +3,8 @@ require File.expand_path('../lib/chef-handler-datadog', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'chef-handler-datadog'
-  gem.summary       = %q{Chef Handler for DataDog events and metrics}
-  gem.description   = %q{This Handler will report the events and metrics for a chef-client run to DataDog.}
+  gem.summary       = %q(Chef Handler for DataDog events and metrics)
+  gem.description   = %q(This Handler will report the events and metrics for a chef-client run to DataDog.)
   gem.license       = 'BSD'
   gem.version       = ChefHandlerDatadog::VERSION
 

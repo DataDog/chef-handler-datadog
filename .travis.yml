@@ -3,9 +3,10 @@ rvm:
   - 1.9.3
 bundler_args: --without=localdev
 gemfile:
-  - gemfiles/chef_10.14.0.gemfile
   - gemfiles/chef_10.26.0.gemfile
-  - gemfiles/chef_10.30.2.gemfile
+  - gemfiles/chef_10.32.2.gemfile
   - gemfiles/chef_11.8.2.gemfile
+  - gemfiles/chef_11.10.4.gemfile
+  - gemfiles/chef_11.12.2.gemfile
 env:
   - API_KEY=somefakeapikey APPLICATION_KEY=somefakeapplicationkey

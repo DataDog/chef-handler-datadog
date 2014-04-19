@@ -1,10 +1,10 @@
 # encoding: utf-8
 
 # Describe any version dependencies here.
-
 %w(
-  10.14.0
-  10.30.2
+  11.8.2
+  11.10.4
+  11.12.2
 ).each do |tv|
   appraise "chef-#{tv}" do
     gem 'chef', tv
@@ -15,7 +15,7 @@ end
 # conflicts, specify best version here.
 %w(
   10.26.0
-  11.8.2
+  10.32.2
 ).each do |tv|
   appraise "chef-#{tv}" do
     gem 'chef', tv

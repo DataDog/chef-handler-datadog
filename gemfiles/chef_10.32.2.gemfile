@@ -2,11 +2,12 @@
 
 source "http://rubygems.org"
 
-gem "chef", "10.14.0"
+gem "chef", "10.32.2"
+gem "json", "1.7.7"
 
 group :localdev do
   gem "pry"
   gem "travis-lint"
 end
 
-gemspec :path=>".././"
+gemspec :path => "../"

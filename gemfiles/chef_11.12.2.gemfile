@@ -2,8 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "chef", "10.26.0"
-gem "json", "1.7.7"
+gem "chef", "11.12.2"
 
 group :localdev do
   gem "pry"

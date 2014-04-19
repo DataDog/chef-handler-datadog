@@ -1,5 +1,5 @@
 # encoding: utf-8
-require File.expand_path('../lib/chef-handler-datadog', __FILE__)
+require File.expand_path('../lib/chef_handler_datadog', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'chef-handler-datadog'

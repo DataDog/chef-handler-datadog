@@ -1,6 +1,11 @@
 Changes
 =======
 
+# 0.4.0 / Unreleased
+
+* [MISC] Updated versions of Chef tested
+* [MISC] Style update for source file name, parens
+
 # 0.3.0 / 2014-01-23
 
 * [MISC] **Breaking Change**: Chef 0.9.x is no longer supported. Extra code implemented for 0.9 versions has been removed. [@miketheman][]

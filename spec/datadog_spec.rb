@@ -68,18 +68,19 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       end
     end
 
-    context 'get and set tags' do
-      it 'gets the tags for the current node' do
+    context 'sets tags' do
+      it 'puts the tags for the current node' do
+        # We no longer need to query the tag api for current tags,
+        # rather udpate only the tags for the designated source type
         expect(a_request(:get, HOST_TAG_ENDPOINT + @node.name).with(
           :query => { 'api_key' => @handler.config[:api_key],
                       'application_key' => @handler.config[:application_key] },
-        )).to have_been_made.times(1)
-      end
+        )).to have_been_made.times(0)
 
-      it 'puts the tags for the current node' do
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
           :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key] },
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
           :body => { 'tags' => ['env:testing'] },
         )).to have_been_made.times(1)
       end
@@ -161,7 +162,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     it 'sets the role and env and tags' do
       expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
         :query => { 'api_key' => @handler.config[:api_key],
-                    'application_key' => @handler.config[:application_key] },
+                    'application_key' => @handler.config[:application_key],
+                    'source' => 'chef' },
         :body => hash_including(:tags => [
           'env:hostile', 'role:highlander', 'tag:the_one_and_only'
           ]),

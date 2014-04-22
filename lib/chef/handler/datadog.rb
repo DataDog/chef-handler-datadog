@@ -26,32 +26,7 @@ class Chef
         emit_metrics_to_datadog(hostname, run_status)
 
         # Build the correct event
-        event_title = ''
-        run_time = pluralize(run_status.elapsed_time, 'second')
-        if run_status.success?
-          alert_type = 'success'
-          event_priority = 'low'
-          event_title << "Chef completed in #{run_time} on #{hostname} "
-        else
-          event_title << "Chef failed in #{run_time} on #{hostname} "
-        end
-
-        event_data = "Chef updated #{run_status.updated_resources.length} resources out of #{run_status.all_resources.length} resources total."
-
-        if run_status.failed?
-          alert_type = 'error'
-          event_priority = 'normal'
-          event_data << "\n@@@\n#{run_status.formatted_exception}\n@@@\n"
-          event_data << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
-        end
-
-        if run_status.updated_resources.length.to_i > 0
-          event_data << "\n@@@\n"
-          run_status.updated_resources.each do |r|
-            event_data << "- #{r} (#{r.defined_at})\n"
-          end
-          event_data << "\n@@@\n"
-        end
+        alert_type, event_priority, event_title, event_data = build_event_data(hostname, run_status)
 
         # Submit the details back to Datadog
         begin
@@ -121,6 +96,41 @@ class Chef
       end
 
       private
+
+      # Build the Event data for submission
+      #
+      # @param hostname [String] resolved hostname to attach to Event
+      # @param run_status [Chef::RunStatus] current run status
+      # @return [Array] alert_type, event_priority, event_title, event_data
+      def build_event_data(hostname, run_status)
+        run_time = pluralize(run_status.elapsed_time, 'second')
+
+        # This is the first line of the Event data, the rest is appended here.
+        event_data = "Chef updated #{run_status.updated_resources.length} resources out of #{run_status.all_resources.length} resources total."
+
+        if run_status.success?
+          alert_type = 'success'
+          event_priority = 'low'
+          event_title = "Chef completed in #{run_time} on #{hostname} "
+        else
+          alert_type = 'error'
+          event_priority = 'normal'
+          event_title = "Chef failed in #{run_time} on #{hostname} "
+          event_data << "\n@@@\n#{run_status.formatted_exception}\n@@@\n"
+          event_data << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
+        end
+
+        if run_status.updated_resources.length.to_i > 0
+          event_data << "\n@@@\n"
+          run_status.updated_resources.each do |r|
+            event_data << "- #{r} (#{r.defined_at})\n"
+          end
+          event_data << "\n@@@\n"
+        end
+
+        # Return resolved data
+        [alert_type, event_priority, event_title, event_data]
+      end
 
       # Emit Chef metrics to Datadog
       #

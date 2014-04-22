@@ -2,7 +2,7 @@ PATH
   remote: ../
   specs:
     chef-handler-datadog (0.4.0.alpha)
-      dogapi (>= 1.2)
+      dogapi (>= 1.6)
 
 GEM
   remote: http://rubygems.org/

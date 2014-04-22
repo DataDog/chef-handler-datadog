@@ -91,6 +91,13 @@ class Chef
           alert_type = 'error'
           event_priority = 'normal'
           event_title = "Chef failed in #{run_time} on #{hostname} "
+
+          if @config[:notify_on_failure]
+            handles = @config[:notify_on_failure]
+            # convert the notification handle array to a string
+            event_body << "\nAlerting: #{handles.join(' ')}\n"
+          end
+
           event_body << "\n@@@\n#{run_status.formatted_exception}\n@@@\n"
           event_body << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
         end

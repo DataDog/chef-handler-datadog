@@ -136,6 +136,42 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     end
   end
 
+  context 'hostname' do
+    before(:each) do
+      @node = Chef::Node.build('chef.handler.datadog.test-hostname')
+      @node.send(:chef_environment, 'testing')
+
+      @run_context = Chef::RunContext.new(@node, {}, @events)
+      @run_status = Chef::RunStatus.new(@node, @events)
+      @expected_time = Time.now
+      Time.stub(:now).and_return(@expected_time, @expected_time + 5)
+      @run_status.start_clock
+      @run_status.stop_clock
+      @run_status.run_context = @run_context
+    end
+
+    it 'uses the node.name when no config specified' do
+      @handler.run_report_unsafe(@run_status)
+
+      expect(a_request(:post, EVENTS_ENDPOINT).with(
+        :query => { 'api_key' => @handler.config[:api_key] },
+        :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name}"),
+        :body => hash_including(:host => @node.name),
+      )).to have_been_made.times(1)
+    end
+
+    it 'uses the specified hostname when provided' do
+      @handler.config[:hostname] = 'my-imaginary-hostname.local'
+      @handler.run_report_unsafe(@run_status)
+
+      expect(a_request(:post, EVENTS_ENDPOINT).with(
+        :query => { 'api_key' => @handler.config[:api_key] },
+        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on my-imaginary-hostname.local'),
+        :body => hash_including(:host => 'my-imaginary-hostname.local'),
+      )).to have_been_made.times(1)
+    end
+  end
+
   describe 'handles tags correctly' do
     before(:each) do
       @node = Chef::Node.build('chef.handler.datadog.test-tags')

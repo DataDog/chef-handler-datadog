@@ -20,7 +20,7 @@ class Chef
 
       def report
         # resolve correct hostname
-        hostname = select_hostname(run_status.node)
+        hostname = select_hostname(run_status.node, config)
 
         # Send the metrics
         emit_metrics_to_datadog(hostname, run_status)
@@ -208,13 +208,16 @@ class Chef
       # node's `ec2` attribute existence to make the decision.
       #
       # @param node [Chef::Node] from `run_status`, can feasibly any `node`
+      # @param config [Hash] config object passed in to handler
       # @return [String] the hostname decided upon
-      def select_hostname(node)
+      def select_hostname(node, config)
         use_ec2_instance_id = !config.key?(:use_ec2_instance_id) ||
                                 (config.key?(:use_ec2_instance_id) &&
                                   config[:use_ec2_instance_id])
 
-        if use_ec2_instance_id && node.attribute?('ec2') && node.ec2.attribute?('instance_id')
+        if config[:hostname]
+          config[:hostname]
+        elsif use_ec2_instance_id && node.attribute?('ec2') && node.ec2.attribute?('instance_id')
           node.ec2.instance_id
         else
           node.name

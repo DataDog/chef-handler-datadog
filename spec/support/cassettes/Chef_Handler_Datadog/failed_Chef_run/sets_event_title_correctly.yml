@@ -5,7 +5,7 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.total","points":[[1390096494,0.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: ! '{"series":[{"metric":"chef.resources.total","points":[[1398157261,0.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept:
       - ! '*/*'
@@ -21,9 +21,9 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Sun, 19 Jan 2014 01:54:44 GMT
+      - Tue, 22 Apr 2014 09:01:00 GMT
       Server:
-      - dogdispatcher/4.10.0
+      - dogdispatcher/4.12.1
       Content-Length:
       - '15'
       Connection:
@@ -32,13 +32,13 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"status":"ok"}'
     http_version: 
-  recorded_at: Sun, 19 Jan 2014 01:54:54 GMT
+  recorded_at: Tue, 22 Apr 2014 09:01:01 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.updated","points":[[1390096494,0.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: ! '{"series":[{"metric":"chef.resources.updated","points":[[1398157261,0.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept:
       - ! '*/*'
@@ -54,9 +54,9 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Sun, 19 Jan 2014 01:54:48 GMT
+      - Tue, 22 Apr 2014 09:01:01 GMT
       Server:
-      - dogdispatcher/4.10.0
+      - dogdispatcher/4.12.1
       Content-Length:
       - '15'
       Connection:
@@ -65,13 +65,13 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"status":"ok"}'
     http_version: 
-  recorded_at: Sun, 19 Jan 2014 01:54:54 GMT
+  recorded_at: Tue, 22 Apr 2014 09:01:01 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1390096494,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: ! '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1398157261,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept:
       - ! '*/*'
@@ -87,9 +87,9 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Sun, 19 Jan 2014 01:54:48 GMT
+      - Tue, 22 Apr 2014 09:01:02 GMT
       Server:
-      - dogdispatcher/4.10.0
+      - dogdispatcher/4.12.1
       Content-Length:
       - '15'
       Connection:
@@ -98,14 +98,14 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"status":"ok"}'
     http_version: 
-  recorded_at: Sun, 19 Jan 2014 01:54:54 GMT
+  recorded_at: Tue, 22 Apr 2014 09:01:01 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
     body:
       encoding: UTF-8
       string: ! '{"msg_text":"Chef updated 0 resources out of 0 resources total.\n@@@\nChef::Exceptions::UnsupportedAction:
-        Something awry.\n@@@\n\n@@@\nfile.rb:2\nfile.rb:1\n@@@\n","date_happened":1390096494,"msg_title":"Chef
+        Something awry.\n@@@\n\n@@@\nfile.rb:2\nfile.rb:1\n@@@\n","date_happened":1398157261,"msg_title":"Chef
         failed in 2 seconds on chef.handler.datadog.test-failed ","priority":"normal","parent":null,"tags":[],"aggregation_key":"chef.handler.datadog.test-failed","alert_type":"error","event_type":"config_management.run","source_type_name":"chef","title":"Chef
         failed in 2 seconds on chef.handler.datadog.test-failed ","text":"Chef updated
         0 resources out of 0 resources total.\n@@@\nChef::Exceptions::UnsupportedAction:
@@ -125,9 +125,9 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Sun, 19 Jan 2014 01:54:48 GMT
+      - Tue, 22 Apr 2014 09:01:04 GMT
       Server:
-      - dogdispatcher/4.10.0
+      - dogdispatcher/4.12.1
       Content-Length:
       - '474'
       Connection:
@@ -135,51 +135,16 @@ http_interactions:
     body:
       encoding: US-ASCII
       string: ! '{"status": "ok", "event": {"priority": "normal", "date_happened":
-        1390096494, "handle": null, "title": "Chef failed in 2 seconds on chef.handler.datadog.test-failed
-        ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2111137870265175278",
+        1398157261, "handle": null, "title": "Chef failed in 2 seconds on chef.handler.datadog.test-failed
+        ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2246375237107537507",
         "text": "Chef updated 0 resources out of 0 resources total.\n@@@\nChef::Exceptions::UnsupportedAction:
         Something awry.\n@@@\n\n@@@\nfile.rb:2\nfile.rb:1\n@@@\n", "tags": [], "related_event_id":
-        null, "id": 2111137870265175278}}'
+        null, "id": 2246375237107537507}}'
     http_version: 
-  recorded_at: Sun, 19 Jan 2014 01:54:54 GMT
-- request:
-    method: get
-    uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-failed?api_key=<API_KEY>&application_key=<APPLICATION_KEY>
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - ! '*/*'
-      User-Agent:
-      - Ruby
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Cache-Control:
-      - no-cache
-      Content-Type:
-      - application/json
-      Date:
-      - Sun, 19 Jan 2014 01:54:49 GMT
-      Pragma:
-      - no-cache
-      Server:
-      - gunicorn/0.17.4
-      Content-Length:
-      - '44'
-      Connection:
-      - keep-alive
-    body:
-      encoding: US-ASCII
-      string: ! '{"tags": ["env:hostile", "role:highlander"]}'
-    http_version: 
-  recorded_at: Sun, 19 Jan 2014 01:54:54 GMT
+  recorded_at: Tue, 22 Apr 2014 09:01:01 GMT
 - request:
     method: put
-    uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-failed?api_key=<API_KEY>&application_key=<APPLICATION_KEY>
+    uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-failed?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
     body:
       encoding: UTF-8
       string: ! '{"tags":["env:hostile","role:highlander","tag:the_one_and_only"]}'
@@ -200,19 +165,19 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Sun, 19 Jan 2014 01:54:49 GMT
+      - Tue, 22 Apr 2014 09:01:05 GMT
       Pragma:
       - no-cache
       Server:
       - gunicorn/0.17.4
       Content-Length:
-      - '88'
+      - '112'
       Connection:
       - keep-alive
     body:
       encoding: US-ASCII
       string: ! '{"host": "chef.handler.datadog.test-failed", "tags": ["env:hostile",
-        "role:highlander"]}'
+        "role:highlander", "tag:the_one_and_only"]}'
     http_version: 
-  recorded_at: Sun, 19 Jan 2014 01:54:54 GMT
-recorded_with: VCR 2.8.0
+  recorded_at: Tue, 22 Apr 2014 09:01:01 GMT
+recorded_with: VCR 2.9.0

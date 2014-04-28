@@ -91,10 +91,10 @@ class Chef
             )
             fail ArgumentError, 'Missing Datadog Application Key'
           else
-            new_host_tags = get_combined_tags(hostname, node)
+            new_host_tags = get_combined_tags(node)
 
-            # Replace all tags with the new tags
-            rc = @dog.update_tags(hostname, new_host_tags)
+            # Replace all Chef tags with the found Chef tags
+            rc = @dog.update_tags(hostname, new_host_tags, 'chef')
             begin
               # See FIXME above about why I feel dirty repeating this code here
               if rc.length < 2
@@ -135,28 +135,21 @@ class Chef
         Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
       end
 
-      # Call Datadog API for a given hostname and retrieve the current list
-      # of Datadog tags - not the same as Chef 'tags' - rather all tags in
-      # are `key:value` e.g. `role:database-master`.
-      # Build up an array of Datadog tags to send back
+      # Build up an array of Chef tags to send back
       #
-      # @param hostname [String]
-      # @return [Array] an array of current Datadog tags, roles, env
-      def get_combined_tags(hostname, node)
-        host_tags = get_host_tags(hostname)
-        host_tags << get_node_env(node)
+      # Selects all [env, roles, tags] from the Node's object and reformats
+      # them to `key:value` e.g. `role:database-master`.
+      #
+      # @param node [Chef::Node]
+      # @return [Array] current Chef env, roles, tags
+      def get_combined_tags(node)
+        chef_env = get_node_env(node).split # converts a string into an array
 
         chef_roles = get_node_roles(node)
         chef_tags = get_node_tags(node)
 
-        # Combine (union) all arrays. Removes dupes, preserves non-Chef tags.
-        host_tags | chef_roles | chef_tags
-      end
-
-      # Get current tags, drop any that will be replaced
-      def get_host_tags(hostname)
-        tags = @dog.host_tags(hostname)[1]['tags'] || []
-        tags.delete_if { |tag| tag.start_with?('role:', 'env:', 'tag:') }
+        # Combine (union) all arrays. Removes duplicates if found.
+        chef_env | chef_roles | chef_tags
       end
 
       def get_node_roles(node)

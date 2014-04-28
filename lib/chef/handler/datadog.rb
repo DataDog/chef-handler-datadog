@@ -26,62 +26,12 @@ class Chef
         emit_metrics_to_datadog(hostname, run_status)
 
         # Build the correct event
-        event_title = ''
-        run_time = pluralize(run_status.elapsed_time, 'second')
-        if run_status.success?
-          alert_type = 'success'
-          event_priority = 'low'
-          event_title << "Chef completed in #{run_time} on #{hostname} "
-        else
-          event_title << "Chef failed in #{run_time} on #{hostname} "
-        end
-
-        event_data = "Chef updated #{run_status.updated_resources.length} resources out of #{run_status.all_resources.length} resources total."
-
-        if run_status.failed?
-          alert_type = 'error'
-          event_priority = 'normal'
-          event_data << "\n@@@\n#{run_status.formatted_exception}\n@@@\n"
-          event_data << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
-        end
-
-        if run_status.updated_resources.length.to_i > 0
-          event_data << "\n@@@\n"
-          run_status.updated_resources.each do |r|
-            event_data << "- #{r} (#{r.defined_at})\n"
-          end
-          event_data << "\n@@@\n"
-        end
+        event_data = build_event_data(hostname, run_status)
 
         # Submit the details back to Datadog
         begin
           # Send the Event data
-          evt = @dog.emit_event(Dogapi::Event.new(event_data,
-                                                  :msg_title => event_title,
-                                                  :event_type => 'config_management.run',
-                                                  :event_object => hostname,
-                                                  :alert_type => alert_type,
-                                                  :priority => event_priority,
-                                                  :source_type_name => 'chef'
-          ), :host => hostname)
-
-          begin
-            # FIXME: nice-to-have: abstract format of return value away a bit
-            # in dogapi directly. See https://github.com/DataDog/dogapi-rb/issues/18
-            if evt.length < 2
-              Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
-            else
-              # [http_response_code, {"event" => {"url" => "...", ...}}]
-              # 2xx means ok
-              if evt[0].to_i / 100 != 2
-                Chef::Log.warn("Could not submit event to Datadog (HTTP call failed): #{evt[0]}")
-              else
-                Chef::Log.debug("Successfully submitted Chef event to Datadog for #{hostname} at #{evt[1]['event']['url']}")
-              end
-            end
-          rescue
-            Chef::Log.warn("Could not determine whether chef run was successfully submitted to Datadog: #{evt}")
-          end
+          emit_event_to_datadog(hostname, event_data)
 
           # Update tags
           if config[:application_key].nil?
@@ -114,13 +64,90 @@ class Chef
           Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
           Chef::Log.error('Data to be submitted was:')
           Chef::Log.error(event_title)
-          Chef::Log.error(event_data)
+          Chef::Log.error(event_body)
           Chef::Log.error('Tags to be set for this run:')
           Chef::Log.error(new_host_tags)
         end
       end
 
       private
+
+      # Build the Event data for submission
+      #
+      # @param hostname [String] resolved hostname to attach to Event
+      # @param run_status [Chef::RunStatus] current run status
+      # @return [Array] alert_type, event_priority, event_title, event_body
+      def build_event_data(hostname, run_status)
+        run_time = pluralize(run_status.elapsed_time, 'second')
+
+        # This is the first line of the Event body, the rest is appended here.
+        event_body = "Chef updated #{run_status.updated_resources.length} resources out of #{run_status.all_resources.length} resources total."
+
+        if run_status.success?
+          alert_type = 'success'
+          event_priority = 'low'
+          event_title = "Chef completed in #{run_time} on #{hostname} "
+        else
+          alert_type = 'error'
+          event_priority = 'normal'
+          event_title = "Chef failed in #{run_time} on #{hostname} "
+
+          if @config[:notify_on_failure]
+            handles = @config[:notify_on_failure]
+            # convert the notification handle array to a string
+            event_body << "\nAlerting: #{handles.join(' ')}\n"
+          end
+
+          event_body << "\n@@@\n#{run_status.formatted_exception}\n@@@\n"
+          event_body << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
+        end
+
+        if run_status.updated_resources.length.to_i > 0
+          event_body << "\n@@@\n"
+          run_status.updated_resources.each do |r|
+            event_body << "- #{r} (#{r.defined_at})\n"
+          end
+          event_body << "\n@@@\n"
+        end
+
+        # Return resolved data
+        [alert_type, event_priority, event_title, event_body]
+      end
+
+      # Emit Event to Datadog Event Stream
+      #
+      # @param hostname [String] resolved hostname to attach to Event
+      # @param event_params [Array] all the configurables to build a valid Event
+      def emit_event_to_datadog(hostname, event_data)
+        alert_type, event_priority, event_title, event_body = event_data
+
+        evt = @dog.emit_event(Dogapi::Event.new(event_body,
+                                                :msg_title => event_title,
+                                                :event_type => 'config_management.run',
+                                                :event_object => hostname,
+                                                :alert_type => alert_type,
+                                                :priority => event_priority,
+                                                :source_type_name => 'chef'
+        ), :host => hostname)
+
+        begin
+          # FIXME: nice-to-have: abstract format of return value away a bit
+          # in dogapi directly. See https://github.com/DataDog/dogapi-rb/issues/18
+          if evt.length < 2
+            Chef::Log.warn("Unexpected response from Datadog Event API: #{evt}")
+          else
+            # [http_response_code, {"event" => {"url" => "...", ...}}]
+            # 2xx means ok
+            if evt[0].to_i / 100 != 2
+              Chef::Log.warn("Could not submit event to Datadog (HTTP call failed): #{evt[0]}")
+            else
+              Chef::Log.debug("Successfully submitted Chef event to Datadog for #{hostname} at #{evt[1]['event']['url']}")
+            end
+          end
+        rescue
+          Chef::Log.warn("Could not determine whether chef run was successfully submitted to Datadog: #{evt}")
+        end
+      end
 
       # Emit Chef metrics to Datadog
       #

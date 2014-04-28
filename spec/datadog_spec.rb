@@ -242,6 +242,16 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         :body => hash_including(:priority => 'normal'),
       )).to have_been_made.times(1)
     end
+
+    it 'sets alert handles when specified' do
+      @handler.config[:notify_on_failure] = ['@alice', '@bob']
+      @handler.run_report_unsafe(@run_status)
+
+      expect(a_request(:post, EVENTS_ENDPOINT).with(
+        :query => { 'api_key' => @handler.config[:api_key] },
+        :body => /Alerting: @alice @bob/
+      )).to have_been_made.times(1)
+    end
   end
 
   describe 'updated resources' do

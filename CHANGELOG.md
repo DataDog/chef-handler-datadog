@@ -3,6 +3,7 @@ Changes
 
 # 0.4.0 / Unreleased
 
+* [FEATURE] Allow specification of a `:hostname` to config to override `node.name`, [#41][] [@miketheman][]
 * [FEATURE] Allow passing an array of handles in config to alert when Chef fails, [#29][] [@miketheman][]
 * [OPTIMIZE] Use new version of `dogapi` lib to submit tags for Chef only, [#28][] [@miketheman][]
 * [MISC] Updated versions of Chef tested
@@ -44,6 +45,7 @@ And all other versions were prior to this. See git history for more.
 [#34]: https://github.com/DataDog/chef-handler-datadog/issues/34
 [#37]: https://github.com/DataDog/chef-handler-datadog/issues/37
 [#39]: https://github.com/DataDog/chef-handler-datadog/issues/39
+[#41]: https://github.com/DataDog/chef-handler-datadog/issues/41
 [@alq]: https://github.com/alq
 [@miketheman]: https://github.com/miketheman
 [@remh]: https://github.com/remh

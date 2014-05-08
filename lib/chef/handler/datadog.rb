@@ -35,9 +35,9 @@ class Chef
 
           # Update tags
           if config[:application_key].nil?
-            Chef::Log.warn("You need an application key to let Chef tag your nodes " \
-              "in Datadog. Visit https://app.datadoghq.com/account/settings#api to " \
-                "create one and update your datadog attributes in the datadog cookbook."
+            Chef::Log.warn('You need an application key to let Chef tag your nodes ' \
+              'in Datadog. Visit https://app.datadoghq.com/account/settings#api to ' \
+                'create one and update your datadog attributes in the datadog cookbook.'
             )
             fail ArgumentError, 'Missing Datadog Application Key'
           else

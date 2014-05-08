@@ -22,7 +22,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'dotenv'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'
-  gem.add_development_dependency 'rubocop', '~> 0.20.1'
+  gem.add_development_dependency 'rubocop', '~> 0.21.0'
   gem.add_development_dependency 'simplecov'
   gem.add_development_dependency 'vcr'
   gem.add_development_dependency 'webmock'

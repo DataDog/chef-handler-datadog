@@ -1,7 +1,7 @@
 Changes
 =======
 
-# 0.4.0 / Unreleased
+# 0.4.0 / 2014-05-08
 
 * [FEATURE] Allow specification of a `:hostname` to config to override `node.name`, [#41][] [@miketheman][]
 * [FEATURE] Allow passing an array of handles in config to alert when Chef fails, [#29][] [@miketheman][]

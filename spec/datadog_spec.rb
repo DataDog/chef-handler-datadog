@@ -32,6 +32,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_context = Chef::RunContext.new(@node, {}, @events)
       @run_status = Chef::RunStatus.new(@node, @events)
 
+      @node.stub(:[]).with(:roles) { [] }
+
       @expected_time = Time.now
       Time.stub(:now).and_return(@expected_time, @expected_time + 5)
       @run_status.start_clock
@@ -93,6 +95,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @node.send(:chef_environment, 'testing')
 
       @node.automatic_attrs['ec2'] = { :instance_id => 'i-123456' }
+      @node.stub(:[]).with(:roles) { [] }
 
       @run_context = Chef::RunContext.new(@node, {}, @events)
       @run_status = Chef::RunStatus.new(@node, @events)
@@ -140,6 +143,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     before(:each) do
       @node = Chef::Node.build('chef.handler.datadog.test-hostname')
       @node.send(:chef_environment, 'testing')
+      @node.stub(:[]).with(:roles) { [] }
 
       @run_context = Chef::RunContext.new(@node, {}, @events)
       @run_status = Chef::RunStatus.new(@node, @events)
@@ -177,8 +181,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @node = Chef::Node.build('chef.handler.datadog.test-tags')
 
       @node.send(:chef_environment, 'hostile')
-      @node.send(:run_list, 'role[highlander]')
       @node.normal.tags = ['the_one_and_only']
+      @node.stub(:[]).with(:roles) { ['highlander'] }
 
       @events = Chef::EventDispatch::Dispatcher.new
       @run_context = Chef::RunContext.new(@node, {}, @events)
@@ -212,8 +216,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @node = Chef::Node.build('chef.handler.datadog.test-noapp')
 
       @node.send(:chef_environment, 'hostile')
-      @node.send(:run_list, 'role[highlander]')
       @node.normal.tags = ['the_one_and_only']
+      @node.stub(:[]).with(:roles) { ['highlander'] }
 
       @events = Chef::EventDispatch::Dispatcher.new
       @run_context = Chef::RunContext.new(@node, {}, @events)
@@ -241,8 +245,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @node = Chef::Node.build('chef.handler.datadog.test-failed')
 
       @node.send(:chef_environment, 'hostile')
-      @node.send(:run_list, 'role[highlander]')
       @node.normal.tags = ['the_one_and_only']
+      @node.stub(:[]).with(:roles) { ['highlander'] }
 
       @events = Chef::EventDispatch::Dispatcher.new
       @run_context = Chef::RunContext.new(@node, {}, @events)
@@ -294,6 +298,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     before(:each) do
       @node = Chef::Node.build('chef.handler.datadog.test-resources')
       @node.send(:chef_environment, 'resources')
+      @node.stub(:[]).with(:roles) { [] }
+
       @events = Chef::EventDispatch::Dispatcher.new
       @run_context = Chef::RunContext.new(@node, {}, @events)
       @run_status = Chef::RunStatus.new(@node, @events)

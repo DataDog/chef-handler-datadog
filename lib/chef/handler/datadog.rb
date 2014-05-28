@@ -179,8 +179,10 @@ class Chef
         chef_env | chef_roles | chef_tags
       end
 
+      # Include all the roles defined on the server, not just in the
+      # runlist. However, omit any that contain double underscores "__"
       def get_node_roles(node)
-        node.run_list.roles.map! { |role| 'role:' + role }
+        node[:roles].reject { |r| r.include?('__') }.map { |role| 'role:' + role }
       end
 
       def get_node_env(node)

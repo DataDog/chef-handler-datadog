@@ -1,6 +1,7 @@
 # encoding: utf-8
 require 'rubygems'
 require 'chef/handler'
+require 'chef/mash'
 require 'dogapi'
 
 class Chef
@@ -13,9 +14,9 @@ class Chef
       # "Account Settings" page here: https://app.datadoghq.com/account/settings
       # It should be passed along from the node/role/environemnt attributes, as the default is nil.
       def initialize(config = {})
-        @config = config
+        @config = Mash.new(config)
         # If *any* api_key is not provided, this will fail immediately.
-        @dog = Dogapi::Client.new(config[:api_key], config[:application_key])
+        @dog = Dogapi::Client.new(@config[:api_key], @config[:application_key])
       end
 
       def report

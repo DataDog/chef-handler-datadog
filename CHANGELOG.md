@@ -1,6 +1,12 @@
 Changes
 =======
 
+# 0.5.0 / Unreleased
+
+* [FEATURE] Allow credentials to be passed as string keys vs symbols, [#50][] [@dwradcliffe][]
+* [MISC] Testing framework updates, [@miketheman][]
+* [MISC] Doc updates
+
 # 0.4.0 / 2014-05-08
 
 * [FEATURE] Allow specification of a `:hostname` to config to override `node.name`, [#41][] [@miketheman][]
@@ -46,6 +52,8 @@ And all other versions were prior to this. See git history for more.
 [#37]: https://github.com/DataDog/chef-handler-datadog/issues/37
 [#39]: https://github.com/DataDog/chef-handler-datadog/issues/39
 [#41]: https://github.com/DataDog/chef-handler-datadog/issues/41
+[#50]: https://github.com/DataDog/chef-handler-datadog/issues/50
 [@alq]: https://github.com/alq
+[@dwradcliffe]: https://github.com/dwradcliffe
 [@miketheman]: https://github.com/miketheman
 [@remh]: https://github.com/remh

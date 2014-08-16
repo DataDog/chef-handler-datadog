@@ -14,4 +14,4 @@ CLEAN.include(['coverage/', 'doc/', 'pkg/'])
 
 RSpec::Core::RakeTask.new(:spec)
 
-Rubocop::RakeTask.new(:cops)
+RuboCop::RakeTask.new(:cops)

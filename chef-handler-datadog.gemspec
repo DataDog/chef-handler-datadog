@@ -3,8 +3,8 @@ require File.expand_path('../lib/chef_handler_datadog', __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'chef-handler-datadog'
-  gem.summary       = %q(Chef Handler for DataDog events and metrics)
-  gem.description   = %q(This Handler will report the events and metrics for a chef-client run to DataDog.)
+  gem.summary       = 'Chef Handler reports events and metrics to Datadog'
+  gem.description   = 'This Handler will report the events and metrics for a chef-client run to Datadog.'
   gem.license       = 'BSD'
   gem.version       = ChefHandlerDatadog::VERSION
 
@@ -21,8 +21,8 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'chef', '>= 10', '<= 12'
   gem.add_development_dependency 'dotenv'
   gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'rspec'
-  gem.add_development_dependency 'rubocop', '~> 0.21.0'
+  gem.add_development_dependency 'rspec', '~> 3.0.0'
+  gem.add_development_dependency 'rubocop', '~> 0.25.0'
   gem.add_development_dependency 'simplecov'
   gem.add_development_dependency 'vcr'
   gem.add_development_dependency 'webmock'

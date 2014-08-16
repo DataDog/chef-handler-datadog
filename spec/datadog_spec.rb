@@ -33,7 +33,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_status = Chef::RunStatus.new(@node, @events)
 
       @expected_time = Time.now
-      Time.stub(:now).and_return(@expected_time, @expected_time + 5)
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 5)
       @run_status.start_clock
       @run_status.stop_clock
 
@@ -97,7 +97,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_context = Chef::RunContext.new(@node, {}, @events)
       @run_status = Chef::RunStatus.new(@node, @events)
       @expected_time = Time.now
-      Time.stub(:now).and_return(@expected_time, @expected_time + 5)
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 5)
       @run_status.start_clock
       @run_status.stop_clock
       @run_status.run_context = @run_context
@@ -144,7 +144,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_context = Chef::RunContext.new(@node, {}, @events)
       @run_status = Chef::RunStatus.new(@node, @events)
       @expected_time = Time.now
-      Time.stub(:now).and_return(@expected_time, @expected_time + 5)
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 5)
       @run_status.start_clock
       @run_status.stop_clock
       @run_status.run_context = @run_context
@@ -185,7 +185,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_status = Chef::RunStatus.new(@node, @events)
 
       @expected_time = Time.now
-      Time.stub(:now).and_return(@expected_time, @expected_time + 5)
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 5)
       @run_status.start_clock
       @run_status.stop_clock
 
@@ -220,7 +220,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_status = Chef::RunStatus.new(@node, @events)
 
       @expected_time = Time.now
-      Time.stub(:now).and_return(@expected_time, @expected_time + 5)
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 5)
       @run_status.start_clock
       @run_status.stop_clock
 
@@ -249,7 +249,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_status = Chef::RunStatus.new(@node, @events)
 
       @expected_time = Time.now
-      Time.stub(:now).and_return(@expected_time, @expected_time + 2)
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 2)
       @run_status.start_clock
       @run_status.stop_clock
 
@@ -303,7 +303,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_context.resource_collection.all_resources.replace(all_resources)
 
       @expected_time = Time.now
-      Time.stub(:now).and_return(@expected_time, @expected_time + 8)
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 8)
       @run_status.start_clock
       @run_status.stop_clock
 

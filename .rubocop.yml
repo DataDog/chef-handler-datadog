@@ -36,3 +36,7 @@ CyclomaticComplexity:
 # be a little lofty.
 MethodLength:
   Max: 78
+
+# TODO: select_hostname, report are both higher than the default of 7
+PerceivedComplexity:
+  Max: 9

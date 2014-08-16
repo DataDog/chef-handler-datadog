@@ -2,7 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "chef", "11.10.4"
+gem "chef", "11.12.8"
 
 group :localdev do
   gem "guard"

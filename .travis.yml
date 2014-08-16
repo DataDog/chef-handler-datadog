@@ -7,6 +7,7 @@ gemfile:
   - gemfiles/chef_10.32.2.gemfile
   - gemfiles/chef_11.8.2.gemfile
   - gemfiles/chef_11.10.4.gemfile
-  - gemfiles/chef_11.12.2.gemfile
+  - gemfiles/chef_11.12.8.gemfile
+  - gemfiles/chef_11.14.2.gemfile
 env:
   - API_KEY=somefakeapikey APPLICATION_KEY=somefakeapplicationkey

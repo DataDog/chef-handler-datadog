@@ -6,7 +6,11 @@ gem "chef", "10.26.0"
 gem "json", "1.7.7"
 
 group :localdev do
+  gem "guard"
+  gem "guard-rspec"
+  gem "guard-rubocop"
   gem "pry"
+  gem "terminal-notifier-guard"
   gem "travis-lint"
 end
 

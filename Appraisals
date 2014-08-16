@@ -4,7 +4,8 @@
 %w(
   11.8.2
   11.10.4
-  11.12.2
+  11.12.8
+  11.14.2
 ).each do |tv|
   appraise "chef-#{tv}" do
     gem 'chef', tv

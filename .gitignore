@@ -58,3 +58,6 @@ Gemfile.lock
 
 # Any environment-specific files
 .env
+
+# Ignore Appraisal lock files
+gemfiles/*.gemfile.lock

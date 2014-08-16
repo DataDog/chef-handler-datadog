@@ -23,6 +23,15 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     )
   end
 
+  describe 'initialize' do
+    it 'should allow config hash to have string keys' do
+      Chef::Handler::Datadog.new(
+        'api_key'         => API_KEY,
+        'application_key' => APPLICATION_KEY,
+      )
+    end
+  end
+
   describe 'reports metrics event and sets tags' do
     # Construct a good run_status
     before(:each) do

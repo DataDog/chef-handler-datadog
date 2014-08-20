@@ -86,7 +86,7 @@ class Chef
           alert_type = 'error'
           event_title = "Chef failed during compile phase on #{hostname} "
           event_priority = 'normal'
-          event_body = 'Chef was unable to complete a run, an error during compilation may have occured.'
+          event_body = 'Chef was unable to complete a run, an error during compilation may have occurred.'
 
           return [alert_type, event_priority, event_title, event_body]
         end

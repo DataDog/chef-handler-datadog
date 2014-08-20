@@ -3,6 +3,7 @@ Changes
 
 # 0.5.0 / Unreleased
 
+* [BUGFIX] Handle cases where Chef fails during compile phase, [#51][] [@miketheman][]
 * [FEATURE] Allow credentials to be passed as string keys vs symbols, [#50][] [@dwradcliffe][]
 * [MISC] Testing framework updates, [@miketheman][]
 * [MISC] Doc updates
@@ -53,6 +54,7 @@ And all other versions were prior to this. See git history for more.
 [#39]: https://github.com/DataDog/chef-handler-datadog/issues/39
 [#41]: https://github.com/DataDog/chef-handler-datadog/issues/41
 [#50]: https://github.com/DataDog/chef-handler-datadog/issues/50
+[#51]: https://github.com/DataDog/chef-handler-datadog/issues/51
 [@alq]: https://github.com/alq
 [@dwradcliffe]: https://github.com/dwradcliffe
 [@miketheman]: https://github.com/miketheman

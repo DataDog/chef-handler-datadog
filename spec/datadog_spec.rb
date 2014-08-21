@@ -257,6 +257,17 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_context = Chef::RunContext.new(@node, {}, @events)
       @run_status = Chef::RunStatus.new(@node, @events)
 
+      all_resources = [
+        Chef::Resource.new('whiskers'),
+        Chef::Resource.new('paws'),
+        Chef::Resource.new('ears'),
+        Chef::Resource.new('nose'),
+        Chef::Resource.new('tail'),
+        Chef::Resource.new('fur')
+        ]
+      all_resources.map { |r| r.updated_by_last_action(true) }
+      @run_context.resource_collection.all_resources.replace(all_resources)
+
       @expected_time = Time.now
       allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 2)
       @run_status.start_clock
@@ -266,7 +277,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       # Construct an exception
       exception = Chef::Exceptions::UnsupportedAction.new('Something awry.')
-      exception.set_backtrace(['file.rb:2', 'file.rb:1'])
+      exception.set_backtrace(['whiskers.rb:2', 'paws.rb:1', 'file.rb:2', 'file.rb:1'])
       @run_status.exception = exception
 
       # Run the report

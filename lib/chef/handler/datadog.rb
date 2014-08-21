@@ -96,6 +96,9 @@ class Chef
         # This is the first line of the Event body, the rest is appended here.
         event_body = "Chef updated #{run_status.updated_resources.length} resources out of #{run_status.all_resources.length} resources total."
 
+        # Show the updated resource list, truncated when failed to 5
+        event_body << updated_resource_list(run_status)
+
         if run_status.success?
           alert_type = 'success'
           event_priority = 'low'
@@ -111,20 +114,34 @@ class Chef
             event_body << "\nAlerting: #{handles.join(' ')}\n"
           end
 
-          event_body << "\n@@@\n#{run_status.formatted_exception}\n@@@\n"
-          event_body << "\n@@@\n#{run_status.backtrace.join("\n")}\n@@@\n"
-        end
-
-        if run_status.updated_resources.length.to_i > 0
-          event_body << "\n@@@\n"
-          run_status.updated_resources.each do |r|
-            event_body << "- #{r} (#{r.defined_at})\n"
-          end
-          event_body << "\n@@@\n"
+          event_body << "\n$$$\n#{run_status.formatted_exception}\n$$$\n"
+          event_body << "\n$$$\n#{run_status.backtrace.join("\n")}\n$$$\n"
         end
 
         # Return resolved data
         [alert_type, event_priority, event_title, event_body]
+      end
+
+      # Compose a list of resources updated during a run.
+      # Shorten the list when there is a failure for stacktrace debugging
+      #
+      # @param run_status [Chef::RunStatus] current run status
+      # @return [String] formatted list of resources updated, truncated on failure
+      def updated_resource_list(run_status)
+        # No resources updated? Go away.
+        return '' unless run_status.updated_resources.length.to_i > 0
+
+        if run_status.failed?
+          report_resources = run_status.updated_resources.last(5)
+        else
+          report_resources = run_status.updated_resources
+        end
+
+        event_body = "\n$$$\n"
+        report_resources.each do |r|
+          event_body << "- #{r} (#{r.defined_at})\n"
+        end
+        event_body << "\n$$$\n"
       end
 
       # Emit Event to Datadog Event Stream

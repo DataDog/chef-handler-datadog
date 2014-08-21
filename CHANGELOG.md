@@ -1,7 +1,7 @@
 Changes
 =======
 
-# 0.5.0 / Unreleased
+# 0.5.0 / 2014-08-21
 
 * [FEATURE] Place recent updated resources above stacktrace on failure, [#46][] [@miketheman][]
 * [BUGFIX] Handle cases where Chef fails during compile phase, [#51][] [@miketheman][]

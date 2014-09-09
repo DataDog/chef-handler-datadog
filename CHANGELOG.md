@@ -3,7 +3,7 @@ Changes
 
 # 0.6.0 / Unreleased
 
-TBD
+* [FEATURE] Submit Chef-related tags to Datadog for Events, [#52][] [@miketheman][]
 
 # 0.5.0 / 2014-08-21
 
@@ -61,6 +61,7 @@ And all other versions were prior to this. See git history for more.
 [#46]: https://github.com/DataDog/chef-handler-datadog/issues/46
 [#50]: https://github.com/DataDog/chef-handler-datadog/issues/50
 [#51]: https://github.com/DataDog/chef-handler-datadog/issues/51
+[#52]: https://github.com/DataDog/chef-handler-datadog/issues/52
 [@alq]: https://github.com/alq
 [@dwradcliffe]: https://github.com/dwradcliffe
 [@miketheman]: https://github.com/miketheman

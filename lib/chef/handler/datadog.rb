@@ -31,6 +31,9 @@ class Chef
 
         # Submit the details back to Datadog
         begin
+          # Collect tags
+          new_host_tags = get_combined_tags(node)
+
           # Send the Event data
           emit_event_to_datadog(hostname, event_data)
 
@@ -42,7 +45,6 @@ class Chef
             )
             fail ArgumentError, 'Missing Datadog Application Key'
           else
-            new_host_tags = get_combined_tags(node)
 
             # Replace all Chef tags with the found Chef tags
             rc = @dog.update_tags(hostname, new_host_tags, 'chef')

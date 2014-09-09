@@ -1,6 +1,10 @@
 Changes
 =======
 
+# 0.6.0 / Unreleased
+
+TBD
+
 # 0.5.0 / 2014-08-21
 
 * [FEATURE] Place recent updated resources above stacktrace on failure, [#46][] [@miketheman][]

@@ -6,10 +6,10 @@ http_interactions:
     body:
       encoding: UTF-8
       string: ! '{"msg_text":"Chef was unable to complete a run, an error during compilation
-        may have occured.","date_happened":1408567902,"msg_title":"Chef failed during
-        compile phase on chef.handler.datadog.test-resources ","priority":"normal","parent":null,"tags":[],"aggregation_key":"chef.handler.datadog.test-resources","alert_type":"error","event_type":"config_management.run","source_type_name":"chef","title":"Chef
+        may have occurred.","date_happened":1410264903,"msg_title":"Chef failed during
+        compile phase on chef.handler.datadog.test-resources ","priority":"normal","parent":null,"tags":["env:resources"],"aggregation_key":"chef.handler.datadog.test-resources","alert_type":"error","event_type":"config_management.run","source_type_name":"chef","title":"Chef
         failed during compile phase on chef.handler.datadog.test-resources ","text":"Chef
-        was unable to complete a run, an error during compilation may have occured.","host":"chef.handler.datadog.test-resources","device":null}'
+        was unable to complete a run, an error during compilation may have occurred.","host":"chef.handler.datadog.test-resources","device":null}'
     headers:
       Accept:
       - ! '*/*'
@@ -25,22 +25,23 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Wed, 20 Aug 2014 20:51:43 GMT
+      - Tue, 09 Sep 2014 12:15:03 GMT
       Server:
-      - dogdispatcher/5.1.1
+      - dogdispatcher/5.2.0
       Content-Length:
-      - '415'
+      - '431'
       Connection:
       - keep-alive
     body:
       encoding: US-ASCII
       string: ! '{"status": "ok", "event": {"priority": "normal", "date_happened":
-        1408567902, "handle": null, "title": "Chef failed during compile phase on
-        chef.handler.datadog.test-resources ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2421036780452550465",
+        1410264903, "handle": null, "title": "Chef failed during compile phase on
+        chef.handler.datadog.test-resources ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2449507720114974929",
         "text": "Chef was unable to complete a run, an error during compilation may
-        have occured.", "tags": [], "related_event_id": null, "id": 2421036780452550465}}'
+        have occurred.", "tags": ["env:resources"], "related_event_id": null, "id":
+        2449507720114974929}}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:43 GMT
+  recorded_at: Tue, 09 Sep 2014 12:15:03 GMT
 - request:
     method: put
     uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-resources?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
@@ -64,7 +65,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Wed, 20 Aug 2014 20:51:43 GMT
+      - Tue, 09 Sep 2014 12:15:03 GMT
       Pragma:
       - no-cache
       Server:
@@ -77,5 +78,5 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"host": "chef.handler.datadog.test-resources", "tags": ["env:resources"]}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:43 GMT
+  recorded_at: Tue, 09 Sep 2014 12:15:03 GMT
 recorded_with: VCR 2.9.2

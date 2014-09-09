@@ -5,7 +5,7 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.total","points":[[1408567896,0.0]],"type":"gauge","host":"chef.handler.datadog.test-noapp","device":null}]}'
+      string: ! '{"series":[{"metric":"chef.resources.total","points":[[1410264888,0.0]],"type":"gauge","host":"chef.handler.datadog.test-noapp","device":null}]}'
     headers:
       Accept:
       - ! '*/*'
@@ -21,7 +21,7 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Wed, 20 Aug 2014 20:51:32 GMT
+      - Tue, 09 Sep 2014 12:14:44 GMT
       Server:
       - dogdispatcher/5.1.1
       Content-Length:
@@ -32,13 +32,13 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"status":"ok"}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:36 GMT
+  recorded_at: Tue, 09 Sep 2014 12:14:48 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.updated","points":[[1408567896,0.0]],"type":"gauge","host":"chef.handler.datadog.test-noapp","device":null}]}'
+      string: ! '{"series":[{"metric":"chef.resources.updated","points":[[1410264888,0.0]],"type":"gauge","host":"chef.handler.datadog.test-noapp","device":null}]}'
     headers:
       Accept:
       - ! '*/*'
@@ -54,7 +54,7 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Wed, 20 Aug 2014 20:51:33 GMT
+      - Tue, 09 Sep 2014 12:14:44 GMT
       Server:
       - dogdispatcher/5.1.1
       Content-Length:
@@ -65,13 +65,13 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"status":"ok"}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:36 GMT
+  recorded_at: Tue, 09 Sep 2014 12:14:48 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1408567896,5.0]],"type":"gauge","host":"chef.handler.datadog.test-noapp","device":null}]}'
+      string: ! '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1410264888,5.0]],"type":"gauge","host":"chef.handler.datadog.test-noapp","device":null}]}'
     headers:
       Accept:
       - ! '*/*'
@@ -87,7 +87,7 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Wed, 20 Aug 2014 20:51:33 GMT
+      - Tue, 09 Sep 2014 12:14:45 GMT
       Server:
       - dogdispatcher/5.1.1
       Content-Length:
@@ -98,14 +98,14 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"status":"ok"}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:36 GMT
+  recorded_at: Tue, 09 Sep 2014 12:14:48 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"msg_text":"Chef updated 0 resources out of 0 resources total.","date_happened":1408567896,"msg_title":"Chef
-        completed in 5 seconds on chef.handler.datadog.test-noapp ","priority":"low","parent":null,"tags":[],"aggregation_key":"chef.handler.datadog.test-noapp","alert_type":"success","event_type":"config_management.run","source_type_name":"chef","title":"Chef
+      string: ! '{"msg_text":"Chef updated 0 resources out of 0 resources total.","date_happened":1410264888,"msg_title":"Chef
+        completed in 5 seconds on chef.handler.datadog.test-noapp ","priority":"low","parent":null,"tags":["env:hostile","role:highlander","tag:the_one_and_only"],"aggregation_key":"chef.handler.datadog.test-noapp","alert_type":"success","event_type":"config_management.run","source_type_name":"chef","title":"Chef
         completed in 5 seconds on chef.handler.datadog.test-noapp ","text":"Chef updated
         0 resources out of 0 resources total.","host":"chef.handler.datadog.test-noapp","device":null}'
     headers:
@@ -123,20 +123,21 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Wed, 20 Aug 2014 20:51:34 GMT
+      - Tue, 09 Sep 2014 12:14:45 GMT
       Server:
       - dogdispatcher/5.1.1
       Content-Length:
-      - '373'
+      - '429'
       Connection:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status": "ok", "event": {"priority": "low", "date_happened": 1408567896,
+      string: ! '{"status": "ok", "event": {"priority": "low", "date_happened": 1410264888,
         "handle": null, "title": "Chef completed in 5 seconds on chef.handler.datadog.test-noapp
-        ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2421036624676108153",
-        "text": "Chef updated 0 resources out of 0 resources total.", "tags": [],
-        "related_event_id": null, "id": 2421036624676108153}}'
+        ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2449507422336115049",
+        "text": "Chef updated 0 resources out of 0 resources total.", "tags": ["env:hostile",
+        "role:highlander", "tag:the_one_and_only"], "related_event_id": null, "id":
+        2449507422336115049}}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:36 GMT
+  recorded_at: Tue, 09 Sep 2014 12:14:48 GMT
 recorded_with: VCR 2.9.2

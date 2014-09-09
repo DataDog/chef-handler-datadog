@@ -66,6 +66,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
           :query => { 'api_key' => @handler.config[:api_key] },
           :body => hash_including(:msg_text => 'Chef updated 0 resources out of 0 resources total.'),
           :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} "),
+          :body => hash_including(:tags => ['env:testing']),
         )).to have_been_made.times(1)
       end
 

@@ -5,7 +5,7 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.total","points":[[1408567899,0.0]],"type":"gauge","host":"my-imaginary-hostname.local","device":null}]}'
+      string: ! '{"series":[{"metric":"chef.resources.total","points":[[1410264904,0.0]],"type":"gauge","host":"my-imaginary-hostname.local","device":null}]}'
     headers:
       Accept:
       - ! '*/*'
@@ -21,9 +21,9 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Wed, 20 Aug 2014 20:51:34 GMT
+      - Tue, 09 Sep 2014 12:14:59 GMT
       Server:
-      - dogdispatcher/5.1.1
+      - dogdispatcher/5.2.0
       Content-Length:
       - '15'
       Connection:
@@ -32,13 +32,13 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"status":"ok"}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:39 GMT
+  recorded_at: Tue, 09 Sep 2014 12:15:04 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.updated","points":[[1408567899,0.0]],"type":"gauge","host":"my-imaginary-hostname.local","device":null}]}'
+      string: ! '{"series":[{"metric":"chef.resources.updated","points":[[1410264904,0.0]],"type":"gauge","host":"my-imaginary-hostname.local","device":null}]}'
     headers:
       Accept:
       - ! '*/*'
@@ -54,7 +54,7 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Wed, 20 Aug 2014 20:51:35 GMT
+      - Tue, 09 Sep 2014 12:15:00 GMT
       Server:
       - dogdispatcher/5.1.1
       Content-Length:
@@ -65,13 +65,13 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"status":"ok"}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:39 GMT
+  recorded_at: Tue, 09 Sep 2014 12:15:04 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1408567899,5.0]],"type":"gauge","host":"my-imaginary-hostname.local","device":null}]}'
+      string: ! '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1410264904,5.0]],"type":"gauge","host":"my-imaginary-hostname.local","device":null}]}'
     headers:
       Accept:
       - ! '*/*'
@@ -87,7 +87,7 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Wed, 20 Aug 2014 20:51:36 GMT
+      - Tue, 09 Sep 2014 12:15:00 GMT
       Server:
       - dogdispatcher/5.1.1
       Content-Length:
@@ -98,14 +98,14 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"status":"ok"}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:39 GMT
+  recorded_at: Tue, 09 Sep 2014 12:15:04 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"msg_text":"Chef updated 0 resources out of 0 resources total.","date_happened":1408567899,"msg_title":"Chef
-        completed in 5 seconds on my-imaginary-hostname.local ","priority":"low","parent":null,"tags":[],"aggregation_key":"my-imaginary-hostname.local","alert_type":"success","event_type":"config_management.run","source_type_name":"chef","title":"Chef
+      string: ! '{"msg_text":"Chef updated 0 resources out of 0 resources total.","date_happened":1410264904,"msg_title":"Chef
+        completed in 5 seconds on my-imaginary-hostname.local ","priority":"low","parent":null,"tags":["env:testing"],"aggregation_key":"my-imaginary-hostname.local","alert_type":"success","event_type":"config_management.run","source_type_name":"chef","title":"Chef
         completed in 5 seconds on my-imaginary-hostname.local ","text":"Chef updated
         0 resources out of 0 resources total.","host":"my-imaginary-hostname.local","device":null}'
     headers:
@@ -123,22 +123,22 @@ http_interactions:
       Content-Type:
       - text/json; charset=UTF-8
       Date:
-      - Wed, 20 Aug 2014 20:51:36 GMT
+      - Tue, 09 Sep 2014 12:15:01 GMT
       Server:
       - dogdispatcher/5.1.1
       Content-Length:
-      - '369'
+      - '382'
       Connection:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status": "ok", "event": {"priority": "low", "date_happened": 1408567899,
+      string: ! '{"status": "ok", "event": {"priority": "low", "date_happened": 1410264904,
         "handle": null, "title": "Chef completed in 5 seconds on my-imaginary-hostname.local
-        ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2421036670125528935",
-        "text": "Chef updated 0 resources out of 0 resources total.", "tags": [],
-        "related_event_id": null, "id": 2421036670125528935}}'
+        ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2449507680654905647",
+        "text": "Chef updated 0 resources out of 0 resources total.", "tags": ["env:testing"],
+        "related_event_id": null, "id": 2449507680654905647}}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:39 GMT
+  recorded_at: Tue, 09 Sep 2014 12:15:04 GMT
 - request:
     method: put
     uri: https://app.datadoghq.com/api/v1/tags/hosts/my-imaginary-hostname.local?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
@@ -162,7 +162,7 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Wed, 20 Aug 2014 20:51:37 GMT
+      - Tue, 09 Sep 2014 12:15:02 GMT
       Pragma:
       - no-cache
       Server:
@@ -175,5 +175,5 @@ http_interactions:
       encoding: US-ASCII
       string: ! '{"host": "my-imaginary-hostname.local", "tags": ["env:testing"]}'
     http_version: 
-  recorded_at: Wed, 20 Aug 2014 20:51:39 GMT
+  recorded_at: Tue, 09 Sep 2014 12:15:04 GMT
 recorded_with: VCR 2.9.2

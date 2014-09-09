@@ -6,6 +6,8 @@
   11.10.4
   11.12.8
   11.14.2
+  11.16.0
+  12.0.0.alpha.1
 ).each do |tv|
   appraise "chef-#{tv}" do
     gem 'chef', tv

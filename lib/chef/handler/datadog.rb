@@ -35,7 +35,7 @@ class Chef
           new_host_tags = get_combined_tags(node)
 
           # Send the Event data
-          emit_event_to_datadog(hostname, event_data)
+          emit_event_to_datadog(hostname, event_data, new_host_tags)
 
           # Update tags
           if config[:application_key].nil?
@@ -150,7 +150,8 @@ class Chef
       #
       # @param hostname [String] resolved hostname to attach to Event
       # @param event_params [Array] all the configurables to build a valid Event
-      def emit_event_to_datadog(hostname, event_data)
+      # @param tags [Array] Chef env/roles/tags to be set as Datadog tags
+      def emit_event_to_datadog(hostname, event_data, tags)
         alert_type, event_priority, event_title, event_body = event_data
 
         evt = @dog.emit_event(Dogapi::Event.new(event_body,
@@ -159,7 +160,8 @@ class Chef
                                                 :event_object => hostname,
                                                 :alert_type => alert_type,
                                                 :priority => event_priority,
-                                                :source_type_name => 'chef'
+                                                :source_type_name => 'chef',
+                                                :tags => tags
         ), :host => hostname)
 
         begin

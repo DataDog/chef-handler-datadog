@@ -1,7 +1,7 @@
 Changes
 =======
 
-# 0.6.0 / Unreleased
+# 0.6.0 / 2014-09-17
 
 * [FEATURE] Submit Chef-related tags to Datadog for Events, [#52][] [@miketheman][]
 

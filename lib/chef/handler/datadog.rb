@@ -76,7 +76,6 @@ class Chef
       private
 
       # Build the Event data for submission
-      #
       # @param hostname [String] resolved hostname to attach to Event
       # @param run_status [Chef::RunStatus] current run status
       # @return [Array] alert_type, event_priority, event_title, event_body
@@ -127,7 +126,6 @@ class Chef
 
       # Compose a list of resources updated during a run.
       # Shorten the list when there is a failure for stacktrace debugging
-      #
       # @param run_status [Chef::RunStatus] current run status
       # @return [String] formatted list of resources updated, truncated on failure
       def updated_resource_list(run_status)
@@ -148,7 +146,6 @@ class Chef
       end
 
       # Emit Event to Datadog Event Stream
-      #
       # @param hostname [String] resolved hostname to attach to Event
       # @param event_params [Array] all the configurables to build a valid Event
       # @param tags [Array] Chef env/roles/tags to be set as Datadog tags
@@ -185,7 +182,6 @@ class Chef
       end
 
       # Emit Chef metrics to Datadog
-      #
       # @param hostname [String] resolved hostname to attach to series
       # @param run_status [Chef::RunStatus] current run status
       def emit_metrics_to_datadog(hostname, run_status)
@@ -205,7 +201,6 @@ class Chef
       end
 
       # Build up an array of Chef tags to send back
-      #
       # Selects all [env, roles, tags] from the Node's object and reformats
       # them to `key:value` e.g. `role:database-master`.
       #
@@ -268,3 +263,4 @@ class Chef
     end # end class Datadog
   end # end class Handler
 end # end class Chef
+

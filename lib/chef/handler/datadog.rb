@@ -263,4 +263,3 @@ class Chef
     end # end class Datadog
   end # end class Handler
 end # end class Chef
-

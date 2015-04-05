@@ -182,13 +182,12 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     end
   end
 
-  describe 'handles tags correctly' do
+  context 'tags' do
     before(:each) do
       @node = Chef::Node.build('chef.handler.datadog.test-tags')
 
       @node.send(:chef_environment, 'hostile')
       @node.send(:run_list, 'role[highlander]')
-      @node.normal.tags = ['the_one_and_only']
 
       @events = Chef::EventDispatch::Dispatcher.new
       @run_context = Chef::RunContext.new(@node, {}, @events)
@@ -200,20 +199,37 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_status.stop_clock
 
       @run_status.run_context = @run_context
-
-      # Run the report
-      @handler.run_report_unsafe(@run_status)
     end
 
-    it 'sets the role and env and tags' do
-      expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-        :query => { 'api_key' => @handler.config[:api_key],
-                    'application_key' => @handler.config[:application_key],
-                    'source' => 'chef' },
-        :body => hash_including(:tags => [
-          'env:hostile', 'role:highlander', 'tag:the_one_and_only'
-          ]),
-      )).to have_been_made.times(1)
+    describe 'when specified' do
+      it 'sets the role and env and tags' do
+        @node.normal.tags = ['the_one_and_only']
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+            'env:hostile', 'role:highlander', 'tag:the_one_and_only'
+            ]),
+        )).to have_been_made.times(1)
+      end
+    end
+
+    describe 'when unspecified' do
+      it 'sets role, env and nothing else' do
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+            'env:hostile', 'role:highlander'
+            ]),
+        )).to have_been_made.times(1)
+      end
     end
   end
 

@@ -1,27 +1,16 @@
 # encoding: utf-8
 
-# Describe any version dependencies here.
-%w(
-  11.8.2
-  11.10.4
-  11.12.8
-  11.14.2
-  11.16.0
-  12.0.0.alpha.1
-).each do |tv|
+# Latest release of mainline Chef versions here.
+%w(10 11 12).each do |tv|
   appraise "chef-#{tv}" do
-    gem 'chef', tv
+    gem 'chef', "~> #{tv}.0"
   end
 end
 
-# Due to some oddity in json gem version pinning for versions that have
-# conflicts, specify best version here.
-%w(
-  10.26.0
-  10.32.2
-).each do |tv|
-  appraise "chef-#{tv}" do
-    gem 'chef', tv
-    gem 'json', '1.7.7'
-  end
+# Describe any specific Chef versions here.
+appraise 'chef-10.14.4' do
+  gem 'chef', '10.14.4'
+  # Old versions of Chef didn't pin the max version of Ohai they supported.
+  # See: http://git.io/vecAn
+  gem 'ohai', '< 8.0'
 end

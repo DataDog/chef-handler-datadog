@@ -215,6 +215,20 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
             ]),
         )).to have_been_made.times(1)
       end
+
+      it 'prepends tags correctly' do
+        @node.normal.tags = ['the_one_and_only', 'service:test']
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+            'env:hostile', 'role:highlander', 'tag:the_one_and_only', 'service:test'
+            ]),
+        )).to have_been_made.times(1)
+      end
     end
 
     describe 'when unspecified' do

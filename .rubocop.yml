@@ -8,36 +8,37 @@ AllCops:
     - 'spec/*.rb'
     - '*/vendor/**/*'
 
-# We want to continue to support Ruby 1.8.x for now
-HashSyntax:
-  EnforcedStyle: hash_rockets
-
 # 80 characters is a nice goal, but not worth currently changing in existing
 # code for the sake of changing it to conform to a length set in 1928 (IBM).
-LineLength:
+Metrics/LineLength:
   Max: 150
 
 #####
 # These exceptions are good goals to attain, and probably will over time,
 # so periodic disabling and re-running to inspect values is suggested.
 
+# TODO: main method `report` does a lot of work, which drives this number up.
+Metrics/AbcSize:
+  Max: 38
+
 # TODO: Main class is currently over 100 lines of code, making comprehending
 # it harder. With refactors and simplifications, we can bring this down,
 # but for now, let's not make it too much worse.
-ClassLength:
-  Max: 160
+Metrics/ClassLength:
+  Max: 158
 
-# TODO: this is currently down to 12 from 22, and should be a constant
+# TODO: this is currently down to 7 from 22, and should be a constant
 # goal to reduce method complexity. The accepted goal is 6.
-CyclomaticComplexity:
-  Max: 12
+# Method `select_hostname`
+Metrics/CyclomaticComplexity:
+  Max: 7
 
 # TODO: The main method `report` is now down from 85 lines. As refactors
 # continue, this should drop. However, the goal of 10 lines in a method may
 # be a little lofty.
-MethodLength:
-  Max: 78
+Metrics/MethodLength:
+  Max: 36
 
 # TODO: select_hostname, report are both higher than the default of 7
-PerceivedComplexity:
+Metrics/PerceivedComplexity:
   Max: 9

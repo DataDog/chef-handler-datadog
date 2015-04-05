@@ -155,14 +155,14 @@ class Chef
         alert_type, event_priority, event_title, event_body = event_data
 
         evt = @dog.emit_event(Dogapi::Event.new(event_body,
-                                                :msg_title => event_title,
-                                                :event_type => 'config_management.run',
-                                                :event_object => hostname,
-                                                :alert_type => alert_type,
-                                                :priority => event_priority,
-                                                :source_type_name => 'chef',
-                                                :tags => tags
-        ), :host => hostname)
+                                                msg_title: event_title,
+                                                event_type: 'config_management.run',
+                                                event_object: hostname,
+                                                alert_type: alert_type,
+                                                priority: event_priority,
+                                                source_type_name: 'chef',
+                                                tags: tags
+        ), host: hostname)
 
         begin
           # FIXME: nice-to-have: abstract format of return value away a bit
@@ -193,9 +193,9 @@ class Chef
         warn_msg = 'Error during compile phase, no Datadog metrics available.'
         return Chef::Log.warn(warn_msg) if run_status.elapsed_time.nil?
 
-        @dog.emit_point('chef.resources.total', run_status.all_resources.length, :host => hostname)
-        @dog.emit_point('chef.resources.updated', run_status.updated_resources.length, :host => hostname)
-        @dog.emit_point('chef.resources.elapsed_time', run_status.elapsed_time, :host => hostname)
+        @dog.emit_point('chef.resources.total', run_status.all_resources.length, host: hostname)
+        @dog.emit_point('chef.resources.updated', run_status.updated_resources.length, host: hostname)
+        @dog.emit_point('chef.resources.elapsed_time', run_status.elapsed_time, host: hostname)
         Chef::Log.debug('Submitted Chef metrics back to Datadog')
       rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
         Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
@@ -251,8 +251,7 @@ class Chef
       # @return [String] the hostname decided upon
       def select_hostname(node, config)
         use_ec2_instance_id = !config.key?(:use_ec2_instance_id) ||
-                                (config.key?(:use_ec2_instance_id) &&
-                                  config[:use_ec2_instance_id])
+                              (config.key?(:use_ec2_instance_id) && config[:use_ec2_instance_id])
 
         if config[:hostname]
           config[:hostname]

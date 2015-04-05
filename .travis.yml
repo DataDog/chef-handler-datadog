@@ -1,20 +1,25 @@
 language: ruby
+cache: bundler
+sudo: false
+
 rvm:
   - 1.9.3
-  - 2.1.2
+  - 2.1.5
+
 bundler_args: --without=localdev
+
 gemfile:
-  - gemfiles/chef_10.26.0.gemfile
-  - gemfiles/chef_10.32.2.gemfile
-  - gemfiles/chef_11.8.2.gemfile
-  - gemfiles/chef_11.10.4.gemfile
-  - gemfiles/chef_11.12.8.gemfile
-  - gemfiles/chef_11.14.2.gemfile
-  - gemfiles/chef_11.16.0.gemfile
-  - gemfiles/chef_12.0.0.alpha.1.gemfile
+  - gemfiles/chef_10.14.4.gemfile
+  - gemfiles/chef_10.gemfile
+  - gemfiles/chef_11.gemfile
+  - gemfiles/chef_12.gemfile
+
 env:
   - API_KEY=somefakeapikey APPLICATION_KEY=somefakeapplicationkey
+
 matrix:
+  exclude:
+    # Chef 12.x with Ohai 8.2.x doesn't work on Chef 1.9.3
+    - rvm: 1.9.3
+      gemfile: gemfiles/chef_12.gemfile
   allow_failures:
-    - rvm: 2.1.2
-    - gemfile: gemfiles/chef_12.0.0.alpha.1.gemfile

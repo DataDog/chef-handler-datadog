@@ -3,7 +3,6 @@
 require 'rubygems'
 require 'bundler/gem_tasks'
 
-require 'appraisal'
 require 'rake/clean'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'

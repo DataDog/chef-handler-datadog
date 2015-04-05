@@ -3,7 +3,7 @@ Changes
 
 # 0.7.0 / Unreleased
 
-
+* [OPTIMIZE] Update test matrix to handle latest released major versions, [#59][] [@miketheman][]
 
 # 0.6.0 / 2014-09-17
 
@@ -66,6 +66,7 @@ And all other versions were prior to this. See git history for more.
 [#50]: https://github.com/DataDog/chef-handler-datadog/issues/50
 [#51]: https://github.com/DataDog/chef-handler-datadog/issues/51
 [#52]: https://github.com/DataDog/chef-handler-datadog/issues/52
+[#59]: https://github.com/DataDog/chef-handler-datadog/issues/59
 [@alq]: https://github.com/alq
 [@dwradcliffe]: https://github.com/dwradcliffe
 [@miketheman]: https://github.com/miketheman

@@ -76,19 +76,19 @@ class Chef
       private
 
       # Build the Event data for submission
-      #
       # @param hostname [String] resolved hostname to attach to Event
       # @param run_status [Chef::RunStatus] current run status
       # @return [Array] alert_type, event_priority, event_title, event_body
       def build_event_data(hostname, run_status)
         # bail early in case of a compiletime failure
         # OPTIMIZE: Use better inspectors to handle failure scenarios, refactor needed.
-        if run_status.elapsed_time.nil?
-
+        if run_status.failed? && run_status.all_resources.nil?
           alert_type = 'error'
           event_title = "Chef failed during compile phase on #{hostname} "
           event_priority = 'normal'
           event_body = 'Chef was unable to complete a run, an error during compilation may have occurred.'
+          event_body << "\n$$$\n#{run_status.formatted_exception}\n$$$\n"
+          event_body << "\n$$$\n#{run_status.backtrace.join("\n")}\n$$$\n"
 
           return [alert_type, event_priority, event_title, event_body]
         end
@@ -126,7 +126,6 @@ class Chef
 
       # Compose a list of resources updated during a run.
       # Shorten the list when there is a failure for stacktrace debugging
-      #
       # @param run_status [Chef::RunStatus] current run status
       # @return [String] formatted list of resources updated, truncated on failure
       def updated_resource_list(run_status)
@@ -147,7 +146,6 @@ class Chef
       end
 
       # Emit Event to Datadog Event Stream
-      #
       # @param hostname [String] resolved hostname to attach to Event
       # @param event_params [Array] all the configurables to build a valid Event
       # @param tags [Array] Chef env/roles/tags to be set as Datadog tags
@@ -184,14 +182,15 @@ class Chef
       end
 
       # Emit Chef metrics to Datadog
-      #
       # @param hostname [String] resolved hostname to attach to series
       # @param run_status [Chef::RunStatus] current run status
       def emit_metrics_to_datadog(hostname, run_status)
         # If there is a failure during compile phase, a large portion of
         # run_status may be unavailable. Bail out here
-        warn_msg = 'Error during compile phase, no Datadog metrics available.'
-        return Chef::Log.warn(warn_msg) if run_status.elapsed_time.nil?
+        warn_msg = 'Error during compile phase, limited Datadog metrics available.'
+        if run_status.failed? && run_status.all_resources.nil?
+          return Chef::Log.warn(warn_msg)
+        end
 
         @dog.emit_point('chef.resources.total', run_status.all_resources.length, host: hostname)
         @dog.emit_point('chef.resources.updated', run_status.updated_resources.length, host: hostname)
@@ -202,7 +201,6 @@ class Chef
       end
 
       # Build up an array of Chef tags to send back
-      #
       # Selects all [env, roles, tags] from the Node's object and reformats
       # them to `key:value` e.g. `role:database-master`.
       #

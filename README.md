@@ -15,6 +15,18 @@ This can be installed by using the `dd-handler` recipe from the [datadog cookboo
 run_list 'foo::bar', 'datadog::dd-handler'
 ```
 
+### Windows support
+
+The chef handler does work on Microsoft Windows however limitations with SSL + Ruby on Windows require extra setup.  One solution is to set the `SSL_CERT_FILE` environmental variable to the one that chef uses on the machine to fix this issue. Here is how [chef](https://github.com/chef/omnibus-chef/blob/master/files/openssl-customization/windows/ssl_env_hack.rb) fixes the issue.
+
+```ruby
+# Setup the certs for ruby in windows
+env 'SSL_CERT_FILE' do
+  action :create
+  value "C:\\opscode\\chef\\embedded\\ssl\\certs\\cacert.pem"
+end
+```
+
 The Datadog Docs on [Chef](http://docs.datadoghq.com/guides/chef/#deployhandler) has detailed instructions.
 
 ## Contributing to chef-handler-datadog

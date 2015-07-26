@@ -20,6 +20,9 @@ class Chef
       end
 
       def report
+        # use agent proxy settings if available
+        use_agent_proxy unless ENV['DATADOG_PROXY'].nil?
+
         # resolve correct hostname
         hostname = select_hostname(run_status.node, config)
 
@@ -71,6 +74,9 @@ class Chef
           Chef::Log.error('Tags to be set for this run:')
           Chef::Log.error(new_host_tags)
         end
+      ensure
+        # restore the env proxy settings before leaving
+        restore_env_proxies unless ENV['DATADOG_PROXY'].nil?
       end
 
       private
@@ -154,6 +160,8 @@ class Chef
       def emit_event_to_datadog(hostname, event_data, tags)
         alert_type, event_priority, event_title, event_body = event_data
 
+        # use agent proxy settings if set, but protect from side effects
+        push_proxy_env_vars unless ENV['DATADOG_PROXY'].nil?
         evt = @dog.emit_event(Dogapi::Event.new(event_body,
                                                 msg_title: event_title,
                                                 event_type: 'config_management.run',
@@ -180,6 +188,9 @@ class Chef
           end
         rescue
           Chef::Log.warn("Could not determine whether chef run was successfully submitted to Datadog: #{evt}")
+        ensure
+          # restore the orginal proxy ENV settings to minimise side effect risk
+          pop_proxy_env_vars unless ENV['DATADOG_PROXY'].nil?
         end
       end
 
@@ -193,12 +204,18 @@ class Chef
         warn_msg = 'Error during compile phase, no Datadog metrics available.'
         return Chef::Log.warn(warn_msg) if run_status.elapsed_time.nil?
 
+        # use agent proxy settings if set, but protect from side effects
+        push_proxy_env_vars unless ENV['DATADOG_PROXY'].nil?
+
         @dog.emit_point('chef.resources.total', run_status.all_resources.length, host: hostname)
         @dog.emit_point('chef.resources.updated', run_status.updated_resources.length, host: hostname)
         @dog.emit_point('chef.resources.elapsed_time', run_status.elapsed_time, host: hostname)
         Chef::Log.debug('Submitted Chef metrics back to Datadog')
       rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
         Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
+      ensure 
+        # restore the orginal proxy ENV settings to minimise side effect risk
+        pop_proxy_env_vars unless ENV['DATADOG_PROXY'].nil?
       end
 
       # Build up an array of Chef tags to send back
@@ -260,6 +277,23 @@ class Chef
         else
           node.name
         end
+      end
+
+      # Using the agent proxy settings requires setting http(s)_proxy
+      # env vars.  However, original env var settings need to be 
+      # preserved for restoration at the end of the handler.
+      def use_agent_proxy
+        Chef::Log.info("Using agent proxy settings")
+        @env_http_proxy = ENV['http_proxy']
+        @env_https_proxy = ENV['https_proxy']
+        ENV['http_proxy'] = ENV['DATADOG_PROXY']
+        ENV['https_proxy'] = ENV['DATADOG_PROXY']
+      end
+
+      # Restore environment proxy settings to pre-report values
+      def restore_env_proxies
+        ENV['http_proxy'] = @env_http_proxy
+        ENV['https_proxy'] = @env_https_proxy
       end
     end # end class Datadog
   end # end class Handler

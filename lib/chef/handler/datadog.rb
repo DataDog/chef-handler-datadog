@@ -160,8 +160,6 @@ class Chef
       def emit_event_to_datadog(hostname, event_data, tags)
         alert_type, event_priority, event_title, event_body = event_data
 
-        # use agent proxy settings if set, but protect from side effects
-        push_proxy_env_vars unless ENV['DATADOG_PROXY'].nil?
         evt = @dog.emit_event(Dogapi::Event.new(event_body,
                                                 msg_title: event_title,
                                                 event_type: 'config_management.run',
@@ -188,9 +186,6 @@ class Chef
           end
         rescue
           Chef::Log.warn("Could not determine whether chef run was successfully submitted to Datadog: #{evt}")
-        ensure
-          # restore the orginal proxy ENV settings to minimise side effect risk
-          pop_proxy_env_vars unless ENV['DATADOG_PROXY'].nil?
         end
       end
 
@@ -204,18 +199,12 @@ class Chef
         warn_msg = 'Error during compile phase, no Datadog metrics available.'
         return Chef::Log.warn(warn_msg) if run_status.elapsed_time.nil?
 
-        # use agent proxy settings if set, but protect from side effects
-        push_proxy_env_vars unless ENV['DATADOG_PROXY'].nil?
-
         @dog.emit_point('chef.resources.total', run_status.all_resources.length, host: hostname)
         @dog.emit_point('chef.resources.updated', run_status.updated_resources.length, host: hostname)
         @dog.emit_point('chef.resources.elapsed_time', run_status.elapsed_time, host: hostname)
         Chef::Log.debug('Submitted Chef metrics back to Datadog')
       rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
         Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
-      ensure 
-        # restore the orginal proxy ENV settings to minimise side effect risk
-        pop_proxy_env_vars unless ENV['DATADOG_PROXY'].nil?
       end
 
       # Build up an array of Chef tags to send back

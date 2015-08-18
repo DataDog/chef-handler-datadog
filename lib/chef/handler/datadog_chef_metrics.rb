@@ -9,24 +9,29 @@ class DatadogChefMetrics
     @run_status = nil
   end
 
-  def and
-    self
-  end
-
+  # set the dogapi client handle
+  #
   # @param dogapi_client [Dogapi::Client] datadog api client
+  # @return [DatadogChefMetrics] instance reference to self enabling method chaining
   def with_dogapi_client(dogapi_client)
     @dog = dogapi_client
     self
   end
 
+  # set the target hostname (chef node name)
+  #
   # @param hostname [String] hostname used for reporting metrics
-  def for_hostname(hostname)
+  # @return [DatadogChefMetrics] instance reference to self enabling method chaining
+  def with_hostname(hostname)
     @hostname = hostname
     self
   end
 
+  # set the chef run status used for the report
+  #
   # @param run_status [Chef::RunStatus] current run status
-  def using_run_status(run_status)
+  # @return [DatadogChefMetrics] instance reference to self enabling method chaining
+  def with_run_status(run_status)
     @run_status = run_status
     self
   end

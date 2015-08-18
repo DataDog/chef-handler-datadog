@@ -23,67 +23,75 @@ class Chef
       end
 
       def report
-        # use agent proxy settings if available
+        # use datadog agent proxy settings, if available
         use_agent_proxy unless ENV['DATADOG_PROXY'].nil?
 
-        hostname = resolve_correct_hostname(run_status.node, config)
-
-        # Send the metrics
-        metrics =
-            DatadogChefMetrics.new
-            .with_dogapi_client(@dog)
-            .for_hostname(hostname)
-            .using_run_status(run_status)
-
-        # Collect tags
-        tags =
-            DatadogChefTags.new
-            .with_dogapi_client(@dog)
-            .for_hostname(hostname)
-            .for_node(node)
-            .with_application_key(@config[:application_key])
-
-        # Build the event
-        event =
-            DatadogChefEvents.new
-            .with_dogapi_client(@dog)
-            .for_hostname(hostname)
-            .using_run_status(run_status)
-            .with_failure_notifications(@config['notify_on_failure'])
-            .with_tags(tags.combined_host_tags)
-
-        # Submit the details back to Datadog
-        begin
-          metrics.emit_to_datadog
-          event.emit_to_datadog
-          tags.update_to_datadog
-        rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
-          Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
-          Chef::Log.error('Data to be submitted was:')
-          Chef::Log.error(event.event_title)
-          Chef::Log.error(event.event_body)
-          Chef::Log.error('Tags to be set for this run:')
-          Chef::Log.error(tags.combined_host_tags)
-        end
+        # prepare the metrics, event, and tags information to be reported
+        prepare_report_for_datadog
+        # post the report information to the datadog service
+        send_report_to_datadog
       ensure
-        # restore the env proxy settings before leaving
+        # restore the env proxy settings before leaving to avoid downstream side-effects
         restore_env_proxies unless ENV['DATADOG_PROXY'].nil?
       end
 
       private
 
+      # prepare metrics, event, and tags data for posting to datadog
+      def prepare_report_for_datadog
+        # uses class method accessors for run_status and config
+        hostname = resolve_correct_hostname
+        # prepare chef run metrics
+        @metrics =
+            DatadogChefMetrics.new
+            .with_dogapi_client(@dog)
+            .with_hostname(hostname)
+            .with_run_status(run_status)
+
+        # Collect and prepare tags
+        @tags =
+            DatadogChefTags.new
+            .with_dogapi_client(@dog)
+            .with_hostname(hostname)
+            .with_run_status(run_status)
+            .with_application_key(config[:application_key])
+
+        # Build the chef event information
+        @event =
+            DatadogChefEvents.new
+            .with_dogapi_client(@dog)
+            .with_hostname(hostname)
+            .with_run_status(run_status)
+            .with_failure_notifications(@config['notify_on_failure'])
+            .with_tags(@tags.combined_host_tags)
+      end
+
+      # Submit metrics, event, and tags information to datadog
+      def send_report_to_datadog
+        @metrics.emit_to_datadog
+        @event.emit_to_datadog
+        @tags.send_update_to_datadog
+      rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
+        Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
+        Chef::Log.error('Data to be submitted was:')
+        Chef::Log.error(@event.event_title)
+        Chef::Log.error(@event.event_body)
+        Chef::Log.error('Tags to be set for this run:')
+        Chef::Log.error(@tags.combined_host_tags)
+      end
+
       # Select which hostname to report back to Datadog.
       # Makes decision based on inputs from `config` and when absent, use the
       # node's `ec2` attribute existence to make the decision.
       #
-      # @param node [Chef::Node] from `run_status`, can feasibly any `node`
-      # @param config [Hash] config object passed in to handler
       # @return [String] the hostname decided upon
-      def resolve_correct_hostname(node, config)
+      def resolve_correct_hostname
+        node = run_status.node
         use_ec2_instance_id = !config.key?(:use_ec2_instance_id) ||
                               (config.key?(:use_ec2_instance_id) && config[:use_ec2_instance_id])
 
         if config[:hostname]
+          puts "found hostname #{config[:hostname]} in config object"
           config[:hostname]
         elsif use_ec2_instance_id && node.attribute?('ec2') && node.ec2.attribute?('instance_id')
           node.ec2.instance_id

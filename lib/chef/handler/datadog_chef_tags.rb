@@ -6,25 +6,37 @@ require 'dogapi'
 
 # helper class for sending datadog tags from chef runs
 class DatadogChefTags
-  def initialize(node = nil)
-    @node = node
+  def initialize
+    @node = nil
+    @run_status = nil
     @application_key = nil
     @combined_host_tags = nil
   end
 
-  def and
-    self
-  end
-
+  # set the dogapi client handle
+  #
+  # @param dogapi_client [Dogapi::Client] datadog api client handle
+  # @return [DatadogChefTags] instance reference to self enabling method chaining
   def with_dogapi_client(dogapi_client)
     @dog = dogapi_client
     self
   end
 
-  # @param node [Chef::Node]
-  # @return [DatadogChefTags]
-  def for_node(node)
-    @node = node
+  # attribute accessor for combined array of tags
+  #
+  # @return [Array] the set of host tags based off the chef run
+  attr_reader :combined_host_tags
+
+  # set the chef run status used for the report
+  #
+  # @param run_status [Chef::RunStatus] current chef run status
+  # @return [DatadogChefTags] instance reference to self enabling method chaining
+  def with_run_status(run_status)
+    @run_status = run_status
+    # Build up an array of Chef tags that will be sent back
+    # Selects all [env, roles, tags] from the Node's object and reformats
+    # them to `key:value` e.g. `role:database-master`.
+    @node = run_status.node
     # generate the combined tags
     chef_env = node_env.split # converts a string into an array
     chef_roles = node_roles
@@ -35,11 +47,23 @@ class DatadogChefTags
     self
   end
 
-  def for_hostname(hostname)
+  # set the target hostname (chef node name)
+  #
+  # @param hostname [String] hostname to use for the handler report
+  # @return [DatadogChefTags] instance reference to self enabling method chaining
+  def with_hostname(hostname)
     @hostname = hostname
     self
   end
 
+  # set the datadog application key
+  #
+  # TODO: the application key is only needed for error checking, e.g. an app key exists
+  #   would be cleaner to push this check up to the data prep method in the
+  #   calling handler class
+  #
+  # @param application_key [String] datadog application key used for chef reports
+  # @return [DatadogChefTags] instance reference to self enabling method chaining
   def with_application_key(application_key)
     @application_key = application_key
     if @application_key.nil?
@@ -52,18 +76,8 @@ class DatadogChefTags
     self
   end
 
-  # Build up an array of Chef tags to send back
-  #
-  # Selects all [env, roles, tags] from the Node's object and reformats
-  # them to `key:value` e.g. `role:database-master`.
-  # @return [Array] current Chef env, roles, tags
-  attr_reader :combined_host_tags
-  # def combined_host_tags
-  #   @combined_host_tags
-  # end
-
-  # Replace all Chef tags with the found Chef tags
-  def update_to_datadog
+  # send updated chef run generated tags to Datadog
+  def send_update_to_datadog
     rc = @dog.update_tags(@hostname, combined_host_tags, 'chef')
     begin
       # See FIXME above about why I feel dirty repeating this code here
@@ -92,6 +106,6 @@ class DatadogChefTags
   end
 
   def node_tags
-    @node.tags.map! { |tag| 'tag:' + tag }
+    @node.tags.map! { |tag| 'tag:' + tag } if @node.tags
   end
-end
+end # end class DatadogChefTags

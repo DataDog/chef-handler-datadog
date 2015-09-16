@@ -227,7 +227,7 @@ class Chef
       end
 
       def get_node_tags(node)
-        node.tags.map! { |tag| 'tag:' + tag }
+        node.tags.map! { |tag| 'tag:' + tag } if node.tags
       end
 
       def pluralize(number, noun)

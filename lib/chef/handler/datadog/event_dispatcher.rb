@@ -1,386 +1,390 @@
 require 'chef/event_dispatcher/base'
 require 'time'
 
-module Datadog
-  class EventDispatcher < Chef::EventDispatcher::Base
-
-    METRICS_NS = 'chef.client.timing'
-
-    def initialize(config = {})
-      @config = Mash.new(config)
-      # If *any* api_key is not provided, this will fail immediately.
-      # @dog = Dogapi::Client.new(@config[:api_key], @config[:application_key])
-      @metrics = {}
-      @timestamps = {}
-    end
-
-    # Called at the very start of a Chef Run
-    def run_start(version)
-      @timestamps[:run_start] = Time.now
-    end
-
-    def run_started(run_status)
-    end
-
-    # Called at the end a successful Chef run.
-    def run_completed(node)
-      @metrics["#{METRICS_NS}.run_complete"] = Time.now - @timestamps[:run_start]
-    end
-
-    # Called at the end of a failed Chef run.
-    def run_failed(exception)
-      @metrics["#{METRICS_NS}.run_failed"] = Time.now - @timestamps[:run_start]
-    end
-
-    # Called right after ohai runs.
-    def ohai_completed(node)
-      @metrics["#{METRICS_NS}.ohai_completed"] = Time.now - @timestamps[:run_start]
-    end
-
-    # Announce that we're not going to register the client. Generally because
-    # we already have the private key, or because we're deliberately not using
-    # a key.
-    def skipping_registration(node_name, config)
-    end
-
-    # About to attempt to create a private key registered to the server with
-    # client +node_name+.
-    def registration_start(node_name, config)
-      @timestamps[:registration_start] = Time.now
-    end
-
-    # Successfully created the private key and registered this client with the
-    # server.
-    def registration_completed
-      @metrics["#{METRICS_NS}.registration_completed"] = Time.now - @timestamps[:registration_start]
-    end
-
-    # Failed to register this client with the server.
-    def registration_failed(node_name, exception, config)
-      @metrics["#{METRICS_NS}.registration_failed"] = Time.now - @timestamps[:registration_start]
-    end
-
-    # Called before Chef client loads the node data from the server
-    def node_load_start(node_name, config)
-      @timestamps[:node_load_start] = Time.now
-    end
-
-    # Failed to load node data from the server
-    def node_load_failed(node_name, exception, config)
-      @metrics["#{METRICS_NS}.node_load_failed"] = Time.now - @timestamps[:node_load_start]
-    end
-
-    # Called after Chef client has loaded the node data.
-    # Default and override attrs from roles have been computed, but not yet applied.
-    # Normal attrs from JSON have been added to the node.
-    def node_load_completed(node, expanded_run_list, config)
-      @metrics["#{METRICS_NS}.node_load_completed"] = Time.now - @timestamps[:node_load_start]
-    end
-
-    # Called before the cookbook collection is fetched from the server.
-    def cookbook_resolution_start(expanded_run_list)
-      @timestamps[:cookbook_resolution_start] = Time.now
-    end
-
-    # Called when there is an error getting the cookbook collection from the
-    # server.
-    def cookbook_resolution_failed(expanded_run_list, exception)
-      @metrics["#{METRICS_NS}.cookbook_resolution_failed"] = Time.now - @timestamps[:cookbook_resolution_start]
-    end
-
-    # Called when the cookbook collection is returned from the server.
-    def cookbook_resolution_complete(cookbook_collection)
-      @metrics["#{METRICS_NS}.cookbook_resolution_complete"] = Time.now - @timestamps[:cookbook_resolution_start]
-    end
-
-    # Called before unneeded cookbooks are removed
-    def cookbook_clean_start
-      @timestamps[:cookbook_clean_start] = Time.now
-    end
-
-    # Called after the file at +path+ is removed. It may be removed if the
-    # cookbook containing it was removed from the run list, or if the file was
-    # removed from the cookbook.
-    def removed_cookbook_file(path)
-    end
-
-    # Called when cookbook cleaning is finished.
-    def cookbook_clean_complete
-      @metrics["#{METRICS_NS}.cookbook_clean_complete"] = Time.now - @timestamps[:cookbook_clean_start]
-    end
-
-    # Called before cookbook sync starts
-    def cookbook_sync_start(cookbook_count)
-    end
-
-    # Called when cookbook +cookbook+ has been sync'd
-    def synchronized_cookbook(cookbook_name, cookbook)
-    end
-
-    # Called when an individual file in a cookbook has been updated
-    def updated_cookbook_file(cookbook_name, path)
-    end
-
-    # Called when an error occurs during cookbook sync
-    def cookbook_sync_failed(cookbooks, exception)
-    end
-
-    # Called after all cookbooks have been sync'd.
-    def cookbook_sync_complete
-    end
-
-    ## TODO: add cookbook name to the API for file load callbacks
-
-    ## TODO: add callbacks for overall cookbook eval start and complete.
-
-    # Called when library file loading starts
-    def library_load_start(file_count)
-    end
-
-    # Called when library file has been loaded
-    def library_file_loaded(path)
-    end
-
-    # Called when a library file has an error on load.
-    def library_file_load_failed(path, exception)
-    end
-
-    # Called when library file loading has finished
-    def library_load_complete
-    end
-
-    # Called when LWRP loading starts
-    def lwrp_load_start(lwrp_file_count)
-    end
-
-    # Called after a LWR or LWP has been loaded
-    def lwrp_file_loaded(path)
-    end
-
-    # Called after a LWR or LWP file errors on load
-    def lwrp_file_load_failed(path, exception)
-    end
-
-    # Called when LWRPs are finished loading
-    def lwrp_load_complete
-    end
-
-    # Called before attribute files are loaded
-    def attribute_load_start(attribute_file_count)
-    end
-
-    # Called after the attribute file is loaded
-    def attribute_file_loaded(path)
-    end
-
-    # Called when an attribute file fails to load.
-    def attribute_file_load_failed(path, exception)
-    end
-
-    # Called when attribute file loading is finished
-    def attribute_load_complete
-    end
-
-    # Called before resource definitions are loaded
-    def definition_load_start(definition_file_count)
-    end
+module Chef
+  module Handler
+    module Datadog
+      class EventDispatcher < Chef::EventDispatcher::Base
+
+        METRICS_NS = 'chef.client.timing'
+
+        def initialize(config = {})
+          @config = Mash.new(config)
+          # If *any* api_key is not provided, this will fail immediately.
+          # @dog = Dogapi::Client.new(@config[:api_key], @config[:application_key])
+          @metrics = {}
+          @timestamps = {}
+        end
+
+        # Called at the very start of a Chef Run
+        def run_start(version)
+          @timestamps[:run_start] = Time.now
+        end
+
+        def run_started(run_status)
+        end
+
+        # Called at the end a successful Chef run.
+        def run_completed(node)
+          @metrics["#{METRICS_NS}.run_complete"] = Time.now - @timestamps[:run_start]
+        end
+
+        # Called at the end of a failed Chef run.
+        def run_failed(exception)
+          @metrics["#{METRICS_NS}.run_failed"] = Time.now - @timestamps[:run_start]
+        end
+
+        # Called right after ohai runs.
+        def ohai_completed(node)
+          @metrics["#{METRICS_NS}.ohai_completed"] = Time.now - @timestamps[:run_start]
+        end
+
+        # Announce that we're not going to register the client. Generally because
+        # we already have the private key, or because we're deliberately not using
+        # a key.
+        def skipping_registration(node_name, config)
+        end
+
+        # About to attempt to create a private key registered to the server with
+        # client +node_name+.
+        def registration_start(node_name, config)
+          @timestamps[:registration_start] = Time.now
+        end
+
+        # Successfully created the private key and registered this client with the
+        # server.
+        def registration_completed
+          @metrics["#{METRICS_NS}.registration_completed"] = Time.now - @timestamps[:registration_start]
+        end
+
+        # Failed to register this client with the server.
+        def registration_failed(node_name, exception, config)
+          @metrics["#{METRICS_NS}.registration_failed"] = Time.now - @timestamps[:registration_start]
+        end
+
+        # Called before Chef client loads the node data from the server
+        def node_load_start(node_name, config)
+          @timestamps[:node_load_start] = Time.now
+        end
+
+        # Failed to load node data from the server
+        def node_load_failed(node_name, exception, config)
+          @metrics["#{METRICS_NS}.node_load_failed"] = Time.now - @timestamps[:node_load_start]
+        end
+
+        # Called after Chef client has loaded the node data.
+        # Default and override attrs from roles have been computed, but not yet applied.
+        # Normal attrs from JSON have been added to the node.
+        def node_load_completed(node, expanded_run_list, config)
+          @metrics["#{METRICS_NS}.node_load_completed"] = Time.now - @timestamps[:node_load_start]
+        end
+
+        # Called before the cookbook collection is fetched from the server.
+        def cookbook_resolution_start(expanded_run_list)
+          @timestamps[:cookbook_resolution_start] = Time.now
+        end
+
+        # Called when there is an error getting the cookbook collection from the
+        # server.
+        def cookbook_resolution_failed(expanded_run_list, exception)
+          @metrics["#{METRICS_NS}.cookbook_resolution_failed"] = Time.now - @timestamps[:cookbook_resolution_start]
+        end
+
+        # Called when the cookbook collection is returned from the server.
+        def cookbook_resolution_complete(cookbook_collection)
+          @metrics["#{METRICS_NS}.cookbook_resolution_complete"] = Time.now - @timestamps[:cookbook_resolution_start]
+        end
+
+        # Called before unneeded cookbooks are removed
+        def cookbook_clean_start
+          @timestamps[:cookbook_clean_start] = Time.now
+        end
+
+        # Called after the file at +path+ is removed. It may be removed if the
+        # cookbook containing it was removed from the run list, or if the file was
+        # removed from the cookbook.
+        def removed_cookbook_file(path)
+        end
 
-    # Called when a resource definition has been loaded
-    def definition_file_loaded(path)
-    end
-
-    # Called when a resource definition file fails to load
-    def definition_file_load_failed(path, exception)
-    end
-
-    # Called when resource definitions are done loading
-    def definition_load_complete
-    end
-
-    # Called before recipes are loaded
-    def recipe_load_start(recipe_count)
-    end
-
-    # Called after the recipe has been loaded
-    def recipe_file_loaded(path)
-    end
-
-    # Called after a recipe file fails to load
-    def recipe_file_load_failed(path, exception)
-    end
-
-    # Called when a recipe cannot be resolved
-    def recipe_not_found(exception)
-    end
-
-    # Called when recipes have been loaded.
-    def recipe_load_complete
-    end
-
-    # Called before convergence starts
-    def converge_start(run_context)
-    end
-
-    # Called when the converge phase is finished.
-    def converge_complete
-    end
-
-    # Called if the converge phase fails
-    def converge_failed(exception)
-    end
-
-    ##################################
-    # Audit Mode Events
-    # This phase is currently experimental and these event APIs are subject to change
-    ##################################
-
-    # Called before audit phase starts
-    def audit_phase_start(run_status)
-    end
-
-    # Called when audit phase successfully finishes
-    def audit_phase_complete(audit_output)
-    end
-
-    # Called if there is an uncaught exception during the audit phase.  The audit runner should
-    # be catching and handling errors from the examples, so this is only uncaught errors (like
-    # bugs in our handling code)
-    def audit_phase_failed(exception, audit_output)
-    end
-
-    # Signifies the start of a `control_group` block with a defined name
-    def control_group_started(name)
-    end
-
-    # An example in a `control_group` block completed successfully
-    def control_example_success(control_group_name, example_data)
-    end
-
-    # An example in a `control_group` block failed with the provided error
-    def control_example_failure(control_group_name, example_data, error)
-    end
-
-    # TODO: need events for notification resolve?
-    # def notifications_resolved
-    # end
-
-    #
-    # Resource events and ordering:
-    #
-    # 1. Start the action
-    #    - resource_action_start
-    # 2. Check the guard
-    #    - resource_skipped: (goto 7) if only_if/not_if say to skip
-    # 3. Load the current resource
-    #    - resource_current_state_loaded
-    #    - resource_current_state_load_bypassed (if not why-run safe)
-    # 4. Check if why-run safe
-    #    - resource_bypassed: (goto 7) if not why-run safe
-    # 5. During processing:
-    #    - resource_update_applied: For each actual change (many per action)
-    # 6. Processing complete status:
-    #    - resource_failed if the resource threw an exception while running
-    #    - resource_failed_retriable: (goto 3) if resource failed and will be retried
-    #    - resource_updated if the resource was updated (resource_update_applied will have been called)
-    #    - resource_up_to_date if the resource was up to date (no resource_update_applied)
-    # 7. Processing complete:
-    #    - resource_completed
-    #
-
-    # Called before action is executed on a resource.
-    def resource_action_start(resource, action, notification_type=nil, notifier=nil)
-    end
-
-    # Called when a resource action has been skipped b/c of a conditional
-    def resource_skipped(resource, action, conditional)
-    end
-
-    # Called after #load_current_resource has run.
-    def resource_current_state_loaded(resource, action, current_resource)
-    end
-
-    # Called when resource current state load is skipped due to the provider
-    # not supporting whyrun mode.
-    def resource_current_state_load_bypassed(resource, action, current_resource)
-    end
-
-    # Called when evaluating a resource that does not support whyrun in whyrun mode
-    def resource_bypassed(resource, action, current_resource)
-    end
-
-    # Called when a change has been made to a resource. May be called multiple
-    # times per resource, e.g., a file may have its content updated, and then
-    # its permissions updated.
-    def resource_update_applied(resource, action, update)
-    end
-
-    # Called when a resource fails, but will retry.
-    def resource_failed_retriable(resource, action, retry_count, exception)
-    end
-
-    # Called when a resource fails and will not be retried.
-    def resource_failed(resource, action, exception)
-    end
-
-    # Called after a resource has been completely converged, but only if
-    # modifications were made.
-    def resource_updated(resource, action)
-    end
-
-    # Called when a resource has no converge actions, e.g., it was already correct.
-    def resource_up_to_date(resource, action)
-    end
-
-    # Called when a resource action has been completed
-    def resource_completed(resource)
-    end
+        # Called when cookbook cleaning is finished.
+        def cookbook_clean_complete
+          @metrics["#{METRICS_NS}.cookbook_clean_complete"] = Time.now - @timestamps[:cookbook_clean_start]
+        end
+
+        # Called before cookbook sync starts
+        def cookbook_sync_start(cookbook_count)
+        end
+
+        # Called when cookbook +cookbook+ has been sync'd
+        def synchronized_cookbook(cookbook_name, cookbook)
+        end
+
+        # Called when an individual file in a cookbook has been updated
+        def updated_cookbook_file(cookbook_name, path)
+        end
+
+        # Called when an error occurs during cookbook sync
+        def cookbook_sync_failed(cookbooks, exception)
+        end
+
+        # Called after all cookbooks have been sync'd.
+        def cookbook_sync_complete
+        end
+
+        ## TODO: add cookbook name to the API for file load callbacks
 
-    # A stream has opened.
-    def stream_opened(stream, options = {})
+        ## TODO: add callbacks for overall cookbook eval start and complete.
+
+        # Called when library file loading starts
+        def library_load_start(file_count)
+        end
+
+        # Called when library file has been loaded
+        def library_file_loaded(path)
+        end
+
+        # Called when a library file has an error on load.
+        def library_file_load_failed(path, exception)
+        end
+
+        # Called when library file loading has finished
+        def library_load_complete
+        end
+
+        # Called when LWRP loading starts
+        def lwrp_load_start(lwrp_file_count)
+        end
+
+        # Called after a LWR or LWP has been loaded
+        def lwrp_file_loaded(path)
+        end
+
+        # Called after a LWR or LWP file errors on load
+        def lwrp_file_load_failed(path, exception)
+        end
+
+        # Called when LWRPs are finished loading
+        def lwrp_load_complete
+        end
+
+        # Called before attribute files are loaded
+        def attribute_load_start(attribute_file_count)
+        end
+
+        # Called after the attribute file is loaded
+        def attribute_file_loaded(path)
+        end
+
+        # Called when an attribute file fails to load.
+        def attribute_file_load_failed(path, exception)
+        end
+
+        # Called when attribute file loading is finished
+        def attribute_load_complete
+        end
+
+        # Called before resource definitions are loaded
+        def definition_load_start(definition_file_count)
+        end
+
+        # Called when a resource definition has been loaded
+        def definition_file_loaded(path)
+        end
+
+        # Called when a resource definition file fails to load
+        def definition_file_load_failed(path, exception)
+        end
+
+        # Called when resource definitions are done loading
+        def definition_load_complete
+        end
+
+        # Called before recipes are loaded
+        def recipe_load_start(recipe_count)
+        end
+
+        # Called after the recipe has been loaded
+        def recipe_file_loaded(path)
+        end
+
+        # Called after a recipe file fails to load
+        def recipe_file_load_failed(path, exception)
+        end
+
+        # Called when a recipe cannot be resolved
+        def recipe_not_found(exception)
+        end
+
+        # Called when recipes have been loaded.
+        def recipe_load_complete
+        end
+
+        # Called before convergence starts
+        def converge_start(run_context)
+        end
+
+        # Called when the converge phase is finished.
+        def converge_complete
+        end
+
+        # Called if the converge phase fails
+        def converge_failed(exception)
+        end
+
+        ##################################
+        # Audit Mode Events
+        # This phase is currently experimental and these event APIs are subject to change
+        ##################################
+
+        # Called before audit phase starts
+        def audit_phase_start(run_status)
+        end
+
+        # Called when audit phase successfully finishes
+        def audit_phase_complete(audit_output)
+        end
+
+        # Called if there is an uncaught exception during the audit phase.  The audit runner should
+        # be catching and handling errors from the examples, so this is only uncaught errors (like
+        # bugs in our handling code)
+        def audit_phase_failed(exception, audit_output)
+        end
+
+        # Signifies the start of a `control_group` block with a defined name
+        def control_group_started(name)
+        end
+
+        # An example in a `control_group` block completed successfully
+        def control_example_success(control_group_name, example_data)
+        end
+
+        # An example in a `control_group` block failed with the provided error
+        def control_example_failure(control_group_name, example_data, error)
+        end
+
+        # TODO: need events for notification resolve?
+        # def notifications_resolved
+        # end
+
+        #
+        # Resource events and ordering:
+        #
+        # 1. Start the action
+        #    - resource_action_start
+        # 2. Check the guard
+        #    - resource_skipped: (goto 7) if only_if/not_if say to skip
+        # 3. Load the current resource
+        #    - resource_current_state_loaded
+        #    - resource_current_state_load_bypassed (if not why-run safe)
+        # 4. Check if why-run safe
+        #    - resource_bypassed: (goto 7) if not why-run safe
+        # 5. During processing:
+        #    - resource_update_applied: For each actual change (many per action)
+        # 6. Processing complete status:
+        #    - resource_failed if the resource threw an exception while running
+        #    - resource_failed_retriable: (goto 3) if resource failed and will be retried
+        #    - resource_updated if the resource was updated (resource_update_applied will have been called)
+        #    - resource_up_to_date if the resource was up to date (no resource_update_applied)
+        # 7. Processing complete:
+        #    - resource_completed
+        #
+
+        # Called before action is executed on a resource.
+        def resource_action_start(resource, action, notification_type=nil, notifier=nil)
+        end
+
+        # Called when a resource action has been skipped b/c of a conditional
+        def resource_skipped(resource, action, conditional)
+        end
+
+        # Called after #load_current_resource has run.
+        def resource_current_state_loaded(resource, action, current_resource)
+        end
+
+        # Called when resource current state load is skipped due to the provider
+        # not supporting whyrun mode.
+        def resource_current_state_load_bypassed(resource, action, current_resource)
+        end
+
+        # Called when evaluating a resource that does not support whyrun in whyrun mode
+        def resource_bypassed(resource, action, current_resource)
+        end
+
+        # Called when a change has been made to a resource. May be called multiple
+        # times per resource, e.g., a file may have its content updated, and then
+        # its permissions updated.
+        def resource_update_applied(resource, action, update)
+        end
+
+        # Called when a resource fails, but will retry.
+        def resource_failed_retriable(resource, action, retry_count, exception)
+        end
+
+        # Called when a resource fails and will not be retried.
+        def resource_failed(resource, action, exception)
+        end
+
+        # Called after a resource has been completely converged, but only if
+        # modifications were made.
+        def resource_updated(resource, action)
+        end
+
+        # Called when a resource has no converge actions, e.g., it was already correct.
+        def resource_up_to_date(resource, action)
+        end
+
+        # Called when a resource action has been completed
+        def resource_completed(resource)
+        end
+
+        # A stream has opened.
+        def stream_opened(stream, options = {})
+        end
+
+        # A stream has closed.
+        def stream_closed(stream, options = {})
+        end
+
+        # A chunk of data from a stream.  The stream is managed by "stream," which
+        # can be any tag whatsoever.  Data in different "streams" may not be placed
+        # on the same line or even sent to the same console.
+        def stream_output(stream, output, options = {})
+        end
+
+        # Called before handlers run
+        def handlers_start(handler_count)
+        end
+
+        # Called after an individual handler has run
+        def handler_executed(handler)
+        end
+
+        # Called after all handlers have executed
+        def handlers_completed
+        end
+
+        # Called when an assertion declared by a provider fails
+        def provider_requirement_failed(action, resource, exception, message)
+        end
+
+        # Called when a provider makes an assumption after a failed assertion
+        # in whyrun mode, in order to allow execution to continue
+        def whyrun_assumption(action, resource, message)
+        end
+
+        # Emit a message about something being deprecated.
+        def deprecation(message, location=caller(2..2)[0])
+        end
+
+        # An uncategorized message. This supports the case that a user needs to
+        # pass output that doesn't fit into one of the callbacks above. Note that
+        # there's no semantic information about the content or importance of the
+        # message. That means that if you're using this too often, you should add a
+        # callback for it.
+        def msg(message)
+        end
+
+      end
     end
-
-    # A stream has closed.
-    def stream_closed(stream, options = {})
-    end
-
-    # A chunk of data from a stream.  The stream is managed by "stream," which
-    # can be any tag whatsoever.  Data in different "streams" may not be placed
-    # on the same line or even sent to the same console.
-    def stream_output(stream, output, options = {})
-    end
-
-    # Called before handlers run
-    def handlers_start(handler_count)
-    end
-
-    # Called after an individual handler has run
-    def handler_executed(handler)
-    end
-
-    # Called after all handlers have executed
-    def handlers_completed
-    end
-
-    # Called when an assertion declared by a provider fails
-    def provider_requirement_failed(action, resource, exception, message)
-    end
-
-    # Called when a provider makes an assumption after a failed assertion
-    # in whyrun mode, in order to allow execution to continue
-    def whyrun_assumption(action, resource, message)
-    end
-
-    # Emit a message about something being deprecated.
-    def deprecation(message, location=caller(2..2)[0])
-    end
-
-    # An uncategorized message. This supports the case that a user needs to
-    # pass output that doesn't fit into one of the callbacks above. Note that
-    # there's no semantic information about the content or importance of the
-    # message. That means that if you're using this too often, you should add a
-    # callback for it.
-    def msg(message)
-    end
-
   end
 end

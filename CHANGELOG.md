@@ -1,8 +1,10 @@
 Changes
 =======
 
-# 0.7.0 / Unreleased
+# 0.7.0 / 2015-10-22
 
+* [FEATURE] Support passing `DATADOG_PROXY` env var to control `dogapi` behavior, [#65][] [@datwiz][]
+* [OPTIMIZE] Only map `tags` if non-nil, [#66][] [@owen][]
 * [MISC] Style updates, [#60][] [@miketheman][]
 * [MISC] Update test matrix to handle latest released major versions, [#59][] [@miketheman][]
 
@@ -69,7 +71,11 @@ And all other versions were prior to this. See git history for more.
 [#52]: https://github.com/DataDog/chef-handler-datadog/issues/52
 [#59]: https://github.com/DataDog/chef-handler-datadog/issues/59
 [#60]: https://github.com/DataDog/chef-handler-datadog/issues/60
+[#65]: https://github.com/DataDog/chef-handler-datadog/issues/65
+[#66]: https://github.com/DataDog/chef-handler-datadog/issues/66
 [@alq]: https://github.com/alq
+[@datwiz]: https://github.com/datwiz
 [@dwradcliffe]: https://github.com/dwradcliffe
 [@miketheman]: https://github.com/miketheman
+[@owen]: https://github.com/owen
 [@remh]: https://github.com/remh

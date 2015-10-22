@@ -20,6 +20,7 @@ class DatadogChefEvents
     #       method calls
     @event_body = ''
   end
+
   # set the dogapi client handle
   #
   # @param dogapi_client [Dogapi::Client] datadog api client handle
@@ -77,7 +78,7 @@ class DatadogChefEvents
                                             priority: @event_priority,
                                             source_type_name: 'chef',
                                             tags: @tags
-    ), host: @hostname)
+                                           ), host: @hostname)
 
     begin
       # FIXME: nice-to-have: abstract format of return value away a bit

@@ -9,20 +9,20 @@ Gem::Specification.new do |gem|
   gem.version       = ChefHandlerDatadog::VERSION
 
   gem.files         = `git ls-files`.split($\) # rubocop:disable SpecialGlobalVars
-  gem.executables   = gem.files.grep(/^bin\//).map { |f| File.basename(f) }
-  gem.test_files    = gem.files.grep(/^(test|spec|features)\//)
+  gem.executables   = gem.files.grep(%r{^bin\/}).map { |f| File.basename(f) }
+  gem.test_files    = gem.files.grep(%r{^(test|spec|features)\/})
   gem.require_paths = ['lib']
   gem.extra_rdoc_files = ['README.md', 'LICENSE.txt']
 
   gem.add_dependency 'dogapi', '>= 1.6'
 
-  gem.add_development_dependency 'appraisal', '~> 1.0.0'
+  gem.add_development_dependency 'appraisal', '~> 2.0.1'
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'chef', '>= 10.14.4', '<= 13'
   gem.add_development_dependency 'dotenv'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec', '~> 3.2.0'
-  gem.add_development_dependency 'rubocop', '~> 0.29.1'
+  gem.add_development_dependency 'rubocop', '~> 0.34.2'
   gem.add_development_dependency 'simplecov'
   gem.add_development_dependency 'vcr'
   gem.add_development_dependency 'webmock'

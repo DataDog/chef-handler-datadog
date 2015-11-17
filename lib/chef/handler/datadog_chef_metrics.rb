@@ -41,7 +41,7 @@ class DatadogChefMetrics
     # If there is a failure during compile phase, a large portion of
     # run_status may be unavailable. Bail out here
     warn_msg = 'Error during compile phase, no Datadog metrics available.'
-    return Chef::Log.warn(warn_msg) if @run_status.elapsed_time.nil?
+    return Chef::Log.warn(warn_msg) if compile_error?
 
     @dog.emit_point('chef.resources.total', @run_status.all_resources.length, host: @hostname)
     @dog.emit_point('chef.resources.updated', @run_status.updated_resources.length, host: @hostname)
@@ -49,5 +49,11 @@ class DatadogChefMetrics
     Chef::Log.debug('Submitted Chef metrics back to Datadog')
   rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
     Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
+  end
+
+  private
+
+  def compile_error?
+    @run_status.all_resources.nil? || @run_status.elapsed_time.nil? || @run_status.updated_resources.nil?
   end
 end # end class DatadogChefMetrics

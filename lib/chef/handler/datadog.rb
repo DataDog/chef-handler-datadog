@@ -55,6 +55,7 @@ class Chef
             .with_hostname(hostname)
             .with_run_status(run_status)
             .with_application_key(config[:application_key])
+            .with_retries(@config[:tags_submission_retries])
 
         # Build the chef event information
         @event =

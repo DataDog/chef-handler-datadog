@@ -68,9 +68,9 @@ class Chef
 
       # Submit metrics, event, and tags information to datadog
       def send_report_to_datadog
-        @metrics.emit_to_datadog
-        @event.emit_to_datadog
-        @tags.send_update_to_datadog
+        @metrics.emit_to_datadog unless @config[:skip_metrics]
+        @event.emit_to_datadog unless @config[:skip_events]
+        @tags.send_update_to_datadog unless @config[:skip_update_tags]
       rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
         Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
         Chef::Log.error('Data to be submitted was:')

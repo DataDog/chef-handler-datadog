@@ -16,12 +16,20 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     METRICS_ENDPOINT  = BASE_URL + '/api/v1/series'
   end
 
+  let(:skip_metrics) { false }
+  let(:skip_events) { false }
+  let(:skip_update_tags) { false }
+
   before(:each) do
     @handler = Chef::Handler::Datadog.new(
-      :api_key         => API_KEY,
-      :application_key => APPLICATION_KEY,
+      :api_key          => API_KEY,
+      :application_key  => APPLICATION_KEY,
+      :skip_metrics     => skip_metrics,
+      :skip_events      => skip_events,
+      :skip_update_tags => skip_update_tags,
     )
   end
+
 
   describe 'initialize' do
     it 'should allow config hash to have string keys' do
@@ -29,6 +37,26 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         'api_key'         => API_KEY,
         'application_key' => APPLICATION_KEY,
       )
+    end
+
+    context 'config options passed' do
+      context 'skip metrics' do
+        let(:skip_metrics) { true }
+        subject { @handler.config[:skip_metrics] }
+        it { is_expected.to eq true }
+      end
+
+      context 'skip event' do
+        let(:skip_events) { true }
+        subject { @handler.config[:skip_events] }
+        it { is_expected.to eq true }
+      end
+
+      context 'skip event' do
+        let(:skip_update_tags) { true }
+        subject { @handler.config[:skip_update_tags] }
+        it { is_expected.to eq true }
+      end
     end
   end
 
@@ -60,6 +88,14 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       end
     end
 
+    context 'does not emit metrics' do
+      let(:skip_metrics) { true }
+      subject { a_request(:post, METRICS_ENDPOINT).with(
+          :query => { 'api_key' => @handler.config[:api_key] }
+        )}
+      it { is_expected.to have_been_made.times(0) }
+    end
+
     context 'emits events' do
       it 'posts an event' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
@@ -78,6 +114,25 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       end
     end
 
+    context 'does not emit events' do
+      let(:skip_events) { true }
+
+      subject { a_request(:post, EVENTS_ENDPOINT).with(
+          :query => { 'api_key' => @handler.config[:api_key] },
+          :body => hash_including(:msg_text => 'Chef updated 0 resources out of 0 resources total.'),
+          :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} "),
+          :body => hash_including(:tags => ['env:testing']),
+        )}
+      it { is_expected.to have_been_made.times(0)}
+
+      subject { a_request(:post, EVENTS_ENDPOINT).with(
+          :query => { 'api_key' => @handler.config[:api_key] },
+          :body => hash_including(:priority => 'low'),
+        )}
+
+      it { is_expected.to have_been_made.times(0) }
+    end
+
     context 'sets tags' do
       it 'puts the tags for the current node' do
         # We no longer need to query the tag api for current tags,
@@ -94,6 +149,24 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
           :body => { 'tags' => ['env:testing'] },
         )).to have_been_made.times(1)
       end
+    end
+
+    context 'does not set tags' do
+      let(:skip_update_tags) { true }
+
+      subject { a_request(:get, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key] },
+        )}
+      it { is_expected.to have_been_made.times(0) }
+
+      subject { a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => { 'tags' => ['env:testing'] },
+        )}
+      it { is_expected.to have_been_made.times(0) }
     end
   end
 

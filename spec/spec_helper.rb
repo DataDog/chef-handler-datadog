@@ -7,6 +7,9 @@ require 'rspec'
 require 'vcr'
 require 'webmock/rspec'
 
+# need a fake resource for mocking the result_set via Chef::ResourceBuilder
+require 'chef/resource/package'
+
 # Include our code
 require 'chef/handler/datadog'
 

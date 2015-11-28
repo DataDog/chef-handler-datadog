@@ -23,6 +23,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     )
   end
 
+
   describe 'initialize' do
     it 'should allow config hash to have string keys' do
       Chef::Handler::Datadog.new(
@@ -55,8 +56,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     context 'emits metrics' do
       it 'reports metrics' do
         expect(a_request(:post, METRICS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] }
-        )).to have_been_made.times(3)
+          :query => { 'api_key' => @handler.config[:api_key] },
+          :body => hash_including(:series))).to have_been_made.times(1)
       end
     end
 
@@ -386,6 +387,100 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
           :body => hash_including(:msg_title => "Chef failed during compile phase on #{@node.name} "),
         )).to have_been_made.times(1)
       end
+    end
+  end
+
+  describe 'detailed metrics' do
+    before(:each) do
+      @node = Chef::Node.build('chef.handler.datadog.detailed-resource-metrics')
+
+      @node.send(:chef_environment, 'testing')
+      @node.send(:run_list, 'role[highlander]')
+      @node.normal.tags = ['the_one_and_only'] # TODO: check what tags are being passed
+
+      @events = Chef::EventDispatch::Dispatcher.new
+      @run_context = Chef::RunContext.new(@node, {}, @events)
+      @run_status = Chef::RunStatus.new(@node, @events)
+
+      allow_any_instance_of(Chef::ResourceResolver).to receive(:resolve).and_return(Chef::Resource::Package)
+
+      all_resources = [
+        Chef::ResourceBuilder.new(name: 'whiskers',
+                                  type: 'package',
+                                  cookbook_name: 'cookbook-test',
+                                  recipe_name: 'default',
+                                  run_context: @run_context ).build,
+        Chef::ResourceBuilder.new(name: 'paws',
+                                  type: 'package',
+                                  cookbook_name: 'cookbook-test',
+                                  recipe_name: 'default',
+                                  run_context: @run_context ).build,
+        ]
+
+      all_resources.map { |r| r.updated_by_last_action(true) }
+      @run_context.resource_collection.all_resources.replace(all_resources)
+
+      # freezing time, want to asser the exact payload
+      @expected_time = Time.new('2015','01','01')
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 2)
+      @run_status.start_clock
+      @run_status.stop_clock
+
+      @run_status.run_context = @run_context
+
+      # Run the report
+      @handler.run_report_unsafe(@run_status)
+    end
+
+    context "collects detailed metrics" do
+      subject { @handler.metrics.details }
+      it { is_expected.to include(
+        {:name=>"chef.resources.convergence_time",
+         :tags=>"resource_name:whiskers cookbook:cookbook-test recipe:default",
+         :value=>0},
+         {:name=>"chef.resources.convergence_time",
+         :tags=>"resource_name:paws cookbook:cookbook-test recipe:default",
+         :value=>0}
+         )
+       }
+    end
+
+    context "sends detailed metrics" do
+      let(:request_body) { { series: [] } }
+
+      it 'posts detailed metrics' do
+        [{metric: "chef.resources.convergence_time",
+          points: [[1420099202,0.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil,
+          tags: "resource_name:whiskers cookbook:cookbook-test recipe:default"},
+         {metric: "chef.resources.convergence_time",
+          points: [[1420099202,0.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil,
+          tags: "resource_name:paws cookbook:cookbook-test recipe:default"},
+         {metric: "chef.resources.total",
+          points: [[1420099202,2.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil},
+         {metric: "chef.resources.updated",
+          points: [[1420099202,2.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil},
+         {metric: "chef.resources.elapsed_time",
+          points: [[1420099202,2.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil}].each { |b| request_body[:series] << b }
+
+       expect(a_request(:post, METRICS_ENDPOINT).with(
+          :query => { 'api_key' => @handler.config[:api_key] },
+          :body => request_body)).to have_been_made.times(1)
+       end
     end
   end
 

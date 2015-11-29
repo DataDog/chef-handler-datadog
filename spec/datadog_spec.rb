@@ -16,10 +16,14 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     METRICS_ENDPOINT  = BASE_URL + '/api/v1/series'
   end
 
+
+  let(:cache_resource_details) { false }
+
   before(:each) do
     @handler = Chef::Handler::Datadog.new(
       :api_key         => API_KEY,
       :application_key => APPLICATION_KEY,
+      :cache_resource_details => cache_resource_details,
     )
   end
 
@@ -29,6 +33,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       Chef::Handler::Datadog.new(
         'api_key'         => API_KEY,
         'application_key' => APPLICATION_KEY,
+        'cache_resource_details' => cache_resource_details,
       )
     end
   end
@@ -420,34 +425,60 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       all_resources.map { |r| r.updated_by_last_action(true) }
       @run_context.resource_collection.all_resources.replace(all_resources)
 
+      @all_resources_metrics_details = [
+        {:name=>"chef.resources.convergence_time",
+        :tags=>"resource_name:whiskers cookbook:cookbook-test recipe:default",
+        :value=>0},
+        {:name=>"chef.resources.convergence_time",
+        :tags=>"resource_name:paws cookbook:cookbook-test recipe:default",
+        :value=>0}]
+
       # freezing time, want to asser the exact payload
       @expected_time = Time.new('2015','01','01')
-      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 2)
+      @finish_time = @expected_time + 2
+      allow(Time).to receive(:now).and_return(@expected_time, @finish_time)
       @run_status.start_clock
       @run_status.stop_clock
 
       @run_status.run_context = @run_context
-
-      # Run the report
-      @handler.run_report_unsafe(@run_status)
     end
 
     context "collects detailed metrics" do
+      before { @handler.run_report_unsafe(@run_status) }
       subject { @handler.metrics.details }
-      it { is_expected.to include(
-        {:name=>"chef.resources.convergence_time",
-         :tags=>"resource_name:whiskers cookbook:cookbook-test recipe:default",
-         :value=>0},
-         {:name=>"chef.resources.convergence_time",
-         :tags=>"resource_name:paws cookbook:cookbook-test recipe:default",
-         :value=>0}
-         )
-       }
+      it { is_expected.to eq @all_resources_metrics_details }
+    end
+
+    context 'saves resource details' do
+      let(:cache_file) { double('cache-file') }
+      let(:cache_filename) { "/tmp/chef-metrics-#{@finish_time.to_i}.json" }
+
+      context 'cache enabled' do
+        let(:cache_resource_details) { true }
+        before do
+          allow(File).to receive(:open).and_call_original
+          allow(File).to receive(:open).with(cache_filename, 'w+').and_yield(cache_file)
+        end
+        subject { cache_file }
+        it { is_expected.to receive(:write).with(JSON.dump(@all_resources_metrics_details)) }
+        after { @handler.run_report_unsafe(@run_status) }
+      end
+
+      context 'cache disabled' do
+        let(:cache_resource_details) { false }
+        before do
+         allow(File).to receive(:open).and_call_original
+         allow(File).to receive(:open).with(cache_filename, 'w+').and_yield(cache_file)
+         @handler.run_report_unsafe(@run_status)
+        end
+        subject { cache_file }
+        it { is_expected.not_to receive(:write) }
+      end
     end
 
     context "sends detailed metrics" do
       let(:request_body) { { series: [] } }
-
+      before { @handler.run_report_unsafe(@run_status) }
       it 'posts detailed metrics' do
         [{metric: "chef.resources.convergence_time",
           points: [[1420099202,0.0]],

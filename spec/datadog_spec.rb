@@ -16,18 +16,24 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     METRICS_ENDPOINT  = BASE_URL + '/api/v1/series'
   end
 
+
+  let(:cache_resource_details) { false }
+
   before(:each) do
     @handler = Chef::Handler::Datadog.new(
       :api_key         => API_KEY,
       :application_key => APPLICATION_KEY,
+      :cache_resource_details => cache_resource_details,
     )
   end
+
 
   describe 'initialize' do
     it 'should allow config hash to have string keys' do
       Chef::Handler::Datadog.new(
         'api_key'         => API_KEY,
         'application_key' => APPLICATION_KEY,
+        'cache_resource_details' => cache_resource_details,
       )
     end
   end
@@ -55,8 +61,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     context 'emits metrics' do
       it 'reports metrics' do
         expect(a_request(:post, METRICS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] }
-        )).to have_been_made.times(3)
+          :query => { 'api_key' => @handler.config[:api_key] },
+          :body => hash_including(:series))).to have_been_made.times(1)
       end
     end
 
@@ -386,6 +392,126 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
           :body => hash_including(:msg_title => "Chef failed during compile phase on #{@node.name} "),
         )).to have_been_made.times(1)
       end
+    end
+  end
+
+  describe 'detailed metrics' do
+    before(:each) do
+      @node = Chef::Node.build('chef.handler.datadog.detailed-resource-metrics')
+
+      @node.send(:chef_environment, 'testing')
+      @node.send(:run_list, 'role[highlander]')
+      @node.normal.tags = ['the_one_and_only'] # TODO: check what tags are being passed
+
+      @events = Chef::EventDispatch::Dispatcher.new
+      @run_context = Chef::RunContext.new(@node, {}, @events)
+      @run_status = Chef::RunStatus.new(@node, @events)
+
+      allow_any_instance_of(Chef::ResourceResolver).to receive(:resolve).and_return(Chef::Resource::Package)
+
+      all_resources = [
+        Chef::ResourceBuilder.new(name: 'whiskers',
+                                  type: 'package',
+                                  cookbook_name: 'cookbook-test',
+                                  recipe_name: 'default',
+                                  run_context: @run_context ).build,
+        Chef::ResourceBuilder.new(name: 'paws',
+                                  type: 'package',
+                                  cookbook_name: 'cookbook-test',
+                                  recipe_name: 'default',
+                                  run_context: @run_context ).build,
+        ]
+
+      all_resources.map { |r| r.updated_by_last_action(true) }
+      @run_context.resource_collection.all_resources.replace(all_resources)
+
+      @all_resources_metrics_details = [
+        {:name=>"chef.resources.convergence_time",
+        :tags=>"resource_name:whiskers cookbook:cookbook-test recipe:default",
+        :value=>0},
+        {:name=>"chef.resources.convergence_time",
+        :tags=>"resource_name:paws cookbook:cookbook-test recipe:default",
+        :value=>0}]
+
+      # freezing time, want to asser the exact payload
+      @expected_time = Time.new('2015','01','01')
+      @finish_time = @expected_time + 2
+      allow(Time).to receive(:now).and_return(@expected_time, @finish_time)
+      @run_status.start_clock
+      @run_status.stop_clock
+
+      @run_status.run_context = @run_context
+    end
+
+    context "collects detailed metrics" do
+      before { @handler.run_report_unsafe(@run_status) }
+      subject { @handler.metrics.details }
+      it { is_expected.to eq @all_resources_metrics_details }
+    end
+
+    context 'saves resource details' do
+      let(:cache_file) { double('cache-file') }
+      let(:cache_filename) { "/tmp/chef-metrics-#{@finish_time.to_i}.json" }
+
+      context 'cache enabled' do
+        let(:cache_resource_details) { true }
+        before do
+          allow(File).to receive(:open).and_call_original
+          allow(File).to receive(:open).with(cache_filename, 'w+').and_yield(cache_file)
+        end
+        subject { cache_file }
+        it { is_expected.to receive(:write).with(JSON.dump(@all_resources_metrics_details)) }
+        after { @handler.run_report_unsafe(@run_status) }
+      end
+
+      context 'cache disabled' do
+        let(:cache_resource_details) { false }
+        before do
+         allow(File).to receive(:open).and_call_original
+         allow(File).to receive(:open).with(cache_filename, 'w+').and_yield(cache_file)
+         @handler.run_report_unsafe(@run_status)
+        end
+        subject { cache_file }
+        it { is_expected.not_to receive(:write) }
+      end
+    end
+
+    context "sends detailed metrics" do
+      let(:request_body) { { series: [] } }
+      before { @handler.run_report_unsafe(@run_status) }
+      it 'posts detailed metrics' do
+        [{metric: "chef.resources.convergence_time",
+          points: [[1420099202,0.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil,
+          tags: "resource_name:whiskers cookbook:cookbook-test recipe:default"},
+         {metric: "chef.resources.convergence_time",
+          points: [[1420099202,0.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil,
+          tags: "resource_name:paws cookbook:cookbook-test recipe:default"},
+         {metric: "chef.resources.total",
+          points: [[1420099202,2.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil},
+         {metric: "chef.resources.updated",
+          points: [[1420099202,2.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil},
+         {metric: "chef.resources.elapsed_time",
+          points: [[1420099202,2.0]],
+          type: "gauge",
+          host: "chef.handler.datadog.detailed-resource-metrics",
+          device: nil}].each { |b| request_body[:series] << b }
+
+       expect(a_request(:post, METRICS_ENDPOINT).with(
+          :query => { 'api_key' => @handler.config[:api_key] },
+          :body => request_body)).to have_been_made.times(1)
+       end
     end
   end
 

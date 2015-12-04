@@ -42,8 +42,6 @@ describe Chef::Handler::DatadogChefMetrics do
 
     before(:each) do
       node.send(:chef_environment, 'testing')
-
-      # allow(Time).to receive(:now).and_return(Time.new('2015','01','01'))
       allow(run_status).to receive(:elapsed_time).and_return 2
 
       # dont' want it to iterate over any Chef::Resource list here, empty

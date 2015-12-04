@@ -105,7 +105,7 @@ class DatadogChefMetrics
         cookbook:          resource.cookbook_name,
         recipe:            resource.recipe_name,
         updated:           resource.updated,
-        resource_class:    resource_class(resource.cookbook_name)
+        resource_class:    resource_class_for(resource.cookbook_name)
       }.merge!(extra_tags)
 
       resource_metrics << { name: 'chef.resources.convergence_time',
@@ -118,7 +118,7 @@ class DatadogChefMetrics
 
   # assign extra properties to the resource based on the configuration dict
   # this is used to define owners of the particular resource for tracing
-  def resource_class(cookbook_name)
+  def resource_class_for(cookbook_name)
     @resource_class_map[cookbook_name] || DEFAULT_RESOURCE_CLASS
   end
 

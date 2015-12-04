@@ -108,7 +108,7 @@ describe Chef::Handler::DatadogChefMetrics do
       end
 
       it 'detects resource_class' do
-        expect(@metrics).to receive(:resource_class).with(:'cats-base')
+        expect(@metrics).to receive(:resource_class_for).with(:'cats-base')
         @metrics.collect_detailed_resource_metrics
       end
 

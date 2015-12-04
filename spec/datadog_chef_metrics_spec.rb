@@ -12,12 +12,63 @@ describe Chef::Handler::DatadogChefMetrics do
   let(:dog) { double('datadog-client').as_null_object }
   let(:hostname) { double('hostname') }
 
+  let(:log_filename) { '/tmp/chef-metrics-1420099200.json' }
+  let(:log_results) { double('log-results') }
   let(:datadog_chef_metrics) {
     DatadogChefMetrics.new
     .with_dogapi_client(dog)
     .with_hostname(hostname)
     .with_run_status(run_status)
+    .with_log(log_results)
   }
+
+  describe '#initialize' do
+    it 'sets tmp file properly' do
+      expect(datadog_chef_metrics.log_file_path).to match(/chef-metrics/)
+    end
+  end
+
+  describe '#write_detailed_resource_metrics' do
+    let(:log_file) { double('log-file') }
+
+    # there is no factory for those metrics thus crafting the fixtures manually
+    let(:fake_metrics) { [
+                           { name: "chef.resources.convergence_time",
+                             value: 0.1,
+                             tags: "resource_name:whiskers cookbook: recipe: updated:true resource_class:role"},
+                           {metric: "chef.resources.convergence_time",
+                            value: 0.2,
+                            tags: "resource_name:paws cookbook: recipe: updated:true resource_class:role"}] }
+
+    before(:each) do
+      node.send(:chef_environment, 'testing')
+
+      # allow(Time).to receive(:now).and_return(Time.new('2015','01','01'))
+      allow(run_status).to receive(:elapsed_time).and_return 2
+
+      # dont' want it to iterate over any Chef::Resource list here, empty
+      allow(run_status).to receive(:all_resources).and_return []
+
+      # this short circuits the resource enumeration and parsing
+      datadog_chef_metrics.details = fake_metrics
+      # mock the file
+      allow(File).to receive(:open).and_yield(log_file)
+    end
+
+    context 'caching enabled' do
+      let(:log_results) { true }
+      after { datadog_chef_metrics.emit_to_datadog }
+      subject { log_file }
+      it { is_expected.to receive(:write).with(JSON.dump(fake_metrics)) }
+    end
+
+    context 'caching disabled' do
+      let(:log_results) { false }
+      before { datadog_chef_metrics.emit_to_datadog }
+      subject { log_file }
+      it { is_expected.not_to receive(:write).with(JSON.dump(fake_metrics)) }
+    end
+  end
 
   describe '#collect_detailed_resource_metrics' do
     before(:each) do

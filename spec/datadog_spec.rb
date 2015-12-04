@@ -19,12 +19,14 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
   let(:skip_metrics) { false }
   let(:skip_events) { false }
   let(:skip_update_tags) { false }
+  let(:log_resource_details) { false }
   let(:resource_class_map) { nil }
 
   before(:each) do
     @handler = Chef::Handler::Datadog.new(
       :api_key              => API_KEY,
       :application_key      => APPLICATION_KEY,
+      :log_resource_details => log_resource_details,
       :skip_metrics         => skip_metrics,
       :skip_events          => skip_events,
       :skip_update_tags     => skip_update_tags,
@@ -40,6 +42,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         'skip_metrics'          => skip_metrics,
         'skip_events'           => skip_events,
         'skip_update_tags'      => skip_update_tags,
+        'log_resource_details'  => log_resource_details,
         'resource_class_map'    => resource_class_map
       )
     end
@@ -541,6 +544,24 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       before { @handler.run_report_unsafe(@run_status) }
       subject { @handler.metrics.details }
       it { is_expected.to eq @all_resources_metrics_details }
+    end
+
+    context 'saves resource details' do
+      context 'logging enabled' do
+        let(:log_resource_details) { true }
+        it 'writes to a file' do
+          expect_any_instance_of(DatadogChefMetrics).to receive(:write_detailed_resource_metrics)
+          @handler.run_report_unsafe(@run_status)
+        end
+      end
+
+      context 'logging disabled' do
+        let(:log_resource_details) { false }
+        it 'does not write to a file' do
+          expect_any_instance_of(DatadogChefMetrics).not_to receive(:write_detailed_resource_metrics)
+          @handler.run_report_unsafe(@run_status)
+        end
+      end
     end
 
     context "sends detailed metrics" do

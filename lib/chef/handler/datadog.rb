@@ -48,6 +48,7 @@ class Chef
             .with_dogapi_client(@dog)
             .with_hostname(hostname)
             .with_run_status(run_status)
+            .with_log(@config[:log_resource_details])
             .with_resource_class_map(@config[:resource_class_map])
 
         # Collect and prepare tags

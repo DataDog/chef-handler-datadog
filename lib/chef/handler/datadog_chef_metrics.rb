@@ -8,12 +8,15 @@ BUILD_STAGE_NAME = 'build'
 # helper class for sending datadog metrics from a chef run
 class DatadogChefMetrics
   attr_accessor :details
+  attr_reader :log_file_path
 
   def initialize
     @dog = nil
     @hostname = ''
     @run_status = nil
     @details = nil
+    @log_results = false
+    @log_file_path = "/tmp/chef-metrics-#{Time.now.to_i}.json"
   end
 
   # set the dogapi client handle
@@ -41,6 +44,15 @@ class DatadogChefMetrics
   def with_run_status(run_status)
     @run_status = run_status
     @node = run_status.node
+    self
+  end
+
+  # enables storing the metrics' dump locally
+  #
+  # @param enabled [Bool] option to enable caching of results in /tmp
+  # @return [DatadogChefMetrics] instance reference to self enabling method chaining
+  def with_log(enabled)
+    @log_results = enabled
     self
   end
 
@@ -72,6 +84,7 @@ class DatadogChefMetrics
     }
 
     collect_detailed_resource_metrics(env_tags)
+    write_detailed_resource_metrics if @log_results
 
     @dog.batch_metrics do
       @details.each { |m| @dog.emit_point(m[:name], m[:value], host: @hostname, tags: m[:tags]) }
@@ -107,5 +120,16 @@ class DatadogChefMetrics
   # this is used to define owners of the particular resource for tracing
   def resource_class(cookbook_name)
     @resource_class_map[cookbook_name] || DEFAULT_RESOURCE_CLASS
+  end
+
+  # dump raw metrics to a file in the directory
+  def write_detailed_resource_metrics
+    warn_msg = 'No metrics to be written. Not creating file'
+    return Chef::Log.warn(warn_msg) unless @details
+
+    File.open(@log_file_path, 'w+') { |f| f.write(JSON.dump(@details)) }
+    Chef::Log.info("Saved metrics to file: #{@log_file_path}")
+  rescue StandardError
+    Chef::Log.error("Could not save the status to the file in: #{@log_file_path}")
   end
 end # end class DatadogChefMetrics

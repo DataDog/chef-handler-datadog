@@ -56,11 +56,11 @@ class DatadogChefMetrics
     self
   end
 
-  # sets a list of cookbooks considered base platform
+  # enables resolution of resource class from the passed map
   #
   # @param Array::String
   # @return [DatadogChefMetrics] instance reference to self enabling method chaining
-  def with_resource_class_map(resource_class_map)
+  def with_classified_resources(resource_class_map)
     @resource_class_map ||= resource_class_map || {}
     self
   end

@@ -101,7 +101,7 @@ describe Chef::Handler::DatadogChefMetrics do
 
         @metrics = DatadogChefMetrics.new
         .with_run_status(@run_status)
-        .with_resource_class_map(@resource_class_map)
+        .with_classified_resources(@resource_class_map)
 
       end
 
@@ -140,7 +140,7 @@ describe Chef::Handler::DatadogChefMetrics do
 
         @metrics = DatadogChefMetrics.new
         .with_run_status(@run_status)
-        .with_resource_class_map(@resource_class_map)
+        .with_classified_resources(@resource_class_map)
 
       end
 

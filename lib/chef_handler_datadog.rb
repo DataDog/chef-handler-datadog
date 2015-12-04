@@ -2,5 +2,5 @@
 # Helper module for version number only.
 # Real deal in 'chef/handler/datadog.rb'
 module ChefHandlerDatadog
-  VERSION = '0.8.2.twilio1'
+  VERSION = '0.8.2.dev'
 end

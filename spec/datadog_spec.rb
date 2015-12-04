@@ -486,7 +486,6 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       @node.send(:chef_environment, 'testing')
       @node.send(:run_list, 'role[highlander]')
-      @node.normal.tags = ['the_one_and_only'] # TODO: check what tags are being passed
 
       @events = Chef::EventDispatch::Dispatcher.new
       @run_context = Chef::RunContext.new(@node, {}, @events)

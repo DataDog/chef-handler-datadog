@@ -72,7 +72,9 @@ class DatadogChefMetrics
     warn_msg = 'Error during compile phase, no Datadog metrics available.'
     return Chef::Log.warn(warn_msg) if @run_status.elapsed_time.nil?
 
-    # HACK: we're loosing role information, only 1 gets populated
+    # TODO: we're loosing role information, only 1 gets populated
+    # make sure the tags are merged for multiple roles
+    # TODO: allow merging tags from @node.tags list
     env_tags = {
       realm: @node[:realm],
       stage: @node[:realm] ? DEPLOY_STAGE_NAME : BUILD_STAGE_NAME,

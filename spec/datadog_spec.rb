@@ -19,6 +19,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
   let(:skip_metrics) { false }
   let(:skip_events) { false }
   let(:skip_update_tags) { false }
+  let(:resource_class_map) { nil }
 
   before(:each) do
     @handler = Chef::Handler::Datadog.new(
@@ -26,7 +27,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       :application_key      => APPLICATION_KEY,
       :skip_metrics         => skip_metrics,
       :skip_events          => skip_events,
-      :skip_update_tags     => skip_update_tags
+      :skip_update_tags     => skip_update_tags,
+      :resource_class_map   => resource_class_map
     )
   end
 
@@ -37,7 +39,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         'application_key'       => APPLICATION_KEY,
         'skip_metrics'          => skip_metrics,
         'skip_events'           => skip_events,
-        'skip_update_tags'      => skip_update_tags
+        'skip_update_tags'      => skip_update_tags,
+        'resource_class_map'    => resource_class_map
       )
     end
 
@@ -58,6 +61,16 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         let(:skip_update_tags) { true }
         subject { @handler.config[:skip_update_tags] }
         it { is_expected.to eq true }
+      end
+
+      context 'resource_class_map' do
+          let(:resource_class_map) {
+            { :'plaform-base' => 'base',
+              :ami => 'role' }
+            }
+
+          subject { @handler.config[:resource_class_map][:ami] }
+          it { is_expected.to eq('role') }
       end
     end
   end
@@ -85,8 +98,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     context 'emits metrics' do
       it 'reports metrics' do
         expect(a_request(:post, METRICS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] }
-        )).to have_been_made.times(3)
+          :query => { 'api_key' => @handler.config[:api_key] },
+          :body => hash_including(:series))).to have_been_made.times(1)
       end
     end
 
@@ -461,6 +474,82 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
           :body => hash_including(:msg_title => "Chef failed during compile phase on #{@node.name} "),
         )).to have_been_made.times(1)
       end
+    end
+  end
+
+  describe 'detailed metrics' do
+    before(:each) do
+      @node = Chef::Node.build('chef.handler.datadog.detailed-resource-metrics')
+
+      @node.send(:chef_environment, 'testing')
+      @node.send(:run_list, 'role[highlander]')
+      @node.normal.tags = ['the_one_and_only'] # TODO: check what tags are being passed
+
+      @events = Chef::EventDispatch::Dispatcher.new
+      @run_context = Chef::RunContext.new(@node, {}, @events)
+      @run_status = Chef::RunStatus.new(@node, @events)
+
+      all_resources = [
+        Chef::Resource.new('whiskers'),
+        Chef::Resource.new('paws'),
+        ]
+
+      # We're only updating the status here, extra information here
+      all_resources.map { |r| r.updated_by_last_action(true) }
+
+      @run_context.resource_collection.all_resources.replace(all_resources)
+
+      @all_resources_metrics_details = [
+        {:name=>"chef.resources.convergence_time",
+         :tags=>["resource_name:whiskers",
+                "cookbook:",
+                "recipe:",
+                "updated:true",
+                "resource_class:role",
+                "realm:",
+                "stage:build",
+                "environment_realm:",
+                "instance_type:",
+                "ami_id:",
+                "host_sid:",
+                "role:highlander"],
+        :value=>0},
+        {:name=>"chef.resources.convergence_time",
+         :tags=>["resource_name:paws",
+                "cookbook:",
+                "recipe:",
+                "updated:true",
+                "resource_class:role",
+                "realm:",
+                "stage:build",
+                "environment_realm:",
+                "instance_type:",
+                "ami_id:",
+                "host_sid:",
+                "role:highlander"],
+        :value=>0}]
+
+      @expected_time = Time.now
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 2)
+      @run_status.start_clock
+      @run_status.stop_clock
+
+      @run_status.run_context = @run_context
+    end
+
+    context "collects detailed metrics" do
+      before { @handler.run_report_unsafe(@run_status) }
+      subject { @handler.metrics.details }
+      it { is_expected.to eq @all_resources_metrics_details }
+    end
+
+    context "sends detailed metrics" do
+      before { @handler.run_report_unsafe(@run_status) }
+      it 'posts detailed metrics' do
+       expect(a_request(:post, METRICS_ENDPOINT).with(
+          :query => { 'api_key' => @handler.config[:api_key] }
+          )).to have_been_made.times(1)
+       end
     end
   end
 

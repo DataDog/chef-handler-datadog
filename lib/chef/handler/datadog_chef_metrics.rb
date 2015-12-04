@@ -1,12 +1,19 @@
 # encoding: utf-8
 require 'dogapi'
 
+DEFAULT_RESOURCE_CLASS = 'role'
+DEPLOY_STAGE_NAME = 'deploy'
+BUILD_STAGE_NAME = 'build'
+
 # helper class for sending datadog metrics from a chef run
 class DatadogChefMetrics
+  attr_accessor :details
+
   def initialize
     @dog = nil
     @hostname = ''
     @run_status = nil
+    @details = nil
   end
 
   # set the dogapi client handle
@@ -33,6 +40,16 @@ class DatadogChefMetrics
   # @return [DatadogChefMetrics] instance reference to self enabling method chaining
   def with_run_status(run_status)
     @run_status = run_status
+    @node = run_status.node
+    self
+  end
+
+  # sets a list of cookbooks considered base platform
+  #
+  # @param Array::String
+  # @return [DatadogChefMetrics] instance reference to self enabling method chaining
+  def with_resource_class_map(resource_class_map)
+    @resource_class_map ||= resource_class_map || {}
     self
   end
 
@@ -43,11 +60,52 @@ class DatadogChefMetrics
     warn_msg = 'Error during compile phase, no Datadog metrics available.'
     return Chef::Log.warn(warn_msg) if @run_status.elapsed_time.nil?
 
-    @dog.emit_point('chef.resources.total', @run_status.all_resources.length, host: @hostname)
-    @dog.emit_point('chef.resources.updated', @run_status.updated_resources.length, host: @hostname)
-    @dog.emit_point('chef.resources.elapsed_time', @run_status.elapsed_time, host: @hostname)
+    # HACK: we're loosing role information, only 1 gets populated
+    env_tags = {
+      realm: @node[:realm],
+      stage: @node[:realm] ? DEPLOY_STAGE_NAME : BUILD_STAGE_NAME,
+      environment_realm: @node[:environment_realm],
+      instance_type: @node[:instance_type],
+      ami_id: @node[:ami_id],
+      host_sid: @node[:host_sid],
+      role: @node.run_list.roles[0]
+    }
+
+    collect_detailed_resource_metrics(env_tags)
+
+    @dog.batch_metrics do
+      @details.each { |m| @dog.emit_point(m[:name], m[:value], host: @hostname, tags: m[:tags]) }
+      @dog.emit_point('chef.resources.total', @run_status.all_resources.length, host: @hostname)
+      @dog.emit_point('chef.resources.updated', @run_status.updated_resources.length, host: @hostname)
+      @dog.emit_point('chef.resources.elapsed_time', @run_status.elapsed_time, host: @hostname)
+    end
     Chef::Log.debug('Submitted Chef metrics back to Datadog')
   rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
     Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
+  end
+
+  # collect all resource metrics from the @run_status
+  def collect_detailed_resource_metrics(extra_tags = {})
+    @details ||= @run_status.all_resources.each_with_object([]) do |resource, resource_metrics|
+      resource_metric_tags = {
+        resource_name:     resource.name,
+        cookbook:          resource.cookbook_name,
+        recipe:            resource.recipe_name,
+        updated:           resource.updated,
+        resource_class:    resource_class(resource.cookbook_name)
+      }.merge!(extra_tags)
+
+      resource_metrics << { name: 'chef.resources.convergence_time',
+                            tags: resource_metric_tags.map { |k, v| "#{k}:#{v}" },
+                            value: resource.elapsed_time }
+    end
+  end
+
+  private
+
+  # assign extra properties to the resource based on the configuration dict
+  # this is used to define owners of the particular resource for tracing
+  def resource_class(cookbook_name)
+    @resource_class_map[cookbook_name] || DEFAULT_RESOURCE_CLASS
   end
 end # end class DatadogChefMetrics

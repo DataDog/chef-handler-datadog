@@ -12,6 +12,7 @@ class Chef
     # Datadog handler to send Chef run details to Datadog
     class Datadog < Chef::Handler
       attr_reader :config
+      attr_reader :metrics
 
       # For the tags to work, the client must have created an Application Key on the
       # "Account Settings" page here: https://app.datadoghq.com/account/settings
@@ -47,6 +48,7 @@ class Chef
             .with_dogapi_client(@dog)
             .with_hostname(hostname)
             .with_run_status(run_status)
+            .with_resource_class_map(@config[:resource_class_map])
 
         # Collect and prepare tags
         @tags =

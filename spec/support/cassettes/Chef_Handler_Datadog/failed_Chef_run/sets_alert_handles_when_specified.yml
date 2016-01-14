@@ -5,10 +5,10 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.total","points":[[1410264911,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.total","points":[[1410264911,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -30,7 +30,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status":"ok"}'
+      string: '{"status":"ok"}'
     http_version: 
   recorded_at: Tue, 09 Sep 2014 12:15:11 GMT
 - request:
@@ -38,10 +38,10 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.updated","points":[[1410264911,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.updated","points":[[1410264911,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -63,7 +63,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status":"ok"}'
+      string: '{"status":"ok"}'
     http_version: 
   recorded_at: Tue, 09 Sep 2014 12:15:11 GMT
 - request:
@@ -71,10 +71,10 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1410264911,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1410264911,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -96,7 +96,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status":"ok"}'
+      string: '{"status":"ok"}'
     http_version: 
   recorded_at: Tue, 09 Sep 2014 12:15:11 GMT
 - request:
@@ -104,7 +104,7 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"msg_text":"Chef updated 6 resources out of 6 resources total.\n$$$\n-
+      string: '{"msg_text":"Chef updated 6 resources out of 6 resources total.\n$$$\n-
         [paws] (dynamically defined)\n- [ears] (dynamically defined)\n- [nose] (dynamically
         defined)\n- [tail] (dynamically defined)\n- [fur] (dynamically defined)\n\n$$$\n\n$$$\nChef::Exceptions::UnsupportedAction:
         Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1410264911,"msg_title":"Chef
@@ -116,7 +116,7 @@ http_interactions:
         Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","host":"chef.handler.datadog.test-failed","device":null}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -138,8 +138,8 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status": "ok", "event": {"priority": "normal", "date_happened":
-        1410264911, "handle": null, "title": "Chef failed in 2 seconds on chef.handler.datadog.test-failed
+      string: '{"status": "ok", "event": {"priority": "normal", "date_happened": 1410264911,
+        "handle": null, "title": "Chef failed in 2 seconds on chef.handler.datadog.test-failed
         ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2449507845826654380",
         "text": "Chef updated 6 resources out of 6 resources total.\n$$$\n- [paws]
         (dynamically defined)\n- [ears] (dynamically defined)\n- [nose] (dynamically
@@ -154,10 +154,10 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-failed?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
     body:
       encoding: UTF-8
-      string: ! '{"tags":["env:hostile","role:highlander","tag:the_one_and_only"]}'
+      string: '{"tags":["env:hostile","role:highlander","tag:the_one_and_only"]}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -183,7 +183,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"host": "chef.handler.datadog.test-failed", "tags": ["env:hostile",
+      string: '{"host": "chef.handler.datadog.test-failed", "tags": ["env:hostile",
         "role:highlander", "tag:the_one_and_only"]}'
     http_version: 
   recorded_at: Tue, 09 Sep 2014 12:15:11 GMT
@@ -192,10 +192,10 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.total","points":[[1410264911,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.total","points":[[1410264911,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -217,7 +217,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status":"ok"}'
+      string: '{"status":"ok"}'
     http_version: 
   recorded_at: Tue, 09 Sep 2014 12:15:11 GMT
 - request:
@@ -225,10 +225,10 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.updated","points":[[1410264911,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.updated","points":[[1410264911,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -250,7 +250,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status":"ok"}'
+      string: '{"status":"ok"}'
     http_version: 
   recorded_at: Tue, 09 Sep 2014 12:15:11 GMT
 - request:
@@ -258,10 +258,10 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1410264911,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1410264911,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -283,7 +283,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status":"ok"}'
+      string: '{"status":"ok"}'
     http_version: 
   recorded_at: Tue, 09 Sep 2014 12:15:11 GMT
 - request:
@@ -291,7 +291,7 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"msg_text":"Chef updated 6 resources out of 6 resources total.\n$$$\n-
+      string: '{"msg_text":"Chef updated 6 resources out of 6 resources total.\n$$$\n-
         [paws] (dynamically defined)\n- [ears] (dynamically defined)\n- [nose] (dynamically
         defined)\n- [tail] (dynamically defined)\n- [fur] (dynamically defined)\n\n$$$\n\nAlerting:
         @alice @bob\n\n$$$\nChef::Exceptions::UnsupportedAction: Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1410264911,"msg_title":"Chef
@@ -303,7 +303,7 @@ http_interactions:
         Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","host":"chef.handler.datadog.test-failed","device":null}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -325,8 +325,8 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"status": "ok", "event": {"priority": "normal", "date_happened":
-        1410264911, "handle": null, "title": "Chef failed in 2 seconds on chef.handler.datadog.test-failed
+      string: '{"status": "ok", "event": {"priority": "normal", "date_happened": 1410264911,
+        "handle": null, "title": "Chef failed in 2 seconds on chef.handler.datadog.test-failed
         ", "url": "https://app.datadoghq.com/event/jump_to?event_id=2449507892182102265",
         "text": "Chef updated 6 resources out of 6 resources total.\n$$$\n- [paws]
         (dynamically defined)\n- [ears] (dynamically defined)\n- [nose] (dynamically
@@ -341,10 +341,10 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-failed?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
     body:
       encoding: UTF-8
-      string: ! '{"tags":["env:hostile","role:highlander","tag:tag:the_one_and_only"]}'
+      string: '{"tags":["env:hostile","role:highlander","tag:tag:the_one_and_only"]}'
     headers:
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -370,8 +370,86 @@ http_interactions:
       - keep-alive
     body:
       encoding: US-ASCII
-      string: ! '{"host": "chef.handler.datadog.test-failed", "tags": ["tag:tag:the_one_and_only",
+      string: '{"host": "chef.handler.datadog.test-failed", "tags": ["tag:tag:the_one_and_only",
         "env:hostile", "role:highlander"]}'
     http_version: 
   recorded_at: Tue, 09 Sep 2014 12:15:11 GMT
-recorded_with: VCR 2.9.2
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.resources.updated","points":[[1452809600,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Thu, 14 Jan 2016 22:13:18 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version: 
+  recorded_at: Thu, 14 Jan 2016 22:13:20 GMT
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1452809600,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Thu, 14 Jan 2016 22:13:19 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version: 
+  recorded_at: Thu, 14 Jan 2016 22:13:20 GMT
+recorded_with: VCR 3.0.1

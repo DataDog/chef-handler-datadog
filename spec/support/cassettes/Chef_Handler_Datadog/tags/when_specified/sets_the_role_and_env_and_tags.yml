@@ -202,4 +202,43 @@ http_interactions:
         "role:highlander", "tag:the_one_and_only"]}'
     http_version: 
   recorded_at: Sun, 05 Apr 2015 15:49:26 GMT
-recorded_with: VCR 2.9.3
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1452809600,5.0]],"type":"gauge","host":"chef.handler.datadog.test-tags","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Thu, 14 Jan 2016 22:13:16 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version: 
+  recorded_at: Thu, 14 Jan 2016 22:13:20 GMT
+recorded_with: VCR 3.0.1

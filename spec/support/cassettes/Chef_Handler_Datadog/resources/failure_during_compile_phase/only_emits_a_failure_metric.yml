@@ -5,7 +5,7 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.run.success","points":[[1452808903,1.0]],"type":"gauge","host":"chef.handler.datadog.test-resources","device":null}]}'
+      string: '{"series":[{"metric":"chef.run.success","points":[[1453838672,1.0]],"type":"counter","host":"chef.handler.datadog.test-resources","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -17,13 +17,13 @@ http_interactions:
       - application/json
   response:
     status:
-      code: 403
-      message: Forbidden
+      code: 202
+      message: Accepted
     headers:
       Content-Type:
-      - text/plain; charset=utf-8
+      - text/json
       Date:
-      - Thu, 14 Jan 2016 22:01:43 GMT
+      - Tue, 26 Jan 2016 20:04:32 GMT
       Dd-Pool:
       - propjoe
       Strict-Transport-Security:
@@ -31,21 +31,21 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       Content-Length:
-      - '15'
+      - '16'
       Connection:
       - keep-alive
     body:
       encoding: UTF-8
-      string: Invalid API Key
+      string: '{"status": "ok"}'
     http_version: 
-  recorded_at: Thu, 14 Jan 2016 22:01:43 GMT
+  recorded_at: Tue, 26 Jan 2016 20:04:32 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
     body:
       encoding: UTF-8
       string: '{"msg_text":"Chef was unable to complete a run, an error during compilation
-        may have occurred.","date_happened":1452808903,"msg_title":"Chef failed during
+        may have occurred.","date_happened":1453838672,"msg_title":"Chef failed during
         compile phase on chef.handler.datadog.test-resources ","priority":"normal","parent":null,"tags":["env:resources"],"aggregation_key":"chef.handler.datadog.test-resources","alert_type":"error","event_type":"config_management.run","source_type_name":"chef","title":"Chef
         failed during compile phase on chef.handler.datadog.test-resources ","text":"Chef
         was unable to complete a run, an error during compilation may have occurred.","host":"chef.handler.datadog.test-resources","device":null}'
@@ -60,13 +60,13 @@ http_interactions:
       - application/json
   response:
     status:
-      code: 403
-      message: Forbidden
+      code: 202
+      message: Accepted
     headers:
       Content-Type:
       - text/plain; charset=utf-8
       Date:
-      - Thu, 14 Jan 2016 22:01:44 GMT
+      - Tue, 26 Jan 2016 20:04:32 GMT
       Dd-Pool:
       - propjoe
       Strict-Transport-Security:
@@ -74,14 +74,16 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       Content-Length:
-      - '15'
+      - '401'
       Connection:
       - keep-alive
     body:
       encoding: UTF-8
-      string: Invalid API Key
+      string: '{"status":"ok","event":{"id":381236787786934568,"title":"Chef failed
+        during compile phase on chef.handler.datadog.test-resources ","text":"Chef
+        was unable to complete a run, an error during compilation may have occurred.","date_happened":1453838672,"handle":null,"priority":"normal","related_event_id":null,"tags":["env:resources"],"url":"https://app.datadoghq.com/event/event?id=381236787786934568"}}'
     http_version: 
-  recorded_at: Thu, 14 Jan 2016 22:01:44 GMT
+  recorded_at: Tue, 26 Jan 2016 20:04:32 GMT
 - request:
     method: put
     uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-resources?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
@@ -99,34 +101,34 @@ http_interactions:
       - application/json
   response:
     status:
-      code: 403
-      message: Forbidden
+      code: 201
+      message: Created
     headers:
       Cache-Control:
       - no-cache
       Content-Type:
       - application/json
       Date:
-      - Thu, 14 Jan 2016 22:01:44 GMT
+      - Tue, 26 Jan 2016 20:04:32 GMT
       Dd-Pool:
       - dogweb_sameorig
       Pragma:
       - no-cache
       Strict-Transport-Security:
       - max-age=15724800;
-      Vary:
-      - Accept-Encoding
       X-Content-Type-Options:
       - nosniff
+      X-Dd-Debug:
+      - 4iA0gEW3U+JPEQU/L1uUqRuaUwdDN4h3ejNHIRKagxs=
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:
-      - '51'
+      - '74'
       Connection:
       - keep-alive
     body:
       encoding: UTF-8
-      string: '{"errors": ["Invalid API key"]}'
+      string: '{"host": "chef.handler.datadog.test-resources", "tags": ["env:resources"]}'
     http_version: 
-  recorded_at: Thu, 14 Jan 2016 22:01:44 GMT
+  recorded_at: Tue, 26 Jan 2016 20:04:32 GMT
 recorded_with: VCR 3.0.1

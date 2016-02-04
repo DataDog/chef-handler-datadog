@@ -106,6 +106,6 @@ class DatadogChefTags
   end
 
   def node_tags
-    @node.tags.map! { |tag| 'tag:' + tag } if @node.tags
+    @node.tags ? @node.tags.map! { |tag| 'tag:' + tag } : []
   end
 end # end class DatadogChefTags

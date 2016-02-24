@@ -14,3 +14,10 @@ CLEAN.include(['coverage/', 'doc/', 'pkg/'])
 RSpec::Core::RakeTask.new(:spec)
 
 RuboCop::RakeTask.new(:cops)
+
+namespace :dev do
+  task :setup do
+    cp '.env.example', '.env'
+    Rake::Task[:default].invoke
+  end
+end

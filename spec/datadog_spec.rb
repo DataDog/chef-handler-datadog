@@ -56,7 +56,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       it 'reports metrics' do
         expect(a_request(:post, METRICS_ENDPOINT).with(
           :query => { 'api_key' => @handler.config[:api_key] }
-        )).to have_been_made.times(3)
+        )).to have_been_made.times(4)
       end
     end
 
@@ -373,10 +373,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
       end
 
-      it 'does not emit metrics' do
+      it 'only emits a failure metric' do
         expect(a_request(:post, METRICS_ENDPOINT).with(
           :query => { 'api_key' => @handler.config[:api_key] }
-        )).to_not have_been_made
+        )).to have_been_made.times(1)
       end
 
       it 'posts an event' do
@@ -387,7 +387,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         )).to have_been_made.times(1)
       end
     end
-  end
+  end 
 
     # TODO: test failures:
     # @run_status.exception = Exception.new('Boy howdy!')

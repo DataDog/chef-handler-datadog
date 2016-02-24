@@ -5,7 +5,7 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.run.success","points":[[1453838671,1.0]],"type":"counter","host":"chef.handler.datadog.test-resources","device":null}]}'
+      string: '{"series":[{"metric":"chef.run.success","points":[[1453838672,1.0]],"type":"counter","host":"chef.handler.datadog.test-resources","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -23,7 +23,7 @@ http_interactions:
       Content-Type:
       - text/json
       Date:
-      - Tue, 26 Jan 2016 20:04:31 GMT
+      - Tue, 26 Jan 2016 20:04:32 GMT
       Dd-Pool:
       - propjoe
       Strict-Transport-Security:
@@ -79,9 +79,9 @@ http_interactions:
       - keep-alive
     body:
       encoding: UTF-8
-      string: '{"status":"ok","event":{"id":381236783340100567,"title":"Chef failed
+      string: '{"status":"ok","event":{"id":381236787786934568,"title":"Chef failed
         during compile phase on chef.handler.datadog.test-resources ","text":"Chef
-        was unable to complete a run, an error during compilation may have occurred.","date_happened":1453838672,"handle":null,"priority":"normal","related_event_id":null,"tags":["env:resources"],"url":"https://app.datadoghq.com/event/event?id=381236783340100567"}}'
+        was unable to complete a run, an error during compilation may have occurred.","date_happened":1453838672,"handle":null,"priority":"normal","related_event_id":null,"tags":["env:resources"],"url":"https://app.datadoghq.com/event/event?id=381236787786934568"}}'
     http_version: 
   recorded_at: Tue, 26 Jan 2016 20:04:32 GMT
 - request:
@@ -119,7 +119,7 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       X-Dd-Debug:
-      - Lqo3/ximEWPWj/q8nw5y77qbM+7c3xo1aoVdmrbBiyU=
+      - 4iA0gEW3U+JPEQU/L1uUqRuaUwdDN4h3ejNHIRKagxs=
       X-Frame-Options:
       - SAMEORIGIN
       Content-Length:

@@ -5,10 +5,12 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.total","points":[[1410264893,0.0]],"type":"gauge","host":"i-123456","device":null}]}'
+      string: '{"series":[{"metric":"chef.run.success","points":[[1453838670,1.0]],"type":"counter","host":"i-123456","device":null}]}'
     headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -19,29 +21,35 @@ http_interactions:
       message: Accepted
     headers:
       Content-Type:
-      - text/json; charset=UTF-8
+      - text/json
       Date:
-      - Tue, 09 Sep 2014 12:14:49 GMT
-      Server:
-      - dogdispatcher/5.1.1
+      - Tue, 26 Jan 2016 20:04:25 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
       Content-Length:
-      - '15'
+      - '16'
       Connection:
       - keep-alive
     body:
-      encoding: US-ASCII
-      string: ! '{"status":"ok"}'
+      encoding: UTF-8
+      string: '{"status": "ok"}'
     http_version: 
-  recorded_at: Tue, 09 Sep 2014 12:14:53 GMT
+  recorded_at: Tue, 26 Jan 2016 20:04:30 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.updated","points":[[1410264893,0.0]],"type":"gauge","host":"i-123456","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.total","points":[[1453838670,0.0]],"type":"gauge","host":"i-123456","device":null}]}'
     headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -52,29 +60,35 @@ http_interactions:
       message: Accepted
     headers:
       Content-Type:
-      - text/json; charset=UTF-8
+      - text/json
       Date:
-      - Tue, 09 Sep 2014 12:14:49 GMT
-      Server:
-      - dogdispatcher/5.1.1
+      - Tue, 26 Jan 2016 20:04:26 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
       Content-Length:
-      - '15'
+      - '16'
       Connection:
       - keep-alive
     body:
-      encoding: US-ASCII
-      string: ! '{"status":"ok"}'
+      encoding: UTF-8
+      string: '{"status": "ok"}'
     http_version: 
-  recorded_at: Tue, 09 Sep 2014 12:14:53 GMT
+  recorded_at: Tue, 26 Jan 2016 20:04:30 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1410264893,5.0]],"type":"gauge","host":"i-123456","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.updated","points":[[1453838670,0.0]],"type":"gauge","host":"i-123456","device":null}]}'
     headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -85,32 +99,77 @@ http_interactions:
       message: Accepted
     headers:
       Content-Type:
-      - text/json; charset=UTF-8
+      - text/json
       Date:
-      - Tue, 09 Sep 2014 12:14:50 GMT
-      Server:
-      - dogdispatcher/5.1.1
+      - Tue, 26 Jan 2016 20:04:26 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
       Content-Length:
-      - '15'
+      - '16'
       Connection:
       - keep-alive
     body:
-      encoding: US-ASCII
-      string: ! '{"status":"ok"}'
+      encoding: UTF-8
+      string: '{"status": "ok"}'
     http_version: 
-  recorded_at: Tue, 09 Sep 2014 12:14:53 GMT
+  recorded_at: Tue, 26 Jan 2016 20:04:30 GMT
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1453838670,5.0]],"type":"gauge","host":"i-123456","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Tue, 26 Jan 2016 20:04:26 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version: 
+  recorded_at: Tue, 26 Jan 2016 20:04:30 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: ! '{"msg_text":"Chef updated 0 resources out of 0 resources total.","date_happened":1410264893,"msg_title":"Chef
+      string: '{"msg_text":"Chef updated 0 resources out of 0 resources total.","date_happened":1453838670,"msg_title":"Chef
         completed in 5 seconds on i-123456 ","priority":"low","parent":null,"tags":["env:testing"],"aggregation_key":"i-123456","alert_type":"success","event_type":"config_management.run","source_type_name":"chef","title":"Chef
         completed in 5 seconds on i-123456 ","text":"Chef updated 0 resources out
         of 0 resources total.","host":"i-123456","device":null}'
     headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -121,33 +180,37 @@ http_interactions:
       message: Accepted
     headers:
       Content-Type:
-      - text/json; charset=UTF-8
+      - text/plain; charset=utf-8
       Date:
-      - Tue, 09 Sep 2014 12:14:50 GMT
-      Server:
-      - dogdispatcher/5.1.1
+      - Tue, 26 Jan 2016 20:04:26 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
       Content-Length:
-      - '363'
+      - '333'
       Connection:
       - keep-alive
     body:
-      encoding: US-ASCII
-      string: ! '{"status": "ok", "event": {"priority": "low", "date_happened": 1410264893,
-        "handle": null, "title": "Chef completed in 5 seconds on i-123456 ", "url":
-        "https://app.datadoghq.com/event/jump_to?event_id=2449507503705612444", "text":
-        "Chef updated 0 resources out of 0 resources total.", "tags": ["env:testing"],
-        "related_event_id": null, "id": 2449507503705612444}}'
+      encoding: UTF-8
+      string: '{"status":"ok","event":{"id":381236685916283962,"title":"Chef completed
+        in 5 seconds on i-123456 ","text":"Chef updated 0 resources out of 0 resources
+        total.","date_happened":1453838670,"handle":null,"priority":"low","related_event_id":null,"tags":["env:testing"],"url":"https://app.datadoghq.com/event/event?id=381236685916283962"}}'
     http_version: 
-  recorded_at: Tue, 09 Sep 2014 12:14:53 GMT
+  recorded_at: Tue, 26 Jan 2016 20:04:30 GMT
 - request:
     method: put
     uri: https://app.datadoghq.com/api/v1/tags/hosts/i-123456?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
     body:
       encoding: UTF-8
-      string: ! '{"tags":["env:testing"]}'
+      string: '{"tags":["env:testing"]}'
     headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
       Accept:
-      - ! '*/*'
+      - "*/*"
       User-Agent:
       - Ruby
       Content-Type:
@@ -162,18 +225,26 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 09 Sep 2014 12:14:51 GMT
+      - Tue, 26 Jan 2016 20:04:26 GMT
+      Dd-Pool:
+      - dogweb_sameorig
       Pragma:
       - no-cache
-      Server:
-      - gunicorn/19.1.0
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      X-Dd-Debug:
+      - Lqo3/ximEWPWj/q8nw5y77qbM+7c3xo1aoVdmrbBiyU=
+      X-Frame-Options:
+      - SAMEORIGIN
       Content-Length:
       - '45'
       Connection:
       - keep-alive
     body:
-      encoding: US-ASCII
-      string: ! '{"host": "i-123456", "tags": ["env:testing"]}'
+      encoding: UTF-8
+      string: '{"host": "i-123456", "tags": ["env:testing"]}'
     http_version: 
-  recorded_at: Tue, 09 Sep 2014 12:14:53 GMT
-recorded_with: VCR 2.9.2
+  recorded_at: Tue, 26 Jan 2016 20:04:30 GMT
+recorded_with: VCR 3.0.1

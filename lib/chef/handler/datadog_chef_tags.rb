@@ -10,7 +10,6 @@ class DatadogChefTags
     @node = nil
     @run_status = nil
     @application_key = nil
-    @retries = 0
     @combined_host_tags = nil
   end
 
@@ -77,39 +76,19 @@ class DatadogChefTags
     self
   end
 
-  # set the number of retries when sending tags, when the host is not yet present
-  # on Datadog
-  #
-  # @param retries [Integer] number of retries
-  # @return [DatadogChefTags] instance reference to self enabling method chaining
-  def with_retries(retries)
-    @retries = retries unless retries.nil?
-    self
-  end
-
   # send updated chef run generated tags to Datadog
   def send_update_to_datadog
-    retries = @retries
+    rc = @dog.update_tags(@hostname, combined_host_tags, 'chef')
     begin
-      loop do
-        should_retry = false
-        rc = @dog.update_tags(@hostname, combined_host_tags, 'chef')
-        # See FIXME in DatadogChefEvents::emit_to_datadog about why I feel dirty repeating this code here
-        if rc.length < 2
-          Chef::Log.warn("Unexpected response from Datadog Tags API: #{rc}")
+      # See FIXME above about why I feel dirty repeating this code here
+      if rc.length < 2
+        Chef::Log.warn("Unexpected response from Datadog Event API: #{rc}")
+      else
+        if rc[0].to_i / 100 != 2
+          Chef::Log.warn("Could not submit #{combined_host_tags} tags for #{@hostname} to Datadog: #{rc}")
         else
-          if retries > 0 && rc[0].to_i == 404
-            Chef::Log.debug("Host #{@hostname} not yet present on Datadog, re-submitting tags in 2 seconds")
-            sleep 2
-            retries -= 1
-            should_retry = true
-          elsif rc[0].to_i / 100 != 2
-            Chef::Log.warn("Could not submit #{combined_host_tags} tags for #{@hostname} to Datadog: #{rc}")
-          else
-            Chef::Log.debug("Successfully updated #{@hostname}'s tags to #{combined_host_tags.join(', ')}")
-          end
+          Chef::Log.debug("Successfully updated #{@hostname}'s tags to #{combined_host_tags.join(', ')}")
         end
-        break unless should_retry
       end
     rescue
       Chef::Log.warn("Could not determine whether #{@hostname}'s tags were successfully submitted to Datadog: #{rc}")

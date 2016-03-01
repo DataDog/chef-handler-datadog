@@ -1,6 +1,13 @@
 Changes
 =======
 
+# 0.8.0 / 2016-03-01
+
+* [FEATURE] Add success/failure metric [#75][] [@jhulten][]
+* [FEATURE] Retry tags submission when host is not yet present on DD [#80][] [@olivielpeau][]
+* [OPTIMIZE] Ensure tags always returns an array [#78][] [@rlaveycal][]
+* [OPTIMIZE] More robust failed chef run checking [#69][] [@bigbam505][]
+
 # 0.7.0 / 2015-10-22
 
 * [FEATURE] Support passing `DATADOG_PROXY` env var to control `dogapi` behavior, [#65][] [@datwiz][]
@@ -73,9 +80,17 @@ And all other versions were prior to this. See git history for more.
 [#60]: https://github.com/DataDog/chef-handler-datadog/issues/60
 [#65]: https://github.com/DataDog/chef-handler-datadog/issues/65
 [#66]: https://github.com/DataDog/chef-handler-datadog/issues/66
+[#69]: https://github.com/DataDog/chef-handler-datadog/issues/69
+[#75]: https://github.com/DataDog/chef-handler-datadog/issues/75
+[#78]: https://github.com/DataDog/chef-handler-datadog/issues/78
+[#80]: https://github.com/DataDog/chef-handler-datadog/issues/80
 [@alq]: https://github.com/alq
+[@bigbam505]: https://github.com/bigbam505
 [@datwiz]: https://github.com/datwiz
 [@dwradcliffe]: https://github.com/dwradcliffe
+[@jhulten]: https://github.com/jhulten
 [@miketheman]: https://github.com/miketheman
+[@olivielpeau]: https://github.com/olivielpeau
 [@owen]: https://github.com/owen
 [@remh]: https://github.com/remh
+[@rlaveycal]: https://github.com/rlaveycal

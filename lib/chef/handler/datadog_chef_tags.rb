@@ -10,7 +10,7 @@ class DatadogChefTags
     @node = nil
     @run_status = nil
     @application_key = nil
-    @tag_prefix = 'tag'
+    @tag_prefix = 'tag:'
     @retries = 0
     @combined_host_tags = nil
   end
@@ -135,6 +135,6 @@ class DatadogChefTags
 
   def node_tags
     return [] unless @node.tags
-    @tag_prefix.empty? ? @node.tags : @node.tags.map { |tag| "#{@tag_prefix}:#{tag}" }
+    @node.tags.map { |tag| "#{@tag_prefix}#{tag}" }
   end
 end # end class DatadogChefTags

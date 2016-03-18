@@ -219,7 +219,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       it 'allows for user-specified tag prefix' do
         @node.normal.tags = ['the_one_and_only', 'datacenter:my-cloud']
-        @handler.config[:tag_prefix] = 'custom-prefix'
+        @handler.config[:tag_prefix] = 'custom-prefix-'
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
@@ -227,7 +227,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
                       'application_key' => @handler.config[:application_key],
                       'source' => 'chef' },
           :body => hash_including(:tags => [
-            'env:hostile', 'role:highlander', 'custom-prefix:the_one_and_only', 'custom-prefix:datacenter:my-cloud'
+            'env:hostile', 'role:highlander', 'custom-prefix-the_one_and_only', 'custom-prefix-datacenter:my-cloud'
             ]),
          )).to have_been_made.times(1)
       end

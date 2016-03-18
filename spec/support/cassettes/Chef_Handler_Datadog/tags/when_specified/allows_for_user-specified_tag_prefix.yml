@@ -1,0 +1,251 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.run.success","points":[[1458250868,1.0]],"type":"counter","host":"chef.handler.datadog.test-tags","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Thu, 17 Mar 2016 21:41:04 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version: 
+  recorded_at: Thu, 17 Mar 2016 21:41:08 GMT
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.resources.total","points":[[1458250868,0.0]],"type":"gauge","host":"chef.handler.datadog.test-tags","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Thu, 17 Mar 2016 21:41:04 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version: 
+  recorded_at: Thu, 17 Mar 2016 21:41:08 GMT
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.resources.updated","points":[[1458250868,0.0]],"type":"gauge","host":"chef.handler.datadog.test-tags","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Thu, 17 Mar 2016 21:41:04 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version: 
+  recorded_at: Thu, 17 Mar 2016 21:41:08 GMT
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1458250868,5.0]],"type":"gauge","host":"chef.handler.datadog.test-tags","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Thu, 17 Mar 2016 21:41:04 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version: 
+  recorded_at: Thu, 17 Mar 2016 21:41:08 GMT
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"msg_text":"Chef updated 0 resources out of 0 resources total.","date_happened":1458250868,"msg_title":"Chef
+        completed in 5 seconds on chef.handler.datadog.test-tags ","priority":"low","parent":null,"tags":null,"aggregation_key":"chef.handler.datadog.test-tags","alert_type":"success","event_type":"config_management.run","source_type_name":"chef","title":"Chef
+        completed in 5 seconds on chef.handler.datadog.test-tags ","text":"Chef updated
+        0 resources out of 0 resources total.","host":"chef.handler.datadog.test-tags","device":null}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Thu, 17 Mar 2016 21:41:04 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '344'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status":"ok","event":{"id":455261092784026415,"title":"Chef completed
+        in 5 seconds on chef.handler.datadog.test-tags ","text":"Chef updated 0 resources
+        out of 0 resources total.","date_happened":1458250868,"handle":null,"priority":"low","related_event_id":null,"tags":null,"url":"https://app.datadoghq.com/event/event?id=455261092784026415"}}'
+    http_version: 
+  recorded_at: Thu, 17 Mar 2016 21:41:08 GMT
+- request:
+    method: put
+    uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-tags?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
+    body:
+      encoding: UTF-8
+      string: '{"tags":["env:hostile","role:highlander"]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json
+      Date:
+      - Thu, 17 Mar 2016 21:41:04 GMT
+      Dd-Pool:
+      - dogweb_sameorig
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      X-Dd-Debug:
+      - QYSb9ZUj91gVP/VyhgpNnm/M7M7fif9QER6YVwRajIA=
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '86'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"host": "chef.handler.datadog.test-tags", "tags": ["env:hostile",
+        "role:highlander"]}'
+    http_version: 
+  recorded_at: Thu, 17 Mar 2016 21:41:08 GMT
+recorded_with: VCR 3.0.1

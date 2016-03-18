@@ -28,6 +28,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       Chef::Handler::Datadog.new(
         'api_key'         => API_KEY,
         'application_key' => APPLICATION_KEY,
+        'tag_prefix'      => 'tag',
       )
     end
   end
@@ -203,7 +204,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
     describe 'when specified' do
       it 'sets the role and env and tags' do
-        @node.normal.tags = ['the_one_and_only']
+        @node.normal.tags = ['the_one_and_only', 'datacenter:my-cloud']
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
@@ -211,9 +212,39 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
                       'application_key' => @handler.config[:application_key],
                       'source' => 'chef' },
           :body => hash_including(:tags => [
-            'env:hostile', 'role:highlander', 'tag:the_one_and_only'
+            'env:hostile', 'role:highlander', 'tag:the_one_and_only', 'tag:datacenter:my-cloud'
             ]),
         )).to have_been_made.times(1)
+      end
+
+      it 'allows for user-specified tag prefix' do
+        @node.normal.tags = ['the_one_and_only', 'datacenter:my-cloud']
+        @handler.config[:tag_prefix] = 'custom-prefix'
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+            'env:hostile', 'role:highlander', 'custom-prefix:the_one_and_only', 'custom-prefix:datacenter:my-cloud'
+            ]),
+         )).to have_been_made.times(1)
+      end
+
+      it 'allows for empty tag prefix' do
+        @node.normal.tags = ['the_one_and_only', 'datacenter:my-cloud']
+        @handler.config[:tag_prefix] = ''
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+            'env:hostile', 'role:highlander', 'the_one_and_only', 'datacenter:my-cloud'
+            ]),
+         )).to have_been_made.times(1)
       end
     end
 
@@ -457,7 +488,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         )).to have_been_made.times(1)
       end
     end
-  end 
+  end
 
     # TODO: test failures:
     # @run_status.exception = Exception.new('Boy howdy!')

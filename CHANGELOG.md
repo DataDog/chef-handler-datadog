@@ -1,6 +1,10 @@
 Changes
 =======
 
+# 0.9.0 / 2016-03-22
+
+* [FEATURE] Enable users to select tag prefix [#81][] [@mstepniowski][]
+
 # 0.8.0 / 2016-03-01
 
 * [FEATURE] Add success/failure metric [#75][] [@jhulten][]
@@ -84,12 +88,14 @@ And all other versions were prior to this. See git history for more.
 [#75]: https://github.com/DataDog/chef-handler-datadog/issues/75
 [#78]: https://github.com/DataDog/chef-handler-datadog/issues/78
 [#80]: https://github.com/DataDog/chef-handler-datadog/issues/80
+[#81]: https://github.com/DataDog/chef-handler-datadog/issues/81
 [@alq]: https://github.com/alq
 [@bigbam505]: https://github.com/bigbam505
 [@datwiz]: https://github.com/datwiz
 [@dwradcliffe]: https://github.com/dwradcliffe
 [@jhulten]: https://github.com/jhulten
 [@miketheman]: https://github.com/miketheman
+[@mstepniowski]: https://github.com/mstepniowski
 [@olivielpeau]: https://github.com/olivielpeau
 [@owen]: https://github.com/owen
 [@remh]: https://github.com/remh

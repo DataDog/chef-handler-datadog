@@ -10,6 +10,7 @@ class DatadogChefTags
     @node = nil
     @run_status = nil
     @application_key = nil
+    @tag_prefix = 'tag:'
     @retries = 0
     @combined_host_tags = nil
   end
@@ -23,11 +24,6 @@ class DatadogChefTags
     self
   end
 
-  # attribute accessor for combined array of tags
-  #
-  # @return [Array] the set of host tags based off the chef run
-  attr_reader :combined_host_tags
-
   # set the chef run status used for the report
   #
   # @param run_status [Chef::RunStatus] current chef run status
@@ -38,13 +34,6 @@ class DatadogChefTags
     # Selects all [env, roles, tags] from the Node's object and reformats
     # them to `key:value` e.g. `role:database-master`.
     @node = run_status.node
-    # generate the combined tags
-    chef_env = node_env.split # converts a string into an array
-    chef_roles = node_roles
-    chef_tags = node_tags
-
-    # Combine (union) all arrays. Removes duplicates if found.
-    @combined_host_tags = chef_env | chef_roles | chef_tags
     self
   end
 
@@ -77,6 +66,15 @@ class DatadogChefTags
     self
   end
 
+  # set the prefix to be added to all Chef tags
+  #
+  # @param tag_prefix [String] prefix to be added to all Chef tags
+  # @return [DatadogChefTags] instance reference to self enabling method chaining
+  def with_tag_prefix(tag_prefix)
+    @tag_prefix = tag_prefix unless tag_prefix.nil?
+    self
+  end
+
   # set the number of retries when sending tags, when the host is not yet present
   # on Datadog
   #
@@ -89,11 +87,12 @@ class DatadogChefTags
 
   # send updated chef run generated tags to Datadog
   def send_update_to_datadog
+    tags = combined_host_tags
     retries = @retries
     begin
       loop do
         should_retry = false
-        rc = @dog.update_tags(@hostname, combined_host_tags, 'chef')
+        rc = @dog.update_tags(@hostname, tags, 'chef')
         # See FIXME in DatadogChefEvents::emit_to_datadog about why I feel dirty repeating this code here
         if rc.length < 2
           Chef::Log.warn("Unexpected response from Datadog Tags API: #{rc}")
@@ -104,9 +103,9 @@ class DatadogChefTags
             retries -= 1
             should_retry = true
           elsif rc[0].to_i / 100 != 2
-            Chef::Log.warn("Could not submit #{combined_host_tags} tags for #{@hostname} to Datadog: #{rc}")
+            Chef::Log.warn("Could not submit #{tags} tags for #{@hostname} to Datadog: #{rc}")
           else
-            Chef::Log.debug("Successfully updated #{@hostname}'s tags to #{combined_host_tags.join(', ')}")
+            Chef::Log.debug("Successfully updated #{@hostname}'s tags to #{tags.join(', ')}")
           end
         end
         break unless should_retry
@@ -114,6 +113,14 @@ class DatadogChefTags
     rescue
       Chef::Log.warn("Could not determine whether #{@hostname}'s tags were successfully submitted to Datadog: #{rc}")
     end
+  end
+
+  # return a combined array of tags that should be sent to Datadog
+  #
+  # @return [Array] the set of host tags based off the chef run
+  def combined_host_tags
+    # Combine (union) all arrays. Removes duplicates if found.
+    node_env.split | node_roles | node_tags
   end
 
   private
@@ -127,6 +134,7 @@ class DatadogChefTags
   end
 
   def node_tags
-    @node.tags ? @node.tags.map! { |tag| 'tag:' + tag } : []
+    return [] unless @node.tags
+    @node.tags.map { |tag| "#{@tag_prefix}#{tag}" }
   end
 end # end class DatadogChefTags

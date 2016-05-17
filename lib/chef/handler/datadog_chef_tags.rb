@@ -11,6 +11,7 @@ class DatadogChefTags
     @run_status = nil
     @application_key = nil
     @tag_prefix = 'tag:'
+    @scope_prefix = nil
     @retries = 0
     @combined_host_tags = nil
     @regex_black_list = nil
@@ -91,6 +92,15 @@ class DatadogChefTags
     self
   end
 
+  # set the prefix to be added to Datadog tags (Role, Env)
+  #
+  # @param scope_prefix [String] prefix to be added to Datadog tags
+  # @return [DatadogChefTags] instance reference to self enabling method chaining
+  def with_scope_prefix(scope_prefix)
+    @scope_prefix = scope_prefix unless scope_prefix.nil?
+    self
+  end
+
   # send updated chef run generated tags to Datadog
   def send_update_to_datadog
     tags = combined_host_tags
@@ -132,11 +142,11 @@ class DatadogChefTags
   private
 
   def node_roles
-    @node.run_list.roles.map! { |role| 'role:' + role }
+    @node.run_list.roles.map! { |role| "#{@scope_prefix}role:#{role}" }
   end
 
   def node_env
-    'env:' + @node.chef_environment if @node.respond_to?('chef_environment')
+    "#{@scope_prefix}env:#{@node.chef_environment}" if @node.respond_to?('chef_environment')
   end
 
   def node_tags

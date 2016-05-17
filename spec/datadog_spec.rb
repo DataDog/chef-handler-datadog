@@ -29,6 +29,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         'api_key'         => API_KEY,
         'application_key' => APPLICATION_KEY,
         'tag_prefix'      => 'tag',
+        'scope_prefix'    => nil
       )
     end
   end
@@ -243,6 +244,34 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
                       'source' => 'chef' },
           :body => hash_including(:tags => [
             'env:hostile', 'role:highlander', 'the_one_and_only', 'datacenter:my-cloud'
+            ]),
+         )).to have_been_made.times(1)
+      end
+
+      it 'allows for user-specified scope prefix' do
+        @handler.config[:scope_prefix] = 'custom-prefix-'
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+            'custom-prefix-env:hostile', 'custom-prefix-role:highlander'
+            ]),
+         )).to have_been_made.times(1)
+      end
+
+      it 'allows for empty scope prefix' do
+        @handler.config[:scope_prefix] = ''
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+            'env:hostile', 'role:highlander'
             ]),
          )).to have_been_made.times(1)
       end

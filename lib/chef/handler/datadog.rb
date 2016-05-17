@@ -58,6 +58,7 @@ class Chef
             .with_tag_prefix(config[:tag_prefix])
             .with_retries(config[:tags_submission_retries])
             .with_tag_blacklist(config[:tags_blacklist_regex])
+            .with_scope_prefix(config[:scope_prefix])
 
         # Build the chef event information
         @event =

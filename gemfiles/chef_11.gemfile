@@ -4,6 +4,10 @@ source "http://rubygems.org"
 
 gem "chef", "~> 11.0"
 
+# for some reason bundler wants to install json and rack 2.x even when it's not supported by the ruby version
+gem "json", "< 2.0"
+gem "rack", "< 2.0"
+
 group :localdev do
   gem "guard"
   gem "guard-rspec"

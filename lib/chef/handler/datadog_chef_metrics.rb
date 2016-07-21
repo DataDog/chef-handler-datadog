@@ -39,7 +39,8 @@ class DatadogChefMetrics
   # Emit Chef metrics to Datadog
   def emit_to_datadog
     # Send base success/failure metric
-    @dog.emit_point(@run_status.success? ? 'chef.run.success' : 'chef.run.failure', 1, host: @hostname, type: 'counter')
+    @dog.emit_point('chef.run.success', @run_status.success? ? 1 : 0, host: @hostname, type: 'counter')
+    @dog.emit_point('chef.run.failure', @run_status.success? ? 0 : 1, host: @hostname, type: 'counter')
 
     # If there is a failure during compile phase, a large portion of
     # run_status may be unavailable. Bail out here

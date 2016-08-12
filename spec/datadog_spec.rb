@@ -262,6 +262,39 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         )).to have_been_made.times(1)
       end
     end
+
+    describe 'when tag blacklist is specified' do
+      it 'does not include the tag(s) specified' do
+        @node.normal.tags = ['allowed_tag', 'not_allowed_tag']
+        @handler.config[:tags_blacklist_regex] = 'not_allowed.*'
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+              'env:hostile', 'role:highlander', 'tag:allowed_tag'
+            ]),
+        )).to have_been_made.times(1)
+      end
+    end
+
+    describe 'when tag blacklist is unspecified' do
+      it 'should include all of the tag(s) specified' do
+        @node.normal.tags = ['allowed_tag', 'not_allowed_tag']
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+              'env:hostile', 'role:highlander', 'tag:allowed_tag', 'tag:not_allowed_tag'
+            ]),
+        )).to have_been_made.times(1)
+      end
+    end
   end
 
   context 'tags submission retries' do

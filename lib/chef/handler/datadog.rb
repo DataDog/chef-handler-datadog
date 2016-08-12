@@ -57,6 +57,7 @@ class Chef
             .with_application_key(config[:application_key])
             .with_tag_prefix(config[:tag_prefix])
             .with_retries(config[:tags_submission_retries])
+            .with_tag_blacklist(config[:tags_blacklist_regex])
 
         # Build the chef event information
         @event =

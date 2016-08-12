@@ -13,6 +13,7 @@ class DatadogChefTags
     @tag_prefix = 'tag:'
     @retries = 0
     @combined_host_tags = nil
+    @regex_black_list = nil
   end
 
   # set the dogapi client handle
@@ -85,6 +86,11 @@ class DatadogChefTags
     self
   end
 
+  def with_tag_blacklist(tags_blacklist_regex)
+    @regex_black_list = Regexp.new(tags_blacklist_regex, Regexp::IGNORECASE) unless tags_blacklist_regex.nil? || tags_blacklist_regex.empty?
+    self
+  end
+
   # send updated chef run generated tags to Datadog
   def send_update_to_datadog
     tags = combined_host_tags
@@ -135,6 +141,12 @@ class DatadogChefTags
 
   def node_tags
     return [] unless @node.tags
-    @node.tags.map { |tag| "#{@tag_prefix}#{tag}" }
+    output = @node.tags.map { |tag| "#{@tag_prefix}#{tag}" }
+
+    # No blacklist, return all results
+    return output if @regex_black_list.nil?
+
+    # The blacklist is set, so return the items which are not filtered by it.
+    output.select { |t| !@regex_black_list.match(t) }
   end
 end # end class DatadogChefTags

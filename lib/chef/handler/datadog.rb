@@ -18,8 +18,17 @@ class Chef
       # It should be passed along from the node/role/environemnt attributes, as the default is nil.
       def initialize(config = {})
         @config = Mash.new(config)
+
         # If *any* api_key is not provided, this will fail immediately.
-        @dog = Dogapi::Client.new(@config[:api_key], @config[:application_key])
+        @dog = Dogapi::Client.new(
+          @config[:api_key],
+          @config[:application_key],
+          nil,   # host
+          nil,   # device
+          true,  # silent
+          nil,   # timeout
+          extra_endpoints
+        )
       end
 
       def report
@@ -119,6 +128,47 @@ class Chef
       def restore_env_proxies
         ENV['http_proxy'] = @env_http_proxy
         ENV['https_proxy'] = @env_https_proxy
+      end
+
+      def extra_endpoints
+        urls = @config[:other_dd_urls]
+        api_keys = @config[:other_api_keys]
+        app_keys = @config[:other_application_keys]
+
+        return nil unless validate_extra_endpoints(urls, api_keys, app_keys)
+
+        if urls.nil?
+          keys = []
+          api_keys.each_with_index do |api_key, index|
+            keys.push([api_key, app_keys[index]])
+          end
+          return keys
+        else
+          endpoints = Hash.new []
+          urls.each_with_index do |url, index|
+            endpoints[url] = endpoints[url] + [[api_keys[index], app_keys[index]]]
+          end
+          return endpoints
+        end
+      end
+
+      def validate_extra_endpoints(urls, api_keys, app_keys)
+        return false if api_keys.nil?
+        # If not enough app_keys compared to api_keys
+        if app_keys.nil? || app_keys.length != api_keys.length
+          Chef::Log.error('Bad number of other_application_keys given:')
+          Chef::Log.error("#{api_keys.length} other_api_keys, " \
+                          "#{app_keys.nil? ? 0 : app_keys.length} other_application_keys")
+          return false
+        end
+        # If not enough api_keys compared to dd_urls
+        if !urls.nil? && urls.length != api_keys.length
+          Chef::Log.error('Bad number of other_api_keys given:')
+          Chef::Log.error("#{urls.length} other_dd_urls, " \
+                        "#{api_keys.length} other_api_keys")
+          return false
+        end
+        true
       end
     end # end class Datadog
   end # end class Handler

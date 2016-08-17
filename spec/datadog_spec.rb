@@ -552,6 +552,64 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     end
   end
 
+  describe '#extra_endpoints' do
+    context 'when none is set' do
+      it 'returns nil' do
+        handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY
+        expect(handler.send(:extra_endpoints)).to be_nil
+      end
+    end
+
+    context 'when only one endpoint is set' do
+      it 'returns the correct keys' do
+        keys_couples = [['api_key_2', 'app_key_2'], ['api_key_3', 'app_key_3']]
+        handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY,
+                                             other_api_keys: keys_couples.map {|c| c[0]},
+                                             other_application_keys: keys_couples.map {|c| c[1]}
+        expect(handler.send(:extra_endpoints)).to eq(keys_couples)
+      end
+    end
+
+    context 'when multiple endpoints are set' do
+      it 'returns the correct endpoints' do
+        urls_keys = [['https://app.datadoghq.com', 'api_key_2', 'app_key_2'],
+                     ['https://app.example.com', 'api_key_3', 'app_key_3'],
+                     ['https://app.example.com', 'api_key_4', 'app_key_4']]
+        result = {'https://app.datadoghq.com' => [['api_key_2', 'app_key_2']],
+                  'https://app.example.com' => [['api_key_3', 'app_key_3'], ['api_key_4', 'app_key_4']]}
+        handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY,
+                                             other_dd_urls: urls_keys.map {|c| c[0]},
+                                             other_api_keys: urls_keys.map {|c| c[1]},
+                                             other_application_keys: urls_keys.map {|c| c[2]}
+        expect(handler.send(:extra_endpoints)).to eq(result)
+      end
+    end
+
+    context 'when missing application keys' do
+      it 'returns nil' do
+        api_keys = ['api_key_2', 'api_key_3']
+        app_keys = ['app_key_2']
+        handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY,
+                                             other_api_keys: api_keys,
+                                             other_application_keys: app_keys
+        expect(handler.send(:extra_endpoints)).to be_nil
+      end
+    end
+
+    context 'when missing api keys' do
+      it 'returns nil' do
+        dd_urls = ['https://app.example.com']
+        api_keys = ['api_key_2', 'api_key_3']
+        app_keys = ['app_key_2', 'app_key_3']
+        handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY,
+                                             other_dd_urls: dd_urls,
+                                             other_api_keys: api_keys,
+                                             other_application_keys: app_keys
+        expect(handler.send(:extra_endpoints)).to be_nil
+      end
+    end
+  end
+
     # TODO: test failures:
     # @run_status.exception = Exception.new('Boy howdy!')
 end

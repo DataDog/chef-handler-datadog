@@ -6,6 +6,11 @@ rvm:
   - 1.9.3
   - 2.1.5
 
+before_install:
+  - gem update --system
+  - gem --version
+  - gem install bundler --pre
+
 bundler_args: --without=localdev
 
 gemfile:

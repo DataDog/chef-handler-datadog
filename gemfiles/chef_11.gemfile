@@ -3,6 +3,8 @@
 source "http://rubygems.org"
 
 gem "chef", "~> 11.0"
+gem "json", "< 2.0"
+gem "rack", "< 2.0"
 
 group :localdev do
   gem "guard"

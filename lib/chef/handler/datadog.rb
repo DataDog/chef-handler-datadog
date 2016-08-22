@@ -19,16 +19,7 @@ class Chef
       def initialize(config = {})
         @config = Mash.new(config)
 
-        # If *any* api_key is not provided, this will fail immediately.
-        @dog = Dogapi::Client.new(
-          @config[:api_key],
-          @config[:application_key],
-          nil,   # host
-          nil,   # device
-          true,  # silent
-          nil,   # timeout
-          extra_endpoints
-        )
+        @dogs = prepare_the_pack
       end
 
       def report
@@ -37,8 +28,11 @@ class Chef
 
         # prepare the metrics, event, and tags information to be reported
         prepare_report_for_datadog
-        # post the report information to the datadog service
-        send_report_to_datadog
+
+        @dogs.each do |dog|
+          # post the report information to the datadog service
+          send_report_to_datadog dog
+        end
       ensure
         # restore the env proxy settings before leaving to avoid downstream side-effects
         restore_env_proxies unless ENV['DATADOG_PROXY'].nil?
@@ -53,17 +47,14 @@ class Chef
         # prepare chef run metrics
         @metrics =
             DatadogChefMetrics.new
-            .with_dogapi_client(@dog)
             .with_hostname(hostname)
             .with_run_status(run_status)
 
         # Collect and prepare tags
         @tags =
             DatadogChefTags.new
-            .with_dogapi_client(@dog)
             .with_hostname(hostname)
             .with_run_status(run_status)
-            .with_application_key(config[:application_key])
             .with_tag_prefix(config[:tag_prefix])
             .with_retries(config[:tags_submission_retries])
             .with_tag_blacklist(config[:tags_blacklist_regex])
@@ -72,7 +63,6 @@ class Chef
         # Build the chef event information
         @event =
             DatadogChefEvents.new
-            .with_dogapi_client(@dog)
             .with_hostname(hostname)
             .with_run_status(run_status)
             .with_failure_notifications(@config['notify_on_failure'])
@@ -80,10 +70,12 @@ class Chef
       end
 
       # Submit metrics, event, and tags information to datadog
-      def send_report_to_datadog
-        @metrics.emit_to_datadog
-        @event.emit_to_datadog
-        @tags.send_update_to_datadog
+      #
+      # @param dog [Dogapi::Client] Dogapi Client to be used
+      def send_report_to_datadog(dog)
+        @metrics.emit_to_datadog dog
+        @event.emit_to_datadog dog
+        @tags.send_update_to_datadog dog
       rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
         Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
         Chef::Log.error('Data to be submitted was:')
@@ -130,42 +122,56 @@ class Chef
         ENV['https_proxy'] = @env_https_proxy
       end
 
-      def extra_endpoints
-        urls = @config[:other_dd_urls]
-        api_keys = @config[:other_api_keys]
-        app_keys = @config[:other_application_keys]
-
-        return nil unless validate_extra_endpoints(urls, api_keys, app_keys)
-
-        if urls.nil?
-          keys = []
-          api_keys.each_with_index do |api_key, index|
-            keys.push([api_key, app_keys[index]])
-          end
-          return keys
-        else
-          endpoints = Hash.new []
-          urls.each_with_index do |url, index|
-            endpoints[url] = endpoints[url] + [[api_keys[index], app_keys[index]]]
-          end
-          return endpoints
+      # create and configure all the Dogapi Clients to be used
+      #
+      # @return [Array] all Dogapi::Client to be used
+      def prepare_the_pack
+        dogs = []
+        endpoints.each do |url, api_key, app_key|
+          dogs.push(Dogapi::Client.new(
+                      api_key,
+                      app_key,
+                      nil,   # host
+                      nil,   # device
+                      true,  # silent
+                      nil,   # timeout
+                      url
+          ))
         end
+        dogs
       end
 
-      def validate_extra_endpoints(urls, api_keys, app_keys)
-        return false if api_keys.nil?
-        # If not enough app_keys compared to api_keys
-        if app_keys.nil? || app_keys.length != api_keys.length
-          Chef::Log.error('Bad number of other_application_keys given:')
-          Chef::Log.error("#{api_keys.length} other_api_keys, " \
-                          "#{app_keys.nil? ? 0 : app_keys.length} other_application_keys")
+      # return all endpoints as a list of triplets [url, api_key, application_key]
+      def endpoints
+        validate_keys(@config[:api_key], @config[:application_key], true)
+
+        endpoints = [[@config[:url], @config[:api_key], @config[:application_key]]]
+
+        extra_endpoints = @config[:extra_endpoints] || []
+
+        extra_endpoints.each do |endpoint|
+          url = endpoint[:url] || @config[:url]
+          api_key = endpoint[:api_key]
+          app_key = endpoint[:application_key]
+          endpoints << [url, api_key, app_key] if validate_keys(api_key, app_key, false)
+        end
+        endpoints
+      end
+
+      # Validate endpoints config (api_key and application key)
+      # fails if incorrect and should_fail is true (needed for the default)
+      # Doesn't fail for the other endpoints but logs a warning
+      def validate_keys(api_key, app_key, should_fail)
+        if api_key.nil?
+          Chef::Log.warn('You need an API key to communicate with Datadog')
+          fail ArgumentError, 'Missing Datadog Api Key' if should_fail
           return false
         end
-        # If not enough api_keys compared to dd_urls
-        if !urls.nil? && urls.length != api_keys.length
-          Chef::Log.error('Bad number of other_api_keys given:')
-          Chef::Log.error("#{urls.length} other_dd_urls, " \
-                        "#{api_keys.length} other_api_keys")
+        if app_key.nil?
+          Chef::Log.warn('You need an application key to let Chef tag your nodes ' \
+                         'in Datadog. Visit https://app.datadoghq.com/account/settings#api to ' \
+                         'create one and update your datadog attributes in the datadog cookbook.')
+          fail ArgumentError, 'Missing Datadog Application Key' if should_fail
           return false
         end
         true

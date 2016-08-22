@@ -17,15 +17,6 @@ class DatadogChefTags
     @regex_black_list = nil
   end
 
-  # set the dogapi client handle
-  #
-  # @param dogapi_client [Dogapi::Client] datadog api client handle
-  # @return [DatadogChefTags] instance reference to self enabling method chaining
-  def with_dogapi_client(dogapi_client)
-    @dog = dogapi_client
-    self
-  end
-
   # set the chef run status used for the report
   #
   # @param run_status [Chef::RunStatus] current chef run status
@@ -45,26 +36,6 @@ class DatadogChefTags
   # @return [DatadogChefTags] instance reference to self enabling method chaining
   def with_hostname(hostname)
     @hostname = hostname
-    self
-  end
-
-  # set the datadog application key
-  #
-  # TODO: the application key is only needed for error checking, e.g. an app key exists
-  #   would be cleaner to push this check up to the data prep method in the
-  #   calling handler class
-  #
-  # @param application_key [String] datadog application key used for chef reports
-  # @return [DatadogChefTags] instance reference to self enabling method chaining
-  def with_application_key(application_key)
-    @application_key = application_key
-    if @application_key.nil?
-      Chef::Log.warn('You need an application key to let Chef tag your nodes ' \
-              'in Datadog. Visit https://app.datadoghq.com/account/settings#api to ' \
-                'create one and update your datadog attributes in the datadog cookbook.'
-                    )
-      fail ArgumentError, 'Missing Datadog Application Key'
-    end
     self
   end
 
@@ -102,13 +73,15 @@ class DatadogChefTags
   end
 
   # send updated chef run generated tags to Datadog
-  def send_update_to_datadog
+  #
+  # @param dog [Dogapi::Client] Dogapi Client to be used
+  def send_update_to_datadog(dog)
     tags = combined_host_tags
     retries = @retries
     begin
       loop do
         should_retry = false
-        rc = @dog.update_tags(@hostname, tags, 'chef')
+        rc = dog.update_tags(@hostname, tags, 'chef')
         # See FIXME in DatadogChefEvents::emit_to_datadog about why I feel dirty repeating this code here
         if rc.length < 2
           Chef::Log.warn("Unexpected response from Datadog Tags API: #{rc}")

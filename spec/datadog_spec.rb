@@ -417,11 +417,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     end
 
     it 'fails when no application key is provided' do
-      @handler.config[:application_key] = nil
-
       # TODO: figure out how to capture output of Chef::Log
       # Run the report, catch the error
-      expect { @handler.run_report_unsafe(@run_status) }.to raise_error
+      expect { Chef::Handler::Datadog.new(api_key: API_KEY, application_key: nil) }.to raise_error
     end
   end
 
@@ -444,7 +442,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         Chef::Resource.new('nose'),
         Chef::Resource.new('tail'),
         Chef::Resource.new('fur')
-        ]
+      ]
       all_resources.map { |r| r.updated_by_last_action(true) }
       @run_context.resource_collection.all_resources.replace(all_resources)
 
@@ -552,60 +550,201 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     end
   end
 
-  describe '#extra_endpoints' do
-    context 'when none is set' do
-      it 'returns nil' do
+  describe '#endpoints' do
+    context 'with a basic config' do
+      it 'returns the correct triplet' do
         handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY
-        expect(handler.send(:extra_endpoints)).to be_nil
+        expect(handler.send(:endpoints)).to eq([[nil, API_KEY, APPLICATION_KEY]])
       end
     end
 
-    context 'when only one endpoint is set' do
-      it 'returns the correct keys' do
-        keys_couples = [['api_key_2', 'app_key_2'], ['api_key_3', 'app_key_3']]
-        handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY,
-                                             other_api_keys: keys_couples.map {|c| c[0]},
-                                             other_application_keys: keys_couples.map {|c| c[1]}
-        expect(handler.send(:extra_endpoints)).to eq(keys_couples)
+    context 'with no url and two pairs of keys' do
+      it 'returns the correct triplets' do
+        triplets = [
+          [nil, API_KEY, APPLICATION_KEY],
+          [nil, 'api_key_2', 'app_key_2'],
+          [nil, 'api_key_3', 'app_key_3']
+        ]
+        handler = Chef::Handler::Datadog.new api_key: triplets[0][1],
+                                             application_key: triplets[0][2],
+                                             extra_endpoints: [{
+                                               api_key: triplets[1][1],
+                                               application_key: triplets[1][2]
+                                             }, {
+                                               api_key: triplets[2][1],
+                                               application_key: triplets[2][2]
+                                             }]
+        expect(handler.send(:endpoints)).to eq(triplets)
       end
     end
 
-    context 'when multiple endpoints are set' do
-      it 'returns the correct endpoints' do
-        urls_keys = [['https://app.datadoghq.com', 'api_key_2', 'app_key_2'],
-                     ['https://app.example.com', 'api_key_3', 'app_key_3'],
-                     ['https://app.example.com', 'api_key_4', 'app_key_4']]
-        result = {'https://app.datadoghq.com' => [['api_key_2', 'app_key_2']],
-                  'https://app.example.com' => [['api_key_3', 'app_key_3'], ['api_key_4', 'app_key_4']]}
-        handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY,
-                                             other_dd_urls: urls_keys.map {|c| c[0]},
-                                             other_api_keys: urls_keys.map {|c| c[1]},
-                                             other_application_keys: urls_keys.map {|c| c[2]}
-        expect(handler.send(:extra_endpoints)).to eq(result)
+    context 'with one url and two pairs of keys' do
+      it 'returns the correct triplets' do
+        triplets = [
+          ['https://app.example.com', API_KEY, APPLICATION_KEY],
+          ['https://app.example.com', 'api_key_2', 'app_key_2'],
+          ['https://app.example.com', 'api_key_3', 'app_key_3']
+        ]
+        handler = Chef::Handler::Datadog.new api_key: triplets[0][1],
+                                             application_key: triplets[0][2],
+                                             url: triplets[0][0],
+                                             extra_endpoints: [{
+                                               api_key: triplets[1][1],
+                                               application_key: triplets[1][2]
+                                             }, {
+                                               api_key: triplets[2][1],
+                                               application_key: triplets[2][2]
+                                             }]
+        expect(handler.send(:endpoints)).to eq(triplets)
+      end
+    end
+
+    context 'with multiple urls' do
+      it 'returns the correct triplets' do
+        triplets = [
+          ['https://app.datadoghq.com', 'api_key_2', 'app_key_2'],
+          ['https://app.example.com', 'api_key_3', 'app_key_3'],
+          ['https://app.example.com', 'api_key_4', 'app_key_4']
+        ]
+        handler = Chef::Handler::Datadog.new api_key: triplets[0][1],
+                                             application_key: triplets[0][2],
+                                             url: triplets[0][0],
+                                             extra_endpoints: [{
+                                               url: triplets[1][0],
+                                               api_key: triplets[1][1],
+                                               application_key: triplets[1][2]
+                                             }, {
+                                               url: triplets[2][0],
+                                               api_key: triplets[2][1],
+                                               application_key: triplets[2][2]
+                                             }]
+        expect(handler.send(:endpoints)).to eq(triplets)
       end
     end
 
     context 'when missing application keys' do
-      it 'returns nil' do
-        api_keys = ['api_key_2', 'api_key_3']
-        app_keys = ['app_key_2']
-        handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY,
-                                             other_api_keys: api_keys,
-                                             other_application_keys: app_keys
-        expect(handler.send(:extra_endpoints)).to be_nil
+      it 'returns available triplets' do
+        triplets = [
+          [nil, API_KEY, APPLICATION_KEY],
+          [nil, 'api_key_2', 'app_key_2'],
+          [nil, 'api_key_3', 'app_key_3']
+        ]
+        handler = Chef::Handler::Datadog.new api_key: triplets[0][1],
+                                             application_key: triplets[0][2],
+                                             extra_endpoints: [{
+                                               api_key: triplets[1][1],
+                                               application_key: triplets[1][2]
+                                             }, {
+                                               api_key: triplets[2][1]
+                                             }]
+        expect(handler.send(:endpoints)).to eq(triplets[0..1])
       end
     end
 
     context 'when missing api keys' do
-      it 'returns nil' do
-        dd_urls = ['https://app.example.com']
-        api_keys = ['api_key_2', 'api_key_3']
-        app_keys = ['app_key_2', 'app_key_3']
-        handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY,
-                                             other_dd_urls: dd_urls,
-                                             other_api_keys: api_keys,
-                                             other_application_keys: app_keys
-        expect(handler.send(:extra_endpoints)).to be_nil
+      it 'returns available triplets' do
+        triplets = [
+          ['https://app.datadoghq.com', 'api_key_2', 'app_key_2'],
+          ['https://app.example.com', 'api_key_3', 'app_key_3'],
+          ['https://app.example.com', 'api_key_4', 'app_key_4']
+        ]
+        handler = Chef::Handler::Datadog.new api_key: triplets[0][1],
+                                             application_key: triplets[0][2],
+                                             url: triplets[0][0],
+                                             extra_endpoints: [{
+                                               url: triplets[1][0],
+                                               api_key: triplets[1][1],
+                                               application_key: triplets[1][2]
+                                             }, {
+                                               url: triplets[2][0],
+                                               application_key: triplets[2][2]
+                                             }]
+        expect(handler.send(:endpoints)).to eq(triplets[0..1])
+      end
+    end
+  end
+
+  context 'when reporting to multiple endpoints' do
+    let(:api_key2) { 'api_key_example' }
+    let(:application_key2) { 'application_key_example' }
+    let(:base_url2) { 'https://app.example.com' }
+    let(:events_endpoint2) { base_url2 + '/api/v1/events' }
+    let(:host_tag_endpoint2) { base_url2 + '/api/v1/tags/hosts/' }
+    let(:metrics_endpoint2) { base_url2 + '/api/v1/series' }
+    let(:handler) do
+      Chef::Handler::Datadog.new api_key: API_KEY,
+                                 application_key: APPLICATION_KEY,
+                                 url: BASE_URL,
+                                 extra_endpoints: [{
+                                   api_key: api_key2,
+                                   application_key: application_key2,
+                                   url: base_url2
+                                 }]
+    end
+    # Construct a good run_status
+    before(:each) do
+      @node = Chef::Node.build('chef.handler.datadog.test')
+      @node.send(:chef_environment, 'testing')
+      @events = Chef::EventDispatch::Dispatcher.new
+      @run_context = Chef::RunContext.new(@node, {}, @events)
+      @run_status = Chef::RunStatus.new(@node, @events)
+
+      @expected_time = Time.now
+      allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 5)
+      @run_status.start_clock
+      @run_status.stop_clock
+
+      @run_status.run_context = @run_context
+
+      # Run the report
+      handler.run_report_unsafe(@run_status)
+    end
+
+    context 'emits metrics' do
+      it 'reports metrics' do
+        expect(a_request(:post, METRICS_ENDPOINT).with(
+          :query => { 'api_key' => API_KEY }
+        )).to have_been_made.times(5)
+
+        expect(a_request(:post, metrics_endpoint2).with(
+          :query => { 'api_key' => api_key2 }
+        )).to have_been_made.times(5)
+      end
+    end
+
+    context 'emits events' do
+      it 'posts an event' do
+        expect(a_request(:post, EVENTS_ENDPOINT).with(
+          :query => { 'api_key' => API_KEY },
+          :body => hash_including(:msg_text => 'Chef updated 0 resources out of 0 resources total.'),
+          :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} "),
+          :body => hash_including(:tags => ['env:testing']),
+        )).to have_been_made.times(1)
+
+        expect(a_request(:post, events_endpoint2).with(
+          :query => { 'api_key' => api_key2 },
+          :body => hash_including(:msg_text => 'Chef updated 0 resources out of 0 resources total.'),
+          :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} "),
+          :body => hash_including(:tags => ['env:testing']),
+        )).to have_been_made.times(1)
+      end
+    end
+
+    context 'sets tags' do
+      it 'puts the tags for the current node' do
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => API_KEY,
+                      'application_key' => APPLICATION_KEY,
+                      'source' => 'chef' },
+          :body => { 'tags' => ['env:testing'] },
+        )).to have_been_made.times(1)
+
+        expect(a_request(:put, host_tag_endpoint2 + @node.name).with(
+          :query => { 'api_key' => api_key2,
+                      'application_key' => application_key2,
+                      'source' => 'chef' },
+          :body => { 'tags' => ['env:testing'] },
+        )).to have_been_made.times(1)
       end
     end
   end

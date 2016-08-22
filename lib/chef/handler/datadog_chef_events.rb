@@ -7,7 +7,6 @@ require 'dogapi'
 # helper class for sending events about chef runs
 class DatadogChefEvents
   def initialize
-    @dog = nil
     @hostname = nil
     @run_status = nil
     @failure_notfications = nil
@@ -19,15 +18,6 @@ class DatadogChefEvents
     #       handling of the event_body is a bit clunky and depends on the order of
     #       method calls
     @event_body = ''
-  end
-
-  # set the dogapi client handle
-  #
-  # @param dogapi_client [Dogapi::Client] datadog api client handle
-  # @return [DatadogChefTags] instance reference to self enabling method chaining
-  def with_dogapi_client(dogapi_client)
-    @dog = dogapi_client
-    self
   end
 
   # set the target hostname (chef node name)
@@ -67,18 +57,20 @@ class DatadogChefEvents
   end
 
   # Emit Chef event to Datadog
-  def emit_to_datadog
+  #
+  # @param dog [Dogapi::Client] Dogapi Client to be used
+  def emit_to_datadog(dog)
     @event_body = ''
     build_event_data
-    evt = @dog.emit_event(Dogapi::Event.new(@event_body,
-                                            msg_title: @event_title,
-                                            event_type: 'config_management.run',
-                                            event_object: @hostname,
-                                            alert_type: @alert_type,
-                                            priority: @event_priority,
-                                            source_type_name: 'chef',
-                                            tags: @tags
-                                           ), host: @hostname)
+    evt = dog.emit_event(Dogapi::Event.new(@event_body,
+                                           msg_title: @event_title,
+                                           event_type: 'config_management.run',
+                                           event_object: @hostname,
+                                           alert_type: @alert_type,
+                                           priority: @event_priority,
+                                           source_type_name: 'chef',
+                                           tags: @tags
+                                          ), host: @hostname)
 
     begin
       # FIXME: nice-to-have: abstract format of return value away a bit

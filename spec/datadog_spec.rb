@@ -281,7 +281,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     end
 
     describe 'when tag blacklist is unspecified' do
-      it 'should include all of the tag(s) specified' do
+      it 'should include all of the tag(s)' do
         @node.normal.tags = ['allowed_tag', 'not_allowed_tag']
         @handler.run_report_unsafe(@run_status)
 

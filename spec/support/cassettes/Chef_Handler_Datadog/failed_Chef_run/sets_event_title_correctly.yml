@@ -5,6 +5,45 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
+      string: '{"series":[{"metric":"chef.run.success","points":[[1453838669,0.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Tue, 26 Jan 2016 20:04:27 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version:
+  recorded_at: Tue, 26 Jan 2016 20:04:29 GMT
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
       string: '{"series":[{"metric":"chef.run.failure","points":[[1453838669,1.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
@@ -37,7 +76,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version: 
+    http_version:
   recorded_at: Tue, 26 Jan 2016 20:04:29 GMT
 - request:
     method: post
@@ -76,7 +115,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version: 
+    http_version:
   recorded_at: Tue, 26 Jan 2016 20:04:29 GMT
 - request:
     method: post
@@ -115,7 +154,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version: 
+    http_version:
   recorded_at: Tue, 26 Jan 2016 20:04:29 GMT
 - request:
     method: post
@@ -154,7 +193,7 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version: 
+    http_version:
   recorded_at: Tue, 26 Jan 2016 20:04:29 GMT
 - request:
     method: post
@@ -205,7 +244,7 @@ http_interactions:
         (dynamically defined)\n- [ears] (dynamically defined)\n- [nose] (dynamically
         defined)\n- [tail] (dynamically defined)\n- [fur] (dynamically defined)\n\n$$$\n\n$$$\nChef::Exceptions::UnsupportedAction:
         Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1453838669,"handle":null,"priority":"normal","related_event_id":null,"tags":["env:hostile","role:highlander","tag:the_one_and_only"],"url":"https://app.datadoghq.com/event/event?id=381236719251068806"}}'
-    http_version: 
+    http_version:
   recorded_at: Tue, 26 Jan 2016 20:04:29 GMT
 - request:
     method: put
@@ -253,6 +292,6 @@ http_interactions:
       encoding: UTF-8
       string: '{"host": "chef.handler.datadog.test-failed", "tags": ["env:hostile",
         "role:highlander", "tag:the_one_and_only"]}'
-    http_version: 
+    http_version:
   recorded_at: Tue, 26 Jan 2016 20:04:29 GMT
 recorded_with: VCR 3.0.1

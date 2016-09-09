@@ -1,6 +1,13 @@
 Changes
 =======
 
+# 0.10.0 / Unreleased
+
+* [FEATURE] Allow passing `scope_prefix` param that prefixes env and role tags [#82][] [@DanielMuller][]
+* [FEATURE] Support regex tag blacklist [#86][] [@ABrehm264][]
+* [FEATURE] Support multiple endpoints [#87][] [@degemer][]
+* [OPTIMIZE] Always emit success and failure metrics [#89][] [@devonbleak][]
+
 # 0.9.0 / 2016-03-22
 
 * [FEATURE] Enable users to select tag prefix [#81][] [@mstepniowski][]
@@ -89,9 +96,17 @@ And all other versions were prior to this. See git history for more.
 [#78]: https://github.com/DataDog/chef-handler-datadog/issues/78
 [#80]: https://github.com/DataDog/chef-handler-datadog/issues/80
 [#81]: https://github.com/DataDog/chef-handler-datadog/issues/81
+[#82]: https://github.com/DataDog/chef-handler-datadog/issues/82
+[#86]: https://github.com/DataDog/chef-handler-datadog/issues/86
+[#87]: https://github.com/DataDog/chef-handler-datadog/issues/87
+[#89]: https://github.com/DataDog/chef-handler-datadog/issues/89
+[@ABrehm264]: https://github.com/ABrehm264
+[@DanielMuller]: https://github.com/DanielMuller
 [@alq]: https://github.com/alq
 [@bigbam505]: https://github.com/bigbam505
 [@datwiz]: https://github.com/datwiz
+[@degemer]: https://github.com/degemer
+[@devonbleak]: https://github.com/devonbleak
 [@dwradcliffe]: https://github.com/dwradcliffe
 [@jhulten]: https://github.com/jhulten
 [@miketheman]: https://github.com/miketheman

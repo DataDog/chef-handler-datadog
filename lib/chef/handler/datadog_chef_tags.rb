@@ -87,6 +87,10 @@ class DatadogChefTags
     self
   end
 
+  # set the blacklist regexp, node tags matching this regex won't be sent
+  #
+  # @param tags_blacklist_regex [String] regexp-formatted string
+  # @return [DatadogChefTags] instance reference to self enabling method chaining
   def with_tag_blacklist(tags_blacklist_regex)
     @regex_black_list = Regexp.new(tags_blacklist_regex, Regexp::IGNORECASE) unless tags_blacklist_regex.nil? || tags_blacklist_regex.empty?
     self

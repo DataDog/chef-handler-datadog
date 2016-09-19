@@ -4,18 +4,8 @@ require 'dogapi'
 # helper class for sending datadog metrics from a chef run
 class DatadogChefMetrics
   def initialize
-    @dog = nil
     @hostname = ''
     @run_status = nil
-  end
-
-  # set the dogapi client handle
-  #
-  # @param dogapi_client [Dogapi::Client] datadog api client
-  # @return [DatadogChefMetrics] instance reference to self enabling method chaining
-  def with_dogapi_client(dogapi_client)
-    @dog = dogapi_client
-    self
   end
 
   # set the target hostname (chef node name)
@@ -37,19 +27,21 @@ class DatadogChefMetrics
   end
 
   # Emit Chef metrics to Datadog
-  def emit_to_datadog
+  #
+  # @param dog [Dogapi::Client] Dogapi Client to be used
+  def emit_to_datadog(dog)
     # Send base success/failure metric
-    @dog.emit_point('chef.run.success', @run_status.success? ? 1 : 0, host: @hostname, type: 'counter')
-    @dog.emit_point('chef.run.failure', @run_status.success? ? 0 : 1, host: @hostname, type: 'counter')
+    dog.emit_point('chef.run.success', @run_status.success? ? 1 : 0, host: @hostname, type: 'counter')
+    dog.emit_point('chef.run.failure', @run_status.success? ? 0 : 1, host: @hostname, type: 'counter')
 
     # If there is a failure during compile phase, a large portion of
     # run_status may be unavailable. Bail out here
     warn_msg = 'Error during compile phase, no Datadog metrics available.'
     return Chef::Log.warn(warn_msg) if compile_error?
 
-    @dog.emit_point('chef.resources.total', @run_status.all_resources.length, host: @hostname)
-    @dog.emit_point('chef.resources.updated', @run_status.updated_resources.length, host: @hostname)
-    @dog.emit_point('chef.resources.elapsed_time', @run_status.elapsed_time, host: @hostname)
+    dog.emit_point('chef.resources.total', @run_status.all_resources.length, host: @hostname)
+    dog.emit_point('chef.resources.updated', @run_status.updated_resources.length, host: @hostname)
+    dog.emit_point('chef.resources.elapsed_time', @run_status.elapsed_time, host: @hostname)
     Chef::Log.debug('Submitted Chef metrics back to Datadog')
   rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
     Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)

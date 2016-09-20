@@ -1,7 +1,7 @@
 Changes
 =======
 
-# 0.10.0 / Unreleased
+# 0.10.0 / 2016-09-20
 
 * [FEATURE] Allow passing `scope_prefix` param that prefixes env and role tags [#82][] [@DanielMuller][]
 * [FEATURE] Support regex tag blacklist [#86][] [@ABrehm264][]

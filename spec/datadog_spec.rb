@@ -324,6 +324,23 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         )).to have_been_made.times(1)
       end
     end
+
+    describe 'when policy is specified' do
+      it 'sets the policy name and policy group tags' do
+        @node.send(:policy_name, 'the_policy_name')
+        @node.send(:policy_group, 'the_policy_group')
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+              'env:hostile', 'role:highlander', 'policy-group:the_policy_group', 'policy-name:the_policy_name'
+            ]),
+        )).to have_been_made.times(1)
+      end
+    end
   end
 
   context 'tags submission retries' do

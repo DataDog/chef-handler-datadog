@@ -113,7 +113,7 @@ class DatadogChefTags
   # @return [Array] the set of host tags based off the chef run
   def combined_host_tags
     # Combine (union) all arrays. Removes duplicates if found.
-    node_env.split | node_roles | node_tags
+    node_env.split | node_roles | Array(node_policy_group) | Array(node_policy_name) | node_tags
   end
 
   private
@@ -124,6 +124,14 @@ class DatadogChefTags
 
   def node_env
     "#{@scope_prefix}env:#{@node.chef_environment}" if @node.respond_to?('chef_environment')
+  end
+
+  def node_policy_group
+    "#{@scope_prefix}policy-group:#{@node.policy_group}" unless @node.policy_group.nil?
+  end
+
+  def node_policy_name
+    "#{@scope_prefix}policy-name:#{@node.policy_name}" unless @node.policy_name.nil?
   end
 
   def node_tags

@@ -326,6 +326,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     end
 
     describe 'when policy is specified' do
+      # This feature is available only for chef >= 12.5.1
+      if Chef::Version.new(Chef::VERSION) < Chef::Version.new("12.5.1")
+        next
+      end
       it 'sets the policy name and policy group tags' do
         @node.send(:policy_name, 'the_policy_name')
         @node.send(:policy_group, 'the_policy_group')

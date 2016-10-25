@@ -113,7 +113,7 @@ class DatadogChefTags
   # @return [Array] the set of host tags based off the chef run
   def combined_host_tags
     # Combine (union) all arrays. Removes duplicates if found.
-    node_env.split | node_roles | Array(node_policy_group) | Array(node_policy_name) | node_tags
+    node_env.split | node_roles | node_policy_tags | node_tags
   end
 
   private
@@ -126,12 +126,17 @@ class DatadogChefTags
     "#{@scope_prefix}env:#{@node.chef_environment}" if @node.respond_to?('chef_environment')
   end
 
-  def node_policy_group
-    "#{@scope_prefix}policy-group:#{@node.policy_group}" unless @node.policy_group.nil?
-  end
-
-  def node_policy_name
-    "#{@scope_prefix}policy-name:#{@node.policy_name}" unless @node.policy_name.nil?
+  # Send the policy name and policy group as chef tags when using chef policyfiles feature
+  # The policy_group and policy_name attributes exist only for chef >= 12.5.1
+  def node_policy_tags
+    policy_tags = []
+    if @node.respond_to?('policy_group') && !@node.policy_group.nil?
+      policy_tags << "#{@scope_prefix}policy-group:#{@node.policy_group}"
+    end
+    if @node.respond_to?('policy_name') && !@node.policy_name.nil?
+      policy_tags << "#{@scope_prefix}policy-name:#{@node.policy_name}"
+    end
+    policy_tags
   end
 
   def node_tags

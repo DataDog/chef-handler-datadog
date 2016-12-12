@@ -96,7 +96,6 @@ class Chef
                               (config.key?(:use_ec2_instance_id) && config[:use_ec2_instance_id])
 
         if config[:hostname]
-          puts "found hostname #{config[:hostname]} in config object"
           config[:hostname]
         elsif use_ec2_instance_id && node.attribute?('ec2') && node.ec2.attribute?('instance_id')
           node.ec2.instance_id

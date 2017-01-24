@@ -20,7 +20,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'chef', '>= 10.14.4', '<= 13'
   gem.add_development_dependency 'dotenv'
-  gem.add_development_dependency 'rake'
+  gem.add_development_dependency 'rake', '< 12.0'
   gem.add_development_dependency 'rspec', '~> 3.2.0'
   gem.add_development_dependency 'rubocop', '~> 0.34.2'
   gem.add_development_dependency 'simplecov'

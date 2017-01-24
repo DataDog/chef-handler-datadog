@@ -9,8 +9,8 @@ rvm:
 before_install:
   - gem update --system
   - gem --version
-  # Use a stable version once 1.13.0 is released
-  - gem install bundler --version 1.13.0.rc.1
+  # Use the latest bundler
+  - gem install bundler
 
 bundler_args: --without=localdev
 

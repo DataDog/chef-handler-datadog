@@ -128,7 +128,7 @@ class DatadogChefEvents
   def build_event_data
     # bail early in case of a compiletime failure
     # OPTIMIZE: Use better inspectors to handle failure scenarios, refactor needed.
-    if @run_status.elapsed_time.nil?
+    if @run_status.elapsed_time.nil? || @run_status.updated_resources.nil?
       @alert_type = 'error'
       @event_title = "Chef failed during compile phase on #{@hostname} "
       @event_priority = 'normal'

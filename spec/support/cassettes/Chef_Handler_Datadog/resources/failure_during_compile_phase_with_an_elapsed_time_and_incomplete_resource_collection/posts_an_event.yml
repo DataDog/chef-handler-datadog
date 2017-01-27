@@ -1,0 +1,173 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.run.success","points":[[1485547327,1.0]],"type":"counter","host":"chef.handler.datadog.test-resources","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Fri, 27 Jan 2017 20:02:02 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version:
+  recorded_at: Fri, 27 Jan 2017 20:02:07 GMT
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"series":[{"metric":"chef.run.failure","points":[[1485547327,0.0]],"type":"counter","host":"chef.handler.datadog.test-resources","device":null}]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/json
+      Date:
+      - Fri, 27 Jan 2017 20:02:02 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status": "ok"}'
+    http_version:
+  recorded_at: Fri, 27 Jan 2017 20:02:07 GMT
+- request:
+    method: post
+    uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
+    body:
+      encoding: UTF-8
+      string: '{"msg_text":"Chef was unable to complete a run, an error during compilation
+        may have occurred.","date_happened":1485547327,"msg_title":"Chef failed during
+        compile phase on chef.handler.datadog.test-resources ","priority":"normal","parent":null,"tags":["env:resources"],"aggregation_key":"chef.handler.datadog.test-resources","alert_type":"error","event_type":"config_management.run","source_type_name":"chef","title":"Chef
+        failed during compile phase on chef.handler.datadog.test-resources ","text":"Chef
+        was unable to complete a run, an error during compilation may have occurred.","host":"chef.handler.datadog.test-resources","device":null}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 202
+      message: Accepted
+    headers:
+      Content-Type:
+      - text/plain; charset=utf-8
+      Date:
+      - Fri, 27 Jan 2017 20:02:02 GMT
+      Dd-Pool:
+      - propjoe
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      Content-Length:
+      - '401'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"status":"ok","event":{"id":913219665218676295,"title":"Chef failed
+        during compile phase on chef.handler.datadog.test-resources ","text":"Chef
+        was unable to complete a run, an error during compilation may have occurred.","date_happened":1485547327,"handle":null,"priority":"normal","related_event_id":null,"tags":["env:resources"],"url":"https://app.datadoghq.com/event/event?id=913219665218676295"}}'
+    http_version:
+  recorded_at: Fri, 27 Jan 2017 20:02:07 GMT
+- request:
+    method: put
+    uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-resources?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
+    body:
+      encoding: UTF-8
+      string: '{"tags":["env:resources"]}'
+    headers:
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+      User-Agent:
+      - Ruby
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Cache-Control:
+      - no-cache
+      Content-Type:
+      - application/json
+      Date:
+      - Fri, 27 Jan 2017 20:02:02 GMT
+      Dd-Pool:
+      - dogweb_sameorig
+      Pragma:
+      - no-cache
+      Strict-Transport-Security:
+      - max-age=15724800;
+      X-Content-Type-Options:
+      - nosniff
+      X-Dd-Debug:
+      - gViavZoY8rjtSLcIomJIWXS+mOF/f74cR9lPqFPI7NQ=
+      X-Frame-Options:
+      - SAMEORIGIN
+      Content-Length:
+      - '71'
+      Connection:
+      - keep-alive
+    body:
+      encoding: UTF-8
+      string: '{"host":"chef.handler.datadog.test-resources","tags":["env:resources"]}'
+    http_version:
+  recorded_at: Fri, 27 Jan 2017 20:02:07 GMT
+recorded_with: VCR 3.0.3

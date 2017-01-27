@@ -1,8 +1,12 @@
 # encoding: utf-8
 require 'dogapi'
 
+require_relative 'datadog_util'
+
 # helper class for sending datadog metrics from a chef run
 class DatadogChefMetrics
+  include DatadogUtil
+
   def initialize
     @hostname = ''
     @run_status = nil
@@ -45,11 +49,5 @@ class DatadogChefMetrics
     Chef::Log.debug('Submitted Chef metrics back to Datadog')
   rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
     Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
-  end
-
-  private
-
-  def compile_error?
-    @run_status.all_resources.nil? || @run_status.elapsed_time.nil? || @run_status.updated_resources.nil?
   end
 end # end class DatadogChefMetrics

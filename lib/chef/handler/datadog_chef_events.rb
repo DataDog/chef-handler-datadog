@@ -4,8 +4,12 @@ require 'chef/handler'
 require 'chef/mash'
 require 'dogapi'
 
+require_relative 'datadog_util'
+
 # helper class for sending events about chef runs
 class DatadogChefEvents
+  include DatadogUtil
+
   def initialize
     @hostname = nil
     @run_status = nil
@@ -128,7 +132,7 @@ class DatadogChefEvents
   def build_event_data
     # bail early in case of a compiletime failure
     # OPTIMIZE: Use better inspectors to handle failure scenarios, refactor needed.
-    if @run_status.elapsed_time.nil?
+    if compile_error?
       @alert_type = 'error'
       @event_title = "Chef failed during compile phase on #{@hostname} "
       @event_priority = 'normal'

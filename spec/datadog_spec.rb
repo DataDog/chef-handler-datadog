@@ -546,12 +546,41 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @node = Chef::Node.build('chef.handler.datadog.test-resources')
       @node.send(:chef_environment, 'resources')
       @events = Chef::EventDispatch::Dispatcher.new
-      @run_context = Chef::RunContext.new(@node, {}, @events)
       @run_status = Chef::RunStatus.new(@node, @events)
     end
 
     context 'failure during compile phase' do
       before(:each) do
+        @handler.run_report_unsafe(@run_status)
+      end
+
+      it 'only emits the run status metrics' do
+        expect(a_request(:post, METRICS_ENDPOINT).with(
+          :query => { 'api_key' => @handler.config[:api_key] }
+        )).to have_been_made.times(2)
+      end
+
+      it 'posts an event' do
+        expect(a_request(:post, EVENTS_ENDPOINT).with(
+          :query => { 'api_key' => @handler.config[:api_key] },
+          :body => hash_including(:msg_text => 'Chef was unable to complete a run, an error during compilation may have occured.'),
+          :body => hash_including(:msg_title => "Chef failed during compile phase on #{@node.name} "),
+        )).to have_been_made.times(1)
+      end
+    end
+
+    context 'failure during compile phase with an elapsed time and incomplete resource collection' do
+      before(:each) do
+        @run_context = Chef::RunContext.new(@node, {}, @events)
+
+        allow(@run_context.resource_collection).to receive(:all_resources).and_return(nil)
+        @run_status.run_context = @run_context
+
+        @expected_time = Time.now
+        allow(Time).to receive(:now).and_return(@expected_time, @expected_time + 5)
+        @run_status.start_clock
+        @run_status.stop_clock
+
         @handler.run_report_unsafe(@run_status)
       end
 

@@ -15,6 +15,7 @@ class DatadogChefTags
     @retries = 0
     @combined_host_tags = nil
     @regex_black_list = nil
+    @policy_tags_enabled = false
   end
 
   # set the chef run status used for the report
@@ -76,6 +77,15 @@ class DatadogChefTags
     self
   end
 
+  # enable policy tags
+  #
+  # @param enabled [TrueClass,FalseClass] enable or disable policy tags
+  # @return [DatadogChefTags] instance reference to self enabling method chaining
+  def with_policy_tags_enabled(enabled)
+    @policy_tags_enabled = enabled unless enabled.nil?
+    self
+  end
+
   # send updated chef run generated tags to Datadog
   #
   # @param dog [Dogapi::Client] Dogapi Client to be used
@@ -130,11 +140,13 @@ class DatadogChefTags
   # The policy_group and policy_name attributes exist only for chef >= 12.5.1
   def node_policy_tags
     policy_tags = []
-    if @node.respond_to?('policy_group') && !@node.policy_group.nil?
-      policy_tags << "#{@scope_prefix}policy-group:#{@node.policy_group}"
-    end
-    if @node.respond_to?('policy_name') && !@node.policy_name.nil?
-      policy_tags << "#{@scope_prefix}policy-name:#{@node.policy_name}"
+    if @policy_tags_enabled
+      if @node.respond_to?('policy_group') && !@node.policy_group.nil?
+        policy_tags << "#{@scope_prefix}policy_group:#{@node.policy_group}"
+      end
+      if @node.respond_to?('policy_name') && !@node.policy_name.nil?
+        policy_tags << "#{@scope_prefix}policy_name:#{@node.policy_name}"
+      end
     end
     policy_tags
   end

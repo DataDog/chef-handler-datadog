@@ -244,7 +244,7 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-tags?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
     body:
       encoding: UTF-8
-      string: '{"tags":["env:hostile","role:highlander","policy-group:the_policy_group","policy-name:the_policy_name"]}'
+      string: '{"tags":["env:hostile","role:highlander","policy_group:the_policy_group","policy_name:the_policy_name"]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -283,7 +283,7 @@ http_interactions:
       - keep-alive
     body:
       encoding: UTF-8
-      string: '{"host": "chef.handler.datadog.test-tags", "tags":["env:hostile","role:highlander","policy-group:the_policy_group","policy-name:the_policy_name"]}'
+      string: '{"host": "chef.handler.datadog.test-tags", "tags":["env:hostile","role:highlander","policy_group:the_policy_group","policy_name:the_policy_name"]}'
     http_version:
   recorded_at: Tue, 26 Jan 2016 20:04:36 GMT
 recorded_with: VCR 3.0.1

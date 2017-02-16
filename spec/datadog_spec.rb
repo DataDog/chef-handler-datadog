@@ -325,12 +325,12 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       end
     end
 
-    describe 'when policy is specified' do
+    describe 'when policy tags are not enabled' do
       # This feature is available only for chef >= 12.5.1
       if Chef::Version.new(Chef::VERSION) < Chef::Version.new("12.5.1")
         next
       end
-      it 'sets the policy name and policy group tags' do
+      it 'does not set the policy name and policy group tags' do
         @node.send(:policy_name, 'the_policy_name')
         @node.send(:policy_group, 'the_policy_group')
         @handler.run_report_unsafe(@run_status)
@@ -340,7 +340,29 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
                       'application_key' => @handler.config[:application_key],
                       'source' => 'chef' },
           :body => hash_including(:tags => [
-              'env:hostile', 'role:highlander', 'policy-group:the_policy_group', 'policy-name:the_policy_name'
+              'env:hostile', 'role:highlander'
+            ]),
+        )).to have_been_made.times(1)
+      end
+    end
+
+    describe 'when policy tags are enabled' do
+      # This feature is available only for chef >= 12.5.1
+      if Chef::Version.new(Chef::VERSION) < Chef::Version.new("12.5.1")
+        next
+      end
+      it 'sets the policy name and policy group tags' do
+        @node.send(:policy_name, 'the_policy_name')
+        @node.send(:policy_group, 'the_policy_group')
+        @handler.config[:send_policy_tags] = true
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
+          :query => { 'api_key' => @handler.config[:api_key],
+                      'application_key' => @handler.config[:application_key],
+                      'source' => 'chef' },
+          :body => hash_including(:tags => [
+              'env:hostile', 'role:highlander', 'policy_group:the_policy_group', 'policy_name:the_policy_name'
             ]),
         )).to have_been_made.times(1)
       end

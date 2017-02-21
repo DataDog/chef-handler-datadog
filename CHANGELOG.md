@@ -1,7 +1,7 @@
 Changes
 =======
 
-# 0.11.0 / Unreleased
+# 0.11.0 / 2017-02-21
 
 * [FEATURE] Send policy name and group tags if they exist (opt-in) [#90][] & [#97][] [@david-ds][] & [@olivielpeau][]
 * [BUGFIX] Improve detection of compile time error before sending event [#96][] [@olivielpeau][] (thanks [@DanielRedOak][] and [@andrewjamesbrown][])

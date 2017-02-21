@@ -1,6 +1,12 @@
 Changes
 =======
 
+# 0.11.0 / Unreleased
+
+* [FEATURE] Send policy name and group tags if they exist (opt-in) [#90][] & [#97][] [@david-ds][] & [@olivielpeau][]
+* [BUGFIX] Improve detection of compile time error before sending event [#96][] [@olivielpeau][] (thanks [@DanielRedOak][] and [@andrewjamesbrown][])
+* [BUGFIX] Remove spurious `puts` debug statement [#93][] [@kingpong][]
+
 # 0.10.0 / 2016-09-20
 
 * [FEATURE] Allow passing `scope_prefix` param that prefixes env and role tags [#82][] [@DanielMuller][]
@@ -100,15 +106,23 @@ And all other versions were prior to this. See git history for more.
 [#86]: https://github.com/DataDog/chef-handler-datadog/issues/86
 [#87]: https://github.com/DataDog/chef-handler-datadog/issues/87
 [#89]: https://github.com/DataDog/chef-handler-datadog/issues/89
+[#90]: https://github.com/DataDog/chef-handler-datadog/issues/90
+[#93]: https://github.com/DataDog/chef-handler-datadog/issues/93
+[#96]: https://github.com/DataDog/chef-handler-datadog/issues/96
+[#97]: https://github.com/DataDog/chef-handler-datadog/issues/97
 [@ABrehm264]: https://github.com/ABrehm264
 [@DanielMuller]: https://github.com/DanielMuller
+[@DanielRedOak]: https://github.com/DanielRedOak
 [@alq]: https://github.com/alq
+[@andrewjamesbrown]: https://github.com/andrewjamesbrown
 [@bigbam505]: https://github.com/bigbam505
 [@datwiz]: https://github.com/datwiz
+[@david-ds]: https://github.com/david-ds
 [@degemer]: https://github.com/degemer
 [@devonbleak]: https://github.com/devonbleak
 [@dwradcliffe]: https://github.com/dwradcliffe
 [@jhulten]: https://github.com/jhulten
+[@kingpong]: https://github.com/kingpong
 [@miketheman]: https://github.com/miketheman
 [@mstepniowski]: https://github.com/mstepniowski
 [@olivielpeau]: https://github.com/olivielpeau

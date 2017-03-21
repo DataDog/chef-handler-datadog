@@ -77,7 +77,7 @@ class Chef
         @metrics.emit_to_datadog dog
         @event.emit_to_datadog dog
         @tags.send_update_to_datadog dog
-      rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
+      rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT, Net::ReadTimeout => e
         Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
         Chef::Log.error('Data to be submitted was:')
         Chef::Log.error(@event.event_title)

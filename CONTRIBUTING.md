@@ -32,5 +32,6 @@ Some times you need to test chef-handler-datadog before a fix is merged.  In thi
   This way when the next version is released it will take precedence over your snapshot.
 * Run `rake build`, this will create the .gem file in the `pkg/` dir
 * Copy the .gem file to your own gem server
-* When you include `datadog::dd-handler` in your Chef runlist set `node.override['datadog']['gem_server']` to your gem server URL.
+* When you include `datadog::dd-handler` in your Chef runlist set `node.override['datadog']['gem_server']` to your gem server URL and `node.override['datadog']['chef_handler_version']` to your `.pre` version.
 * Chef will install your version of the gem
+* Don't forget to unset `gem_server` and `chef_handler_version` once the handler has been released with your changes

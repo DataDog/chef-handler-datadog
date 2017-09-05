@@ -133,7 +133,7 @@ class Chef
                       app_key,
                       nil,   # host
                       nil,   # device
-                      true,  # silent
+                      false, # silent
                       nil,   # timeout
                       url
           ))

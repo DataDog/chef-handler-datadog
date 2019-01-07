@@ -18,7 +18,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'appraisal', '~> 2.0.1'
   gem.add_development_dependency 'bundler'
-  gem.add_development_dependency 'chef', '>= 12', '<= 14'
+  gem.add_development_dependency 'chef', '>= 13', '<= 14'
   gem.add_development_dependency 'dotenv'
   gem.add_development_dependency 'rake', '< 12.0'
   gem.add_development_dependency 'rspec', '~> 3.2.0'

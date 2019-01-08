@@ -205,7 +205,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
     describe 'when specified' do
       it 'sets the role and env and tags' do
-        @node.normal.tags = ['the_one_and_only', 'datacenter:my-cloud']
+        @node.normal['tags'] = ['the_one_and_only', 'datacenter:my-cloud']
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
@@ -219,7 +219,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       end
 
       it 'allows for user-specified tag prefix' do
-        @node.normal.tags = ['the_one_and_only', 'datacenter:my-cloud']
+        @node.normal['tags'] = ['the_one_and_only', 'datacenter:my-cloud']
         @handler.config[:tag_prefix] = 'custom-prefix-'
         @handler.run_report_unsafe(@run_status)
 
@@ -234,7 +234,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       end
 
       it 'allows for empty tag prefix' do
-        @node.normal.tags = ['the_one_and_only', 'datacenter:my-cloud']
+        @node.normal['tags'] = ['the_one_and_only', 'datacenter:my-cloud']
         @handler.config[:tag_prefix] = ''
         @handler.run_report_unsafe(@run_status)
 
@@ -294,7 +294,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
     describe 'when tag blacklist is specified' do
       it 'does not include the tag(s) specified' do
-        @node.normal.tags = ['allowed_tag', 'not_allowed_tag']
+        @node.normal['tags'] = ['allowed_tag', 'not_allowed_tag']
         @handler.config[:tags_blacklist_regex] = 'not_allowed.*'
         @handler.run_report_unsafe(@run_status)
 
@@ -311,7 +311,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
     describe 'when tag blacklist is unspecified' do
       it 'should include all of the tag(s)' do
-        @node.normal.tags = ['allowed_tag', 'not_allowed_tag']
+        @node.normal['tags'] = ['allowed_tag', 'not_allowed_tag']
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
@@ -375,7 +375,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       @node.send(:chef_environment, 'hostile')
       @node.send(:run_list, 'role[highlander]')
-      @node.normal.tags = ['the_one_and_only']
+      @node.normal['tags'] = ['the_one_and_only']
 
       @events = Chef::EventDispatch::Dispatcher.new
       @run_context = Chef::RunContext.new(@node, {}, @events)
@@ -445,7 +445,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       @node.send(:chef_environment, 'hostile')
       @node.send(:run_list, 'role[highlander]')
-      @node.normal.tags = ['the_one_and_only']
+      @node.normal['tags'] = ['the_one_and_only']
 
       @events = Chef::EventDispatch::Dispatcher.new
       @run_context = Chef::RunContext.new(@node, {}, @events)
@@ -472,7 +472,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       @node.send(:chef_environment, 'hostile')
       @node.send(:run_list, 'role[highlander]')
-      @node.normal.tags = ['the_one_and_only']
+      @node.normal['tags'] = ['the_one_and_only']
 
       @events = Chef::EventDispatch::Dispatcher.new
       @run_context = Chef::RunContext.new(@node, {}, @events)

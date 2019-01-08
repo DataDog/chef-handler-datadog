@@ -1,7 +1,5 @@
-# encoding: utf-8
-
 # Latest release of mainline Chef versions here.
-%w(10 12).each do |tv|
+%w[10 12].each do |tv|
   appraise "chef-#{tv}" do
     gem 'chef', "~> #{tv}.0"
   end

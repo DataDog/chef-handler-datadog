@@ -1,5 +1,4 @@
-# encoding: utf-8
-require File.expand_path('../lib/chef_handler_datadog', __FILE__)
+require File.expand_path('lib/chef_handler_datadog', __dir__)
 
 Gem::Specification.new do |gem|
   gem.name          = 'chef-handler-datadog'
@@ -22,7 +21,7 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'dotenv'
   gem.add_development_dependency 'rake', '~> 12.3'
   gem.add_development_dependency 'rspec', '~> 3.5.0'
-  gem.add_development_dependency 'rubocop', '~> 0.34.2'
+  gem.add_development_dependency 'rubocop', '~> 0.62.0'
   gem.add_development_dependency 'simplecov'
   gem.add_development_dependency 'vcr'
   gem.add_development_dependency 'webmock'

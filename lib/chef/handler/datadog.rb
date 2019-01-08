@@ -98,8 +98,8 @@ class Chef
 
         if config[:hostname]
           config[:hostname]
-        elsif use_ec2_instance_id && node.attribute?('ec2') && node.ec2.attribute?('instance_id')
-          node.ec2.instance_id
+        elsif use_ec2_instance_id && node.attribute?('ec2') && node['ec2'].attribute?('instance_id')
+          node['ec2']['instance_id']
         else
           node.name
         end

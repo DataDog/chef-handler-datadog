@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = ['lib']
   gem.extra_rdoc_files = ['README.md', 'LICENSE.txt']
 
-  gem.add_dependency 'dogapi', '>= 1.23'
+  gem.add_dependency 'dogapi', '>= 1.31'
 
   gem.add_development_dependency 'appraisal', '~> 2.0.1'
   gem.add_development_dependency 'bundler'

@@ -66,17 +66,17 @@ class DatadogChefEvents
   def emit_to_datadog(dog)
     @event_body = ''
     build_event_data
-    evt = dog.emit_event(Dogapi::Event.new(@event_body,
-                                           msg_title: @event_title,
-                                           event_type: 'config_management.run',
-                                           event_object: @hostname,
-                                           alert_type: @alert_type,
-                                           priority: @event_priority,
-                                           source_type_name: 'chef',
-                                           tags: @tags
-                                          ), host: @hostname)
 
     begin
+      evt = dog.emit_event(Dogapi::Event.new(@event_body,
+                                             msg_title: @event_title,
+                                             event_type: 'config_management.run',
+                                             event_object: @hostname,
+                                             alert_type: @alert_type,
+                                             priority: @event_priority,
+                                             source_type_name: 'chef',
+                                             tags: @tags
+                                            ), host: @hostname)
       # FIXME: nice-to-have: abstract format of return value away a bit
       # in dogapi directly. See https://github.com/DataDog/dogapi-rb/issues/18
       if evt.length < 2
@@ -90,8 +90,8 @@ class DatadogChefEvents
           Chef::Log.debug("Successfully submitted Chef event to Datadog for #{@hostname} at #{evt[1]['event']['url']}")
         end
       end
-    rescue
-      Chef::Log.warn("Could not determine whether chef run was successfully submitted to Datadog: #{evt}")
+    rescue StandardError => e
+      Chef::Log.warn("Could not determine whether Chef event was successfully submitted to Datadog: #{evt}. Error:\n#{e}")
     end
   end
 

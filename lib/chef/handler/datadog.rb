@@ -145,16 +145,21 @@ class Chef
       def endpoints
         validate_keys(@config[:api_key], @config[:application_key], true)
 
-        endpoints = [[@config[:url], @config[:api_key], @config[:application_key]]]
+        # the first endpoint is always the url/site + apikey + appkey one
+        url = 'https://app.datadoghq.com'
+        url = 'https://app.' + @config[:site] unless @config[:site].nil?
+        url = @config[:url] unless @config[:url].nil?
+        endpoints = [[url, @config[:api_key], @config[:application_key]]]
 
+        # then add extra endpoints
         extra_endpoints = @config[:extra_endpoints] || []
-
         extra_endpoints.each do |endpoint|
           url = endpoint[:url] || @config[:url]
           api_key = endpoint[:api_key]
           app_key = endpoint[:application_key]
           endpoints << [url, api_key, app_key] if validate_keys(api_key, app_key, false)
         end
+
         endpoints
       end
 

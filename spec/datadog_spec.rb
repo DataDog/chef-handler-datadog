@@ -626,16 +626,16 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     context 'with a basic config' do
       it 'returns the correct triplet' do
         handler = Chef::Handler::Datadog.new api_key: API_KEY, application_key: APPLICATION_KEY
-        expect(handler.send(:endpoints)).to eq([[nil, API_KEY, APPLICATION_KEY]])
+        expect(handler.send(:endpoints)).to eq([["https://app.datadoghq.com", API_KEY, APPLICATION_KEY]])
       end
     end
 
     context 'with no url and two pairs of keys' do
       it 'returns the correct triplets' do
         triplets = [
-          [nil, API_KEY, APPLICATION_KEY],
-          [nil, 'api_key_2', 'app_key_2'],
-          [nil, 'api_key_3', 'app_key_3']
+          ["https://app.datadoghq.com", API_KEY, APPLICATION_KEY],
+          ["https://app.datadoghq.com", 'api_key_2', 'app_key_2'],
+          ["https://app.datadoghq.com", 'api_key_3', 'app_key_3']
         ]
         handler = Chef::Handler::Datadog.new api_key: triplets[0][1],
                                              application_key: triplets[0][2],
@@ -697,9 +697,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     context 'when missing application keys' do
       it 'returns available triplets' do
         triplets = [
-          [nil, API_KEY, APPLICATION_KEY],
-          [nil, 'api_key_2', 'app_key_2'],
-          [nil, 'api_key_3', 'app_key_3']
+          ["https://app.datadoghq.com", API_KEY, APPLICATION_KEY],
+          ["https://app.datadoghq.com", 'api_key_2', 'app_key_2'],
+          ["https://app.datadoghq.com", 'api_key_3', 'app_key_3']
         ]
         handler = Chef::Handler::Datadog.new api_key: triplets[0][1],
                                              application_key: triplets[0][2],

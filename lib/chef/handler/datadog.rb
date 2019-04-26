@@ -141,9 +141,7 @@ class Chef
         dogs
       end
 
-      def url_or_site(value)
-        return value unless value.nil?
-
+      def config_url()
         url = 'https://app.datadoghq.com'
         url = 'https://app.' + @config[:site] unless @config[:site].nil?
         url = @config[:url] unless @config[:url].nil?
@@ -155,12 +153,12 @@ class Chef
         validate_keys(@config[:api_key], @config[:application_key], true)
 
         # the first endpoint is always the url/site + apikey + appkey one
-        endpoints = [[url_or_site(nil), @config[:api_key], @config[:application_key]]]
+        endpoints = [[config_url(), @config[:api_key], @config[:application_key]]]
 
         # then add extra endpoints
         extra_endpoints = @config[:extra_endpoints] || []
         extra_endpoints.each do |endpoint|
-          url = url_or_site(endpoint[:url])
+          url = endpoint[:url] || config_url()
           api_key = endpoint[:api_key]
           app_key = endpoint[:application_key]
           endpoints << [url, api_key, app_key] if validate_keys(api_key, app_key, false)

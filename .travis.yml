@@ -8,6 +8,7 @@ rvm:
   - 2.3.1
   # Chef 13.0 shipped with Ruby 2.4.1
   - 2.4.1
+  - 2.5.0
 
 before_install:
   - gem update --system
@@ -25,3 +26,10 @@ gemfile:
 
 env:
   - API_KEY=somefakeapikey APPLICATION_KEY=somefakeapplicationkey
+
+matrix:
+  exclude:
+    # Ruby 2.4.1 minimum for Chef 14
+    - rvm: 2.3.1
+      gemfile: gemfiles/chef_14.gemfile
+  allow_failures:

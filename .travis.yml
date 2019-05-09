@@ -4,7 +4,8 @@ sudo: false
 
 rvm:
   # Note that Chef 12.0 shipped for Ruby 2.0 for Windows and 2.1 for Linux/mac
-  - 2.1.0
+  # but we need a more recent ruby.
+  - 2.3.1
   # Chef 13.0 shipped with Ruby 2.4.1
   - 2.4.1
 
@@ -24,12 +25,3 @@ gemfile:
 
 env:
   - API_KEY=somefakeapikey APPLICATION_KEY=somefakeapplicationkey
-
-matrix:
-  exclude:
-    # Chef 13.0 mini ruby 2.3.1
-    - rvm: 2.1.0
-      gemfile:
-        - gemfiles/chef_13.gemfile
-        - gemfiles/chef_14.gemfile
-  allow_failures:

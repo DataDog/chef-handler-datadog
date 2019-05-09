@@ -4,7 +4,7 @@ sudo: false
 
 rvm:
   # Note that Chef 12.0 shipped for Ruby 2.0 for Windows and 2.1 for Linux/mac
-  # but we need a more recent ruby.
+  # but we need a more recent ruby to run the tests with our deps.
   - 2.3.1
   # Chef 13.0 shipped with Ruby 2.4.1
   - 2.4.1
@@ -13,7 +13,6 @@ rvm:
 before_install:
   - gem update --system
   - gem --version
-  # Use the latest bundler
   - gem install bundler
 
 bundler_args: --without=localdev

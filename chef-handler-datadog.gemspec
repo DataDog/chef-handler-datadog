@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path('lib/chef_handler_datadog', __dir__)
 
 Gem::Specification.new do |gem|

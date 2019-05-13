@@ -3,29 +3,32 @@ cache: bundler
 sudo: false
 
 rvm:
-  - 1.9.3
-  - 2.1.5
+  # Note that Chef 12.0 shipped for Ruby 2.0 for Windows and 2.1 for Linux/mac
+  # but we need a more recent ruby to run the tests with our deps.
+  - 2.3.1
+  # Chef 13.0 shipped with Ruby 2.4.1
+  - 2.4.1
+  - 2.5.0
 
 before_install:
   - gem update --system
   - gem --version
-  # Use the latest bundler
   - gem install bundler
 
 bundler_args: --without=localdev
 
 gemfile:
-  - gemfiles/chef_10.14.4.gemfile
-  - gemfiles/chef_10.gemfile
-  - gemfiles/chef_11.gemfile
   - gemfiles/chef_12.gemfile
+  - gemfiles/chef_12.7.gemfile
+  - gemfiles/chef_13.gemfile
+  - gemfiles/chef_14.gemfile
 
 env:
   - API_KEY=somefakeapikey APPLICATION_KEY=somefakeapplicationkey
 
 matrix:
   exclude:
-    # Chef 12.x with Ohai 8.2.x doesn't work on Chef 1.9.3
-    - rvm: 1.9.3
-      gemfile: gemfiles/chef_12.gemfile
+    # Ruby 2.4.1 minimum for Chef 14
+    - rvm: 2.3.1
+      gemfile: gemfiles/chef_14.gemfile
   allow_failures:

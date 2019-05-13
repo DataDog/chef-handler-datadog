@@ -2,8 +2,7 @@
 
 source "http://rubygems.org"
 
-gem "chef", "10.14.4"
-gem "ohai", "< 8.0"
+gem "chef", "~> 13.0"
 
 group :localdev do
   gem "guard"

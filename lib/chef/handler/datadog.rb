@@ -31,6 +31,7 @@ class Chef
 
         @dogs.each do |dog|
           # post the report information to the datadog service
+          Chef::Log.debug("Sending Chef report to #{dog.datadog_host}")
           send_report_to_datadog dog
         end
       ensure

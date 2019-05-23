@@ -3,7 +3,7 @@ Changes
 
 # 0.12.0 / Unreleased
 
-**This version drop the support of Chef < 12.7**
+**This version drops the support of Chef < 12.7**
 
 * [FEATURE] Add support for Chef 13 and 14. [#101][] [#104][] [@martinisoft][]
 * [FEATURE] Support `site` configuration option to use either datadoghq.com or datadoghq.eu [#103][] [@remeh][]

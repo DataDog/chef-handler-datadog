@@ -1,6 +1,14 @@
 Changes
 =======
 
+# 0.12.0 / Unreleased
+
+**This version drop the support of Chef < 12.7**
+
+* [FEATURE] Add support for Chef 13 and 14. [#101][] [#104][] [@martinisoft][]
+* [FEATURE] Support `site` configuration option to use either datadoghq.com or datadoghq.eu [#103][] [@remeh][]
+* [BUGFIX] Improve error handling and logging when submitting data. [#102][] [@olivielpeau][]
+
 # 0.11.0 / 2017-02-21
 
 * [FEATURE] Send policy name and group tags if they exist (opt-in) [#90][] & [#97][] [@david-ds][] & [@olivielpeau][]
@@ -110,6 +118,10 @@ And all other versions were prior to this. See git history for more.
 [#93]: https://github.com/DataDog/chef-handler-datadog/issues/93
 [#96]: https://github.com/DataDog/chef-handler-datadog/issues/96
 [#97]: https://github.com/DataDog/chef-handler-datadog/issues/97
+[#101]: https://github.com/DataDog/chef-handler-datadog/issues/101
+[#102]: https://github.com/DataDog/chef-handler-datadog/issues/102
+[#103]: https://github.com/DataDog/chef-handler-datadog/issues/103
+[#104]: https://github.com/DataDog/chef-handler-datadog/issues/104
 [@ABrehm264]: https://github.com/ABrehm264
 [@DanielMuller]: https://github.com/DanielMuller
 [@DanielRedOak]: https://github.com/DanielRedOak
@@ -123,9 +135,11 @@ And all other versions were prior to this. See git history for more.
 [@dwradcliffe]: https://github.com/dwradcliffe
 [@jhulten]: https://github.com/jhulten
 [@kingpong]: https://github.com/kingpong
+[@martinisoft]: https://github.com/martinisoft
 [@miketheman]: https://github.com/miketheman
 [@mstepniowski]: https://github.com/mstepniowski
 [@olivielpeau]: https://github.com/olivielpeau
 [@owen]: https://github.com/owen
 [@remh]: https://github.com/remh
+[@remeh]: https://github.com/remeh
 [@rlaveycal]: https://github.com/rlaveycal

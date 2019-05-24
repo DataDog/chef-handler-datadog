@@ -5,8 +5,8 @@ Changes
 
 **This version drops the support of Chef < 12.7**
 
-* [FEATURE] Add support for Chef 13 and 14. [#101][] [#104][] [@martinisoft][]
 * [FEATURE] Support `site` configuration option to use either datadoghq.com or datadoghq.eu [#103][] [@remeh][]
+* [OPTIMIZE] Drop support of Chef < 12.7 and clean up for Chef 13, 14 and 15 compatibility. [#101][] [#104][] [@martinisoft][]
 * [BUGFIX] Improve error handling and logging when submitting data. [#102][] [@olivielpeau][]
 
 # 0.11.0 / 2017-02-21

@@ -50,6 +50,6 @@ class DatadogChefMetrics
   rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
     Chef::Log.warn("Could not send metrics to Datadog. Connection error:\n" + e)
   rescue StandardError => e
-    Chef::Log.warn("Could not determine whether chef run metrics were successfully submitted to Datadog: #{evt}. Error:\n#{e}")
+    Chef::Log.warn("Could not determine whether chef run metrics were successfully submitted to Datadog. Error:\n#{e}")
   end
 end # end class DatadogChefMetrics

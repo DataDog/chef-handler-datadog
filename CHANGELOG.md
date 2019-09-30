@@ -1,6 +1,10 @@
 Changes
 =======
 
+# 0.12.1 / 2019-09-30
+
+* [BUGFIX] Fix standard error rescue in metrics sender. [#109][] [@rmoriz][]
+
 # 0.12.0 / 2019-05-27
 
 **This version drops the support of Chef < 12.7**
@@ -122,6 +126,7 @@ And all other versions were prior to this. See git history for more.
 [#102]: https://github.com/DataDog/chef-handler-datadog/issues/102
 [#103]: https://github.com/DataDog/chef-handler-datadog/issues/103
 [#104]: https://github.com/DataDog/chef-handler-datadog/issues/104
+[#109]: https://github.com/DataDog/chef-handler-datadog/issues/109
 [@ABrehm264]: https://github.com/ABrehm264
 [@DanielMuller]: https://github.com/DanielMuller
 [@DanielRedOak]: https://github.com/DanielRedOak
@@ -140,6 +145,7 @@ And all other versions were prior to this. See git history for more.
 [@mstepniowski]: https://github.com/mstepniowski
 [@olivielpeau]: https://github.com/olivielpeau
 [@owen]: https://github.com/owen
-[@remh]: https://github.com/remh
 [@remeh]: https://github.com/remeh
+[@remh]: https://github.com/remh
 [@rlaveycal]: https://github.com/rlaveycal
+[@rmoriz]: https://github.com/rmoriz

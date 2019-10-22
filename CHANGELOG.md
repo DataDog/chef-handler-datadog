@@ -1,10 +1,6 @@
 Changes
 =======
 
-# 0.11.1 / 2017-03-23
-
-* [BUGFIX] Resuce all errors sending/emiting to Datadog [#98][] [@borgstrom][]
-
 # 0.11.0 / 2017-02-21
 
 * [FEATURE] Send policy name and group tags if they exist (opt-in) [#90][] & [#97][] [@david-ds][] & [@olivielpeau][]

@@ -25,7 +25,7 @@ If you'd like to run the test suite, fix a bug or add a feature, please follow t
 
 ## Building and using local snapshots
 
-Some times you need to test chef-handler-datadog before a fix is merged.  In this case you need to:
+Sometimes you need to test chef-handler-datadog before a fix is merged.  In this case you need to:
 
 * Set the version in `lib/chef_handler_datadog.rb`
   If the current version is `0.11.0` then you should bump to `0.11.1.pre`.

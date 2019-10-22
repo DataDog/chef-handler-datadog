@@ -1,5 +1,7 @@
 #!/usr/bin/env rake
-# encoding: utf-8
+
+# frozen_string_literal: true
+
 require 'rubygems'
 require 'bundler/gem_tasks'
 
@@ -7,7 +9,7 @@ require 'rake/clean'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
-task default: [:cops, :spec]
+task default: %i[cops spec]
 
 CLEAN.include(['coverage/', 'doc/', 'pkg/'])
 

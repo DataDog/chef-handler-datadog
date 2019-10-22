@@ -48,6 +48,8 @@ class DatadogChefMetrics
     dog.emit_point('chef.resources.elapsed_time', @run_status.elapsed_time, host: @hostname)
     Chef::Log.debug('Submitted Chef metrics back to Datadog')
   rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
-    Chef::Log.error("Could not send metrics to Datadog. Connection error:\n" + e)
+    Chef::Log.warn("Could not send metrics to Datadog. Connection error:\n" + e)
+  rescue StandardError => e
+    Chef::Log.warn("Could not determine whether chef run metrics were successfully submitted to Datadog. Error:\n#{e}")
   end
 end # end class DatadogChefMetrics

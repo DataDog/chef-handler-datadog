@@ -31,6 +31,7 @@ class Chef
 
         @dogs.each do |dog|
           # post the report information to the datadog service
+          Chef::Log.debug("Sending Chef report to #{dog.datadog_host}")
           send_report_to_datadog dog
         end
       ensure
@@ -98,8 +99,8 @@ class Chef
 
         if config[:hostname]
           config[:hostname]
-        elsif use_ec2_instance_id && node.attribute?('ec2') && node.ec2.attribute?('instance_id')
-          node.ec2.instance_id
+        elsif use_ec2_instance_id && node.attribute?('ec2') && node['ec2'].attribute?('instance_id')
+          node['ec2']['instance_id']
         else
           node.name
         end
@@ -141,20 +142,29 @@ class Chef
         dogs
       end
 
+      def config_url()
+        url = 'https://app.datadoghq.com'
+        url = 'https://app.' + @config[:site] unless @config[:site].nil?
+        url = @config[:url] unless @config[:url].nil?
+        url
+      end
+
       # return all endpoints as a list of triplets [url, api_key, application_key]
       def endpoints
         validate_keys(@config[:api_key], @config[:application_key], true)
 
-        endpoints = [[@config[:url], @config[:api_key], @config[:application_key]]]
+        # the first endpoint is always the url/site + apikey + appkey one
+        endpoints = [[config_url(), @config[:api_key], @config[:application_key]]]
 
+        # then add extra endpoints
         extra_endpoints = @config[:extra_endpoints] || []
-
         extra_endpoints.each do |endpoint|
-          url = endpoint[:url] || @config[:url]
+          url = endpoint[:url] || config_url()
           api_key = endpoint[:api_key]
           app_key = endpoint[:application_key]
           endpoints << [url, api_key, app_key] if validate_keys(api_key, app_key, false)
         end
+
         endpoints
       end
 

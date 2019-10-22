@@ -78,9 +78,9 @@ class Chef
         @metrics.emit_to_datadog dog
         @event.emit_to_datadog dog
         @tags.send_update_to_datadog dog
-      rescue Errno::ECONNREFUSED, Errno::ETIMEDOUT => e
-        Chef::Log.error("Could not connect to Datadog. Connection error:\n" + e)
-        Chef::Log.error('Data to be submitted was:')
+      rescue => e
+        Chef::Log.error("Could not send/emit to Datadog:\n" + e)
+        Chef::Log.error('Event data to be submitted was:')
         Chef::Log.error(@event.event_title)
         Chef::Log.error(@event.event_body)
         Chef::Log.error('Tags to be set for this run:')
@@ -134,7 +134,7 @@ class Chef
                       app_key,
                       nil,   # host
                       nil,   # device
-                      true,  # silent
+                      false, # silent
                       nil,   # timeout
                       url
           ))

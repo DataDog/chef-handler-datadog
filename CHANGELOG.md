@@ -1,6 +1,10 @@
 Changes
 =======
 
+# 0.12.2 / 2019-10-23
+
+* [OPTIMIZE] Rescue all errors when sending/emitting from the handler. [#98][] [@borgstrom][]
+
 # 0.12.1 / 2019-09-30
 
 * [BUGFIX] Fix standard error rescue in metrics sender. [#109][] [@rmoriz][]
@@ -122,6 +126,7 @@ And all other versions were prior to this. See git history for more.
 [#93]: https://github.com/DataDog/chef-handler-datadog/issues/93
 [#96]: https://github.com/DataDog/chef-handler-datadog/issues/96
 [#97]: https://github.com/DataDog/chef-handler-datadog/issues/97
+[#98]: https://github.com/DataDog/chef-handler-datadog/issues/98
 [#101]: https://github.com/DataDog/chef-handler-datadog/issues/101
 [#102]: https://github.com/DataDog/chef-handler-datadog/issues/102
 [#103]: https://github.com/DataDog/chef-handler-datadog/issues/103
@@ -133,6 +138,7 @@ And all other versions were prior to this. See git history for more.
 [@alq]: https://github.com/alq
 [@andrewjamesbrown]: https://github.com/andrewjamesbrown
 [@bigbam505]: https://github.com/bigbam505
+[@borgstrom]: https://github.com/borgstrom
 [@datwiz]: https://github.com/datwiz
 [@david-ds]: https://github.com/david-ds
 [@degemer]: https://github.com/degemer

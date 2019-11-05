@@ -159,10 +159,7 @@ class Chef
         # then add extra endpoints
         extra_endpoints = @config[:extra_endpoints] || []
         extra_endpoints.each do |endpoint|
-          url = endpoint[:url] || config_url()
-          if endpoint[:api_url]
-            url = endpoint[:api_url]
-          end
+          url = endpoint[:api_url] || endpoint[:url] || config_url()
           api_key = endpoint[:api_key]
           app_key = endpoint[:application_key]
           endpoints << [url, api_key, app_key] if validate_keys(api_key, app_key, false)

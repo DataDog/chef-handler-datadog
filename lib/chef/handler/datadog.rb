@@ -79,7 +79,7 @@ class Chef
         @event.emit_to_datadog dog
         @tags.send_update_to_datadog dog
       rescue => e
-        Chef::Log.error("Could not send/emit to Datadog:\n" + e)
+        Chef::Log.error("Could not send/emit to Datadog:\n" + e.to_s)
         Chef::Log.error('Event data to be submitted was:')
         Chef::Log.error(@event.event_title)
         Chef::Log.error(@event.event_body)

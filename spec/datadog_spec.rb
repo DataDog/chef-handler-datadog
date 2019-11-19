@@ -734,6 +734,31 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         expect(handler.send(:endpoints)).to eq(triplets[0..1])
       end
     end
+
+    context 'when using api url instead of url' do
+      it 'returns available triplets' do
+        triplets = [
+          ['https://app.datadoghq.com', 'api_key_2' , 'app_key_2'],
+          ['https://app.example.com', 'api_key_3', 'app_key_3'],
+          ['https://app.example.com', 'api_key_4', 'app_key_4']
+        ]
+        handler = Chef::Handler::Datadog.new api_key: triplets[0][1],
+                                             application_key: triplets[0][2],
+                                             url: triplets[0][0],
+                                             extra_endpoints: [{
+                                               api_url: triplets[1][0],
+                                               url: triplets[0][0],
+                                               api_key: triplets[1][1],
+                                               application_key: triplets[1][2]
+                                             }, {
+                                               api_url: triplets[2][0],
+                                               url:triplets[0][0],
+                                               api_key: triplets[2][1],
+                                               application_key: triplets[2][2]
+                                             }]
+        expect(handler.send(:endpoints)).to eq(triplets)
+      end
+    end
   end
 
   context 'when reporting to multiple endpoints' do

@@ -1,6 +1,10 @@
 Changes
 =======
 
+# 0.12.3 / 2019-11-19
+
+* [FEATURE] Use `api_url` to send Chef related data to extra endpoints. [#113][] [@Azoam][]
+
 # 0.12.2 / 2019-10-23
 
 * [OPTIMIZE] Rescue all errors when sending/emitting from the handler. [#98][] [@borgstrom][]
@@ -132,7 +136,9 @@ And all other versions were prior to this. See git history for more.
 [#103]: https://github.com/DataDog/chef-handler-datadog/issues/103
 [#104]: https://github.com/DataDog/chef-handler-datadog/issues/104
 [#109]: https://github.com/DataDog/chef-handler-datadog/issues/109
+[#113]: https://github.com/DataDog/chef-handler-datadog/issues/113
 [@ABrehm264]: https://github.com/ABrehm264
+[@Azoam]: https://github.com/Azoam
 [@DanielMuller]: https://github.com/DanielMuller
 [@DanielRedOak]: https://github.com/DanielRedOak
 [@alq]: https://github.com/alq

@@ -24,6 +24,14 @@ class DatadogChefEvents
     @event_body = ''
   end
 
+  def event_title
+    @event_title
+  end
+
+  def event_body
+    @event_body
+  end
+
   # set the target hostname (chef node name)
   #
   # @param hostname [String] hostname to use for the handler report

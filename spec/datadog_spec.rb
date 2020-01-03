@@ -85,14 +85,14 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         # We no longer need to query the tag api for current tags,
         # rather udpate only the tags for the designated source type
         expect(a_request(:get, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key] },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
         )).to have_been_made.times(0)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => { 'tags' => ['env:testing'] },
         )).to have_been_made.times(1)
       end
@@ -209,9 +209,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
             'env:hostile', 'role:highlander', 'tag:the_one_and_only', 'tag:datacenter:my-cloud'
             ]),
@@ -224,9 +224,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
             'env:hostile', 'role:highlander', 'custom-prefix-the_one_and_only', 'custom-prefix-datacenter:my-cloud'
             ]),
@@ -239,9 +239,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
             'env:hostile', 'role:highlander', 'the_one_and_only', 'datacenter:my-cloud'
             ]),
@@ -253,9 +253,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
             'custom-prefix-env:hostile', 'custom-prefix-role:highlander'
             ]),
@@ -267,9 +267,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
             'env:hostile', 'role:highlander'
             ]),
@@ -282,9 +282,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
             'env:hostile', 'role:highlander'
             ]),
@@ -299,9 +299,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
               'env:hostile', 'role:highlander', 'tag:allowed_tag'
             ]),
@@ -315,9 +315,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
               'env:hostile', 'role:highlander', 'tag:allowed_tag', 'tag:not_allowed_tag'
             ]),
@@ -336,9 +336,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
               'env:hostile', 'role:highlander'
             ]),
@@ -358,9 +358,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
               'env:hostile', 'role:highlander', 'policy_group:the_policy_group', 'policy_name:the_policy_name'
             ]),
@@ -400,9 +400,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
             'env:hostile', 'role:highlander', 'tag:the_one_and_only'
             ]),
@@ -413,9 +413,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                        'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
             'env:hostile', 'role:highlander', 'tag:the_one_and_only'
             ]),
@@ -428,9 +428,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => @handler.config[:api_key],
-                      'application_key' => @handler.config[:application_key],
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
+                       'Dd-Application-Key' => @handler.config[:application_key] },
+          :query => { 'source' => 'chef' },
           :body => hash_including(:tags => [
             'env:hostile', 'role:highlander', 'tag:the_one_and_only'
             ]),
@@ -830,16 +830,16 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     context 'sets tags' do
       it 'puts the tags for the current node' do
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :query => { 'api_key' => API_KEY,
-                      'application_key' => APPLICATION_KEY,
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => API_KEY,
+                        'Dd-Application-Key' => APPLICATION_KEY },
+          :query => { 'source' => 'chef' },
           :body => { 'tags' => ['env:testing'] },
         )).to have_been_made.times(1)
 
         expect(a_request(:put, host_tag_endpoint2 + @node.name).with(
-          :query => { 'api_key' => api_key2,
-                      'application_key' => application_key2,
-                      'source' => 'chef' },
+          :headers => { 'Dd-Api-Key' => api_key2,
+                        'Dd-Application-Key' => application_key2 },
+          :query => { 'source' => 'chef' },
           :body => { 'tags' => ['env:testing'] },
         )).to have_been_made.times(1)
       end

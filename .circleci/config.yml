@@ -116,7 +116,7 @@ jobs:
       CHEF_VERSION: '14.0'
       RUBY_VERSION: '2.5.1'
 
-  verify-gemfile.lock-dependencies: &specs
+  verify-gemfile.lock-dependencies:
     machine: true
     environment:
       API_KEY: somefakeapikey

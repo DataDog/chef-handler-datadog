@@ -6,8 +6,8 @@ jobs:
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '12.0'
       RUBY_VERSION: '2.3.8'
-      BUNDLE_GEMFILE: gemfiles/chef_12.gemfile
     steps:
       - checkout
       - run:
@@ -28,16 +28,16 @@ jobs:
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '12.0'
       RUBY_VERSION: '2.4.9'
-      BUNDLE_GEMFILE: gemfiles/chef_12.gemfile
 
   specs-ruby25-chef-120:
     <<: *specs
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '12.0'
       RUBY_VERSION: '2.5.1'
-      BUNDLE_GEMFILE: gemfiles/chef_12.gemfile
 
   ### Chef 12.7
   specs-ruby23-chef-127:
@@ -45,24 +45,24 @@ jobs:
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '12.7.0'
       RUBY_VERSION: '2.3.8'
-      BUNDLE_GEMFILE: gemfiles/chef_12.7.gemfile
 
   specs-ruby24-chef-127:
     <<: *specs
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '12.7.0'
       RUBY_VERSION: '2.4.9'
-      BUNDLE_GEMFILE: gemfiles/chef_12.7.gemfile
 
   specs-ruby25-chef-127:
     <<: *specs
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '12.7.0'
       RUBY_VERSION: '2.5.1'
-      BUNDLE_GEMFILE: gemfiles/chef_12.7.gemfile
 
   ### Chef 13
   specs-ruby23-chef-130:
@@ -70,24 +70,24 @@ jobs:
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '13.0'
       RUBY_VERSION: '2.3.8'
-      BUNDLE_GEMFILE: gemfiles/chef_13.gemfile
 
   specs-ruby24-chef-130:
     <<: *specs
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '13.0'
       RUBY_VERSION: '2.4.9'
-      BUNDLE_GEMFILE: gemfiles/chef_13.gemfile
 
   specs-ruby25-chef-130:
     <<: *specs
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '13.0'
       RUBY_VERSION: '2.5.1'
-      BUNDLE_GEMFILE: gemfiles/chef_13.gemfile
 
   ### Chef 14
   # Chef 14 depends on ruby >= 2.4
@@ -97,24 +97,24 @@ jobs:
   #   environment:
   #     API_KEY: somefakeapikey
   #     APPLICATION_KEY: somefakeapplicationkey
+  #     CHEF_VERSION: '14.0'
   #     RUBY_VERSION: '2.3.8'
-  #     BUNDLE_GEMFILE: gemfiles/chef_14.gemfile
 
   specs-ruby24-chef-140:
     <<: *specs
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '14.0'
       RUBY_VERSION: '2.4.9'
-      BUNDLE_GEMFILE: gemfiles/chef_14.gemfile
 
   specs-ruby25-chef-140:
     <<: *specs
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: '14.0'
       RUBY_VERSION: '2.5.1'
-      BUNDLE_GEMFILE: gemfiles/chef_14.gemfile
 
 workflows:
   version: 2

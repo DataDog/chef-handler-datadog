@@ -6,6 +6,7 @@ source 'http://rubygems.org'
 gemspec
 
 group :localdev do
+  gem 'chef', "~> #{ENV.fetch('CHEF_VERSION', '15.0')}"
   gem 'guard'
   gem 'guard-rspec'
   gem 'guard-rubocop'

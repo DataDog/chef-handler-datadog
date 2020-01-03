@@ -116,6 +116,27 @@ jobs:
       CHEF_VERSION: '14.0'
       RUBY_VERSION: '2.5.1'
 
+  verify-gemfile.lock-dependencies: &specs
+    machine: true
+    environment:
+      API_KEY: somefakeapikey
+      APPLICATION_KEY: somefakeapplicationkey
+      RUBY_VERSION: '2.5.1'
+    steps:
+      - checkout
+      - run:
+          name: Install Ruby versions
+          command: rvm install $RUBY_VERSION
+      - run:
+          name: Install bundler
+          command: rvm $RUBY_VERSION --verbose do gem install bundler:1.17.3
+      - run:
+          name: Install gem dependencies
+          command: rvm $RUBY_VERSION --verbose do bundle install --path .bundle
+      - run:
+          name: Run tests
+          command: rvm $RUBY_VERSION --verbose do bundle exec rake
+
 workflows:
   version: 2
   build_and_test:
@@ -134,3 +155,4 @@ workflows:
 
       - specs-ruby24-chef-140
       - specs-ruby25-chef-140
+      - verify-gemfile.lock-dependencies

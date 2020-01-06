@@ -5,7 +5,7 @@ http_interactions:
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.run.success","points":[[1453838668,0.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.run.success","points":[[1578321255,0.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -20,31 +20,35 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:14 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.run.failure","points":[[1453838668,1.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.run.failure","points":[[1578321255,1.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -59,31 +63,35 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:14 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.resources.total","points":[[1453838668,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.total","points":[[1578321255,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -98,31 +106,35 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:14 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.resources.updated","points":[[1453838668,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.updated","points":[[1578321255,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -137,31 +149,35 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:15 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1453838668,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1578321255,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -176,25 +192,29 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:15 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
@@ -203,7 +223,7 @@ http_interactions:
       string: '{"msg_text":"\n$$$\n- [paws] (dynamically defined)\n- [ears] (dynamically
         defined)\n- [nose] (dynamically defined)\n- [tail] (dynamically defined)\n-
         [fur] (dynamically defined)\n\n$$$\n\n$$$\nChef::Exceptions::UnsupportedAction:
-        Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1453838668,"msg_title":"Chef
+        Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1578321255,"msg_title":"Chef
         failed in 2 seconds on chef.handler.datadog.test-failed ","priority":"normal","parent":null,"tags":["env:hostile","role:highlander","tag:the_one_and_only"],"aggregation_key":"chef.handler.datadog.test-failed","alert_type":"error","event_type":"config_management.run","source_type_name":"chef","title":"Chef
         failed in 2 seconds on chef.handler.datadog.test-failed ","text":"\n$$$\n-
         [paws] (dynamically defined)\n- [ears] (dynamically defined)\n- [nose] (dynamically
@@ -223,32 +243,36 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
-      Content-Type:
-      - text/plain; charset=utf-8
       Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
+      - Mon, 06 Jan 2020 14:34:15 GMT
+      Content-Type:
+      - application/json
       Content-Length:
-      - '647'
+      - '649'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
-      string: '{"status":"ok","event":{"id":381236694692316426,"title":"Chef failed
+      string: '{"status":"ok","event":{"id":5269025444189820152,"title":"Chef failed
         in 2 seconds on chef.handler.datadog.test-failed ","text":"\n$$$\n- [paws]
         (dynamically defined)\n- [ears] (dynamically defined)\n- [nose] (dynamically
         defined)\n- [tail] (dynamically defined)\n- [fur] (dynamically defined)\n\n$$$\n\n$$$\nChef::Exceptions::UnsupportedAction:
-        Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1453838668,"handle":null,"priority":"normal","related_event_id":null,"tags":["env:hostile","role:highlander","tag:the_one_and_only"],"url":"https://app.datadoghq.com/event/event?id=381236694692316426"}}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+        Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1578321255,"handle":null,"priority":"normal","related_event_id":null,"tags":["env:hostile","role:highlander","tag:the_one_and_only"],"url":"https://app.datadoghq.com/event/event?id=5269025444189820152"}}'
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: put
-    uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-failed?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
+    uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-failed?source=chef
     body:
       encoding: UTF-8
       string: '{"tags":["env:hostile","role:highlander","tag:the_one_and_only"]}'
@@ -259,6 +283,10 @@ http_interactions:
       - "*/*"
       User-Agent:
       - Ruby
+      Dd-Api-Key:
+      - "<API_KEY>"
+      Dd-Application-Key:
+      - "<APPLICATION_KEY>"
       Content-Type:
       - application/json
   response:
@@ -266,40 +294,41 @@ http_interactions:
       code: 201
       message: Created
     headers:
-      Cache-Control:
-      - no-cache
+      Date:
+      - Mon, 06 Jan 2020 14:34:16 GMT
       Content-Type:
       - application/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - dogweb_sameorig
+      Content-Length:
+      - '107'
+      Connection:
+      - keep-alive
       Pragma:
       - no-cache
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
+      Cache-Control:
+      - no-cache
       X-Dd-Debug:
-      - 4G6DflkbLuEPHPN7r5QLLJW1+B1YXxXufb+VXQ5hU44=
+      - yqCkAb2Y8/4OgTSGYvedTl/k5gsPukDI7OLTlGSm9adIbRDVlGb00Ve5DDv9ImFD
+      Dd-Pool:
+      - dogweb
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
       X-Frame-Options:
       - SAMEORIGIN
-      Content-Length:
-      - '112'
-      Connection:
-      - keep-alive
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
-      string: '{"host": "chef.handler.datadog.test-failed", "tags": ["env:hostile",
-        "role:highlander", "tag:the_one_and_only"]}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+      string: '{"host":"chef.handler.datadog.test-failed","tags":["env:hostile","role:highlander","tag:the_one_and_only"]}'
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.run.success","points":[[1453838668,0.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.run.success","points":[[1578321255,0.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -314,31 +343,35 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:16 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.run.failure","points":[[1453838668,1.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.run.failure","points":[[1578321255,1.0]],"type":"counter","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -353,31 +386,35 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:17 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.resources.total","points":[[1453838668,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.total","points":[[1578321255,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -392,31 +429,35 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:17 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:26 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.resources.updated","points":[[1453838668,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.updated","points":[[1578321255,6.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -431,31 +472,35 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:17 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:27 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/series?api_key=<API_KEY>
     body:
       encoding: UTF-8
-      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1453838668,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
+      string: '{"series":[{"metric":"chef.resources.elapsed_time","points":[[1578321255,2.0]],"type":"gauge","host":"chef.handler.datadog.test-failed","device":null}]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -470,25 +515,29 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
+      Date:
+      - Mon, 06 Jan 2020 14:34:18 GMT
       Content-Type:
       - text/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:27 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
       Content-Length:
       - '16'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
       string: '{"status": "ok"}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: post
     uri: https://app.datadoghq.com/api/v1/events?api_key=<API_KEY>
@@ -497,8 +546,8 @@ http_interactions:
       string: '{"msg_text":"\n$$$\n- [paws] (dynamically defined)\n- [ears] (dynamically
         defined)\n- [nose] (dynamically defined)\n- [tail] (dynamically defined)\n-
         [fur] (dynamically defined)\n\n$$$\n\nAlerting: @alice @bob\n\n$$$\nChef::Exceptions::UnsupportedAction:
-        Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1453838668,"msg_title":"Chef
-        failed in 2 seconds on chef.handler.datadog.test-failed ","priority":"normal","parent":null,"tags":["env:hostile","role:highlander","tag:tag:the_one_and_only"],"aggregation_key":"chef.handler.datadog.test-failed","alert_type":"error","event_type":"config_management.run","source_type_name":"chef","title":"Chef
+        Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1578321255,"msg_title":"Chef
+        failed in 2 seconds on chef.handler.datadog.test-failed ","priority":"normal","parent":null,"tags":["env:hostile","role:highlander","tag:the_one_and_only"],"aggregation_key":"chef.handler.datadog.test-failed","alert_type":"error","event_type":"config_management.run","source_type_name":"chef","title":"Chef
         failed in 2 seconds on chef.handler.datadog.test-failed ","text":"\n$$$\n-
         [paws] (dynamically defined)\n- [ears] (dynamically defined)\n- [nose] (dynamically
         defined)\n- [tail] (dynamically defined)\n- [fur] (dynamically defined)\n\n$$$\n\nAlerting:
@@ -517,35 +566,39 @@ http_interactions:
       code: 202
       message: Accepted
     headers:
-      Content-Type:
-      - text/plain; charset=utf-8
       Date:
-      - Tue, 26 Jan 2016 20:04:27 GMT
-      Dd-Pool:
-      - propjoe
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
+      - Mon, 06 Jan 2020 14:34:18 GMT
+      Content-Type:
+      - application/json
       Content-Length:
-      - '676'
+      - '674'
       Connection:
       - keep-alive
+      Dd-Pool:
+      - propjoe
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
-      string: '{"status":"ok","event":{"id":381236701686654829,"title":"Chef failed
+      string: '{"status":"ok","event":{"id":5269025486229085429,"title":"Chef failed
         in 2 seconds on chef.handler.datadog.test-failed ","text":"\n$$$\n- [paws]
         (dynamically defined)\n- [ears] (dynamically defined)\n- [nose] (dynamically
         defined)\n- [tail] (dynamically defined)\n- [fur] (dynamically defined)\n\n$$$\n\nAlerting:
-        @alice @bob\n\n$$$\nChef::Exceptions::UnsupportedAction: Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1453838668,"handle":null,"priority":"normal","related_event_id":null,"tags":["env:hostile","role:highlander","tag:tag:the_one_and_only"],"url":"https://app.datadoghq.com/event/event?id=381236701686654829"}}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
+        @alice @bob\n\n$$$\nChef::Exceptions::UnsupportedAction: Something awry.\n$$$\n\n$$$\nwhiskers.rb:2\npaws.rb:1\nfile.rb:2\nfile.rb:1\n$$$\n","date_happened":1578321255,"handle":null,"priority":"normal","related_event_id":null,"tags":["env:hostile","role:highlander","tag:the_one_and_only"],"url":"https://app.datadoghq.com/event/event?id=5269025486229085429"}}'
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
 - request:
     method: put
-    uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-failed?api_key=<API_KEY>&application_key=<APPLICATION_KEY>&source=chef
+    uri: https://app.datadoghq.com/api/v1/tags/hosts/chef.handler.datadog.test-failed?source=chef
     body:
       encoding: UTF-8
-      string: '{"tags":["env:hostile","role:highlander","tag:tag:the_one_and_only"]}'
+      string: '{"tags":["env:hostile","role:highlander","tag:the_one_and_only"]}'
     headers:
       Accept-Encoding:
       - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
@@ -553,6 +606,10 @@ http_interactions:
       - "*/*"
       User-Agent:
       - Ruby
+      Dd-Api-Key:
+      - "<API_KEY>"
+      Dd-Application-Key:
+      - "<APPLICATION_KEY>"
       Content-Type:
       - application/json
   response:
@@ -560,32 +617,33 @@ http_interactions:
       code: 201
       message: Created
     headers:
-      Cache-Control:
-      - no-cache
+      Date:
+      - Mon, 06 Jan 2020 14:34:18 GMT
       Content-Type:
       - application/json
-      Date:
-      - Tue, 26 Jan 2016 20:04:27 GMT
-      Dd-Pool:
-      - dogweb_sameorig
-      Pragma:
-      - no-cache
-      Strict-Transport-Security:
-      - max-age=15724800;
-      X-Content-Type-Options:
-      - nosniff
-      X-Dd-Debug:
-      - QKcGho/VVHvOvAFq4WeaqBhqhL8eYL3K9CW+TToIP+o=
-      X-Frame-Options:
-      - SAMEORIGIN
       Content-Length:
-      - '116'
+      - '107'
       Connection:
       - keep-alive
+      Pragma:
+      - no-cache
+      Cache-Control:
+      - no-cache
+      X-Dd-Debug:
+      - qA85Kiicwd/s93AfT3MSf+l6IYc5FQ6tEbp4Kft/ri41UOumJ967MPQKmz3gwejd
+      Dd-Pool:
+      - dogweb
+      Content-Security-Policy:
+      - frame-ancestors 'self'; report-uri https://api.datadoghq.com/csp-report
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=15724800;
     body:
       encoding: UTF-8
-      string: '{"host": "chef.handler.datadog.test-failed", "tags": ["tag:tag:the_one_and_only",
-        "env:hostile", "role:highlander"]}'
-    http_version:
-  recorded_at: Tue, 26 Jan 2016 20:04:28 GMT
-recorded_with: VCR 3.0.1
+      string: '{"host":"chef.handler.datadog.test-failed","tags":["env:hostile","role:highlander","tag:the_one_and_only"]}'
+    http_version: 
+  recorded_at: Mon, 06 Jan 2020 14:34:15 GMT
+recorded_with: VCR 5.0.0

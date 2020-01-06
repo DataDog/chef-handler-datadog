@@ -66,16 +66,17 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       it 'posts an event' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
           :query => { 'api_key' => @handler.config[:api_key] },
-          :body => hash_including(:msg_text => 'Chef updated 0 resources out of 0 resources total.'),
-          :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} "),
-          :body => hash_including(:tags => ['env:testing']),
+          :body => hash_including(:msg_text => 'Chef updated 0 resources out of 0 resources total.',
+                                  :msg_title => "Chef completed in 5 seconds on #{@node.name} ",
+                                  :tags => ['env:testing']),
         )).to have_been_made.times(1)
       end
 
       it 'sets priority correctly' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
           :query => { 'api_key' => @handler.config[:api_key] },
-          :body => hash_including(:priority => 'low'),
+          :body => hash_including(:alert_type => 'success',
+                                  :priority => 'low'),
         )).to have_been_made.times(1)
       end
     end
@@ -120,8 +121,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
         :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on i-123456 '),
-        :body => hash_including(:host => 'i-123456'),
+        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on i-123456 ',
+                                :host => 'i-123456'),
       )).to have_been_made.times(1)
     end
 
@@ -131,8 +132,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
         :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on i-123456 '),
-        :body => hash_including(:host => 'i-123456'),
+        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on i-123456 ',
+                                :host => 'i-123456'),
       )).to have_been_made.times(1)
     end
 
@@ -142,8 +143,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
         :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} "),
-        :body => hash_including(:host => @node.name),
+        :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} ",
+                                :host => @node.name),
       )).to have_been_made.times(1)
     end
   end
@@ -167,8 +168,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
         :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name}"),
-        :body => hash_including(:host => @node.name),
+        :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} ",
+                                :host => @node.name),
       )).to have_been_made.times(1)
     end
 
@@ -178,8 +179,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
         :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on my-imaginary-hostname.local'),
-        :body => hash_including(:host => 'my-imaginary-hostname.local'),
+        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on my-imaginary-hostname.local ',
+                                :host => 'my-imaginary-hostname.local'),
       )).to have_been_made.times(1)
     end
   end
@@ -531,8 +532,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     it 'sets priority correctly' do
       expect(a_request(:post, EVENTS_ENDPOINT).with(
         :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:alert_type => 'success'),
-        :body => hash_including(:priority => 'normal'),
+        :body => hash_including(:alert_type => 'error',
+                                :priority => 'normal'),
       )).to have_been_made.times(1)
     end
 
@@ -573,8 +574,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     it 'posts an event' do
       expect(a_request(:post, EVENTS_ENDPOINT).with(
         :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_text => 'Chef updated 1 resources out of 2 resources total.'),
-        :body => hash_including(:msg_title => "Chef completed in 8 seconds on #{@node.name} "),
+        # FIXME: msg_text is "\n$$$\n- [whiskers] (dynamically defined)\n\n$$$\n" - is this a bug?
+        :body => hash_including(#:msg_text => 'Chef updated 1 resources out of 2 resources total.',
+                                :msg_title => "Chef completed in 8 seconds on #{@node.name} "),
       )).to have_been_made.times(1)
     end
   end
@@ -601,8 +603,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       it 'posts an event' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
           :query => { 'api_key' => @handler.config[:api_key] },
-          :body => hash_including(:msg_text => 'Chef was unable to complete a run, an error during compilation may have occured.'),
-          :body => hash_including(:msg_title => "Chef failed during compile phase on #{@node.name} "),
+          :body => hash_including(:msg_text => 'Chef was unable to complete a run, an error during compilation may have occurred.',
+                                  :msg_title => "Chef failed during compile phase on #{@node.name} "),
         )).to have_been_made.times(1)
       end
     end
@@ -631,8 +633,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       it 'posts an event' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
           :query => { 'api_key' => @handler.config[:api_key] },
-          :body => hash_including(:msg_text => 'Chef was unable to complete a run, an error during compilation may have occured.'),
-          :body => hash_including(:msg_title => "Chef failed during compile phase on #{@node.name} "),
+          :body => hash_including(:msg_text => 'Chef was unable to complete a run, an error during compilation may have occurred.',
+                                  :msg_title => "Chef failed during compile phase on #{@node.name} "),
         )).to have_been_made.times(1)
       end
     end

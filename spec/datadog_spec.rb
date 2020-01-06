@@ -397,44 +397,60 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       end
 
       it 'retries no more than twice' do
-        @handler.run_report_unsafe(@run_status)
+        dogs = @handler.instance_variable_get(:@dogs)
 
-        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
-            'env:hostile', 'role:highlander', 'tag:the_one_and_only'
-            ]),
-        )).to have_been_made.times(3)
+        # Check that we do have a Dogapi client
+        expect(dogs.length).to eq(1)
+
+        dog = dogs[0]
+        # Define mock update_tags function which returns the result of an HTTP 404 error
+        res = def dog.update_tags host_id, tags, source=nil
+          [404, 'Not Found']
+        end
+        expect(dog).to receive(:update_tags).exactly(3).times.and_call_original
+        @handler.run_report_unsafe(@run_status)
       end
 
       it 'stops retrying once submission is successful' do
+        dogs = @handler.instance_variable_get(:@dogs)
+
+        # Check that we do have a Dogapi client
+        expect(dogs.length).to eq(1)
+
+        dog = dogs[0]
+        # Define mock update_tags function which returns the result of an HTTP 404 error once
+        def dog.update_tags host_id, tags, source=nil
+          @update_tags_count ||= 0
+          @update_tags_count += 1
+          if @update_tags_count <= 1
+            [404, 'Not Found']
+          else
+            [201, 'Created']
+          end
+        end
+
+        expect(dog).to receive(:update_tags).exactly(2).times.and_call_original
         @handler.run_report_unsafe(@run_status)
 
-        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
-            'env:hostile', 'role:highlander', 'tag:the_one_and_only'
-            ]),
-        )).to have_been_made.times(2)
+
       end
     end
 
     describe 'when not specified' do
-      it 'does not retry after a failed submission'  do
-        @handler.run_report_unsafe(@run_status)
+      it 'does not retry after a failed submission' do
+        dogs = @handler.instance_variable_get(:@dogs)
 
-        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                       'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
-            'env:hostile', 'role:highlander', 'tag:the_one_and_only'
-            ]),
-        )).to have_been_made.times(1)
+        # Check that we do have a Dogapi client
+        expect(dogs.length).to eq(1)
+
+        dog = dogs[0]
+        # Define mock update_tags function which returns the result of an HTTP 404 error
+        def dog.update_tags host_id, tags, source=nil
+          [404, 'Not Found']
+        end
+
+        expect(dog).to receive(:update_tags).exactly(:once).and_call_original
+        @handler.run_report_unsafe(@run_status)
       end
     end
   end
@@ -768,18 +784,17 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     let(:events_endpoint2) { base_url2 + '/api/v1/events' }
     let(:host_tag_endpoint2) { base_url2 + '/api/v1/tags/hosts/' }
     let(:metrics_endpoint2) { base_url2 + '/api/v1/series' }
-    let(:handler) do
-      Chef::Handler::Datadog.new api_key: API_KEY,
-                                 application_key: APPLICATION_KEY,
-                                 url: BASE_URL,
-                                 extra_endpoints: [{
-                                   api_key: api_key2,
-                                   application_key: application_key2,
-                                   url: base_url2
-                                 }]
-    end
     # Construct a good run_status
     before(:each) do
+      @handler = Chef::Handler::Datadog.new api_key: API_KEY,
+                                            application_key: APPLICATION_KEY,
+                                            url: BASE_URL,
+                                            extra_endpoints: [{
+                                              api_key: api_key2,
+                                              application_key: application_key2,
+                                              url: base_url2
+                                            }]
+
       @node = Chef::Node.build('chef.handler.datadog.test')
       @node.send(:chef_environment, 'testing')
       @events = Chef::EventDispatch::Dispatcher.new
@@ -792,56 +807,87 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @run_status.stop_clock
 
       @run_status.run_context = @run_context
-
-      # Run the report
-      handler.run_report_unsafe(@run_status)
     end
 
     context 'emits metrics' do
-      it 'reports metrics' do
-        expect(a_request(:post, METRICS_ENDPOINT).with(
-          :query => { 'api_key' => API_KEY }
-        )).to have_been_made.times(5)
 
-        expect(a_request(:post, metrics_endpoint2).with(
-          :query => { 'api_key' => api_key2 }
-        )).to have_been_made.times(5)
+      it 'reports metrics' do
+        dogs = @handler.instance_variable_get(:@dogs)
+
+        # Check that we do have two Dogapi clients (one for each endpoint)
+        expect(dogs.length).to eq(2)
+
+        for dog in dogs do
+          # Define mock functions to avoid failures when connecting to the app.example.com endpoint
+          def dog.emit_point metric, value, options= {}
+            true
+          end
+          def dog.emit_event event, options= {}
+            [200, "{'event': 'My event'}"]
+          end
+          def dog.update_tags host_id, tags, source=nil
+            [201, "Created"]
+          end
+        end
+
+        expect(dogs[0]).to receive(:emit_point).exactly(5).times.and_call_original
+        expect(dogs[1]).to receive(:emit_point).exactly(5).times.and_call_original
+
+        @handler.run_report_unsafe(@run_status)
       end
     end
 
     context 'emits events' do
       it 'posts an event' do
-        expect(a_request(:post, EVENTS_ENDPOINT).with(
-          :query => { 'api_key' => API_KEY },
-          :body => hash_including(:msg_text => 'Chef updated 0 resources out of 0 resources total.'),
-          :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} "),
-          :body => hash_including(:tags => ['env:testing']),
-        )).to have_been_made.times(1)
+        dogs = @handler.instance_variable_get(:@dogs)
 
-        expect(a_request(:post, events_endpoint2).with(
-          :query => { 'api_key' => api_key2 },
-          :body => hash_including(:msg_text => 'Chef updated 0 resources out of 0 resources total.'),
-          :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} "),
-          :body => hash_including(:tags => ['env:testing']),
-        )).to have_been_made.times(1)
+        # Check that we do have two Dogapi clients (one for each endpoint)
+        expect(dogs.length).to eq(2)
+
+        for dog in dogs do
+          # Define mock functions to avoid failures when connecting to the app.example.com endpoint
+          def dog.emit_point metric, value, options= {}
+            true
+          end
+          def dog.emit_event event, options= {}
+            [200, "{'event': 'My event'}"]
+          end
+          def dog.update_tags host_id, tags, source=nil
+            [201, "Created"]
+          end
+        end
+
+        expect(dogs[0]).to receive(:emit_event).exactly(:once).and_call_original
+        expect(dogs[1]).to receive(:emit_event).exactly(:once).and_call_original
+
+        @handler.run_report_unsafe(@run_status)
       end
     end
 
     context 'sets tags' do
       it 'puts the tags for the current node' do
-        expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => API_KEY,
-                        'Dd-Application-Key' => APPLICATION_KEY },
-          :query => { 'source' => 'chef' },
-          :body => { 'tags' => ['env:testing'] },
-        )).to have_been_made.times(1)
+        dogs = @handler.instance_variable_get(:@dogs)
 
-        expect(a_request(:put, host_tag_endpoint2 + @node.name).with(
-          :headers => { 'Dd-Api-Key' => api_key2,
-                        'Dd-Application-Key' => application_key2 },
-          :query => { 'source' => 'chef' },
-          :body => { 'tags' => ['env:testing'] },
-        )).to have_been_made.times(1)
+        # Check that we do have two Dogapi clients (one for each endpoint)
+        expect(dogs.length).to eq(2)
+
+        for dog in dogs do
+          # Define mock functions to avoid failures when connecting to the app.example.com endpoint
+          def dog.emit_point metric, value, options= {}
+            true
+          end
+          def dog.emit_event event, options= {}
+            [200, "{'event': 'My event'}"]
+          end
+          def dog.update_tags host_id, tags, source=nil
+            [201, "Created"]
+          end
+        end
+
+        expect(dogs[0]).to receive(:update_tags).exactly(:once).and_call_original
+        expect(dogs[1]).to receive(:update_tags).exactly(:once).and_call_original
+
+        @handler.run_report_unsafe(@run_status)
       end
     end
   end

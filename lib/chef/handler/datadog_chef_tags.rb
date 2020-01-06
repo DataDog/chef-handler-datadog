@@ -92,6 +92,7 @@ class DatadogChefTags
   def send_update_to_datadog(dog)
     tags = combined_host_tags
     retries = @retries
+    rc = []
     begin
       loop do
         should_retry = false

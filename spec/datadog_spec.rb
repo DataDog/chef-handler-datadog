@@ -380,6 +380,10 @@ describe Chef::Handler::Datadog, vcr: :new_episodes do
   end
 
   context 'tags submission retries' do
+    let(:dog) do
+      @handler.instance_variable_get(:@dogs)[0]
+    end
+
     before(:each) do
       @node = Chef::Node.build('chef.handler.datadog.test-tags-retries')
 
@@ -396,8 +400,6 @@ describe Chef::Handler::Datadog, vcr: :new_episodes do
       @run_status.stop_clock
 
       @run_status.run_context = @run_context
-
-      @dog = @handler.instance_variable_get(:@dogs)[0]
     end
 
     describe 'when specified as 2 retries' do
@@ -409,41 +411,28 @@ describe Chef::Handler::Datadog, vcr: :new_episodes do
 
       it 'retries no more than twice' do
         # Define mock update_tags function which returns the result of an HTTP 404 error
-        def @dog.update_tags(host_id, tags, source=nil)
-          [404, 'Not Found']
-        end
+        allow(dog).to receive(:update_tags).and_return([404, 'Not Found'])
 
-        expect(@dog).to receive(:update_tags).exactly(3).times.and_call_original
+        expect(dog).to receive(:update_tags).exactly(3).times
         @handler.run_report_unsafe(@run_status)
       end
 
       it 'stops retrying once submission is successful' do
         # Define mock update_tags function which returns the result of an HTTP 404 error once
-        def @dog.update_tags host_id, tags, source=nil
-          @update_tags_count ||= 0
-          @update_tags_count += 1
-          if @update_tags_count <= 1
-            [404, 'Not Found']
-          else
-            [201, 'Created']
-          end
-        end
+        allow(dog).to receive(:update_tags).and_return([404, 'Not Found'], [201, 'Created'])
 
-        expect(@dog).to receive(:update_tags).exactly(2).times.and_call_original
+        expect(dog).to receive(:update_tags).exactly(2).times
         @handler.run_report_unsafe(@run_status)
-
-
       end
     end
 
     describe 'when not specified' do
       it 'does not retry after a failed submission' do
         # Define mock update_tags function which returns the result of an HTTP 404 error
-        def @dog.update_tags host_id, tags, source=nil
-          [404, 'Not Found']
-        end
+        allow(dog).to receive(:update_tags).and_return([404, 'Not Found'])
 
-        expect(@dog).to receive(:update_tags).exactly(:once).and_call_original
+
+        expect(dog).to receive(:update_tags).exactly(:once)
         @handler.run_report_unsafe(@run_status)
       end
     end
@@ -779,29 +768,28 @@ describe Chef::Handler::Datadog, vcr: :new_episodes do
     let(:events_endpoint2) { base_url2 + '/api/v1/events' }
     let(:host_tag_endpoint2) { base_url2 + '/api/v1/tags/hosts/' }
     let(:metrics_endpoint2) { base_url2 + '/api/v1/series' }
+    let(:handler) do
+      Chef::Handler::Datadog.new(api_key: API_KEY,
+        application_key: APPLICATION_KEY,
+        url: BASE_URL,
+        extra_endpoints: [{
+          api_key: api_key2,
+          application_key: application_key2,
+          url: base_url2
+        }])
+    end
+
+    let(:dogs) do
+      handler.instance_variable_get(:@dogs)
+    end
+
     # Construct a good run_status
     before(:each) do
-      @handler = Chef::Handler::Datadog.new api_key: API_KEY,
-                                            application_key: APPLICATION_KEY,
-                                            url: BASE_URL,
-                                            extra_endpoints: [{
-                                              api_key: api_key2,
-                                              application_key: application_key2,
-                                              url: base_url2
-                                            }]
-
-      @dogs = @handler.instance_variable_get(:@dogs)
-      @dogs.each do |dog|
+      dogs.each do |dog|
         # Define mock functions to avoid failures when connecting to the app.example.com endpoint
-        def dog.emit_point(metric, value, options= {})
-          true
-        end
-        def dog.emit_event(event, options= {})
-          [200, "{'event': 'My event'}"]
-        end
-        def dog.update_tags(host_id, tags, source=nil)
-          [201, "Created"]
-        end
+        allow(dog).to receive(:emit_point).and_return(true)
+        allow(dog).to receive(:emit_event).and_return([200, "{'event': 'My event'}"])
+        allow(dog).to receive(:update_tags).and_return([201, "Created"])
       end
 
       @node = Chef::Node.build('chef.handler.datadog.test')
@@ -819,48 +807,48 @@ describe Chef::Handler::Datadog, vcr: :new_episodes do
     end
 
     it 'should create multiple Dogapi clients' do
-      expect(@dogs.length).to eq(2)
+      expect(dogs.length).to eq(2)
     end
 
     context 'emits metrics' do
       it 'reports metrics to the first endpoint' do
-        expect(@dogs[0]).to receive(:emit_point).exactly(5).times.and_call_original
+        expect(dogs[0]).to receive(:emit_point).exactly(5).times
 
-        @handler.run_report_unsafe(@run_status)
+        handler.run_report_unsafe(@run_status)
       end
 
       it 'reports metrics to the second endpoint' do
-        expect(@dogs[1]).to receive(:emit_point).exactly(5).times.and_call_original
+        expect(dogs[1]).to receive(:emit_point).exactly(5).times
 
-        @handler.run_report_unsafe(@run_status)
+        handler.run_report_unsafe(@run_status)
       end
     end
 
     context 'emits events' do
       it 'posts an event to the first endpoint' do
-        expect(@dogs[0]).to receive(:emit_event).exactly(:once).and_call_original
+        expect(dogs[0]).to receive(:emit_event).exactly(:once)
 
-        @handler.run_report_unsafe(@run_status)
+        handler.run_report_unsafe(@run_status)
       end
 
       it 'posts an event to the second endpoint' do
-        expect(@dogs[1]).to receive(:emit_event).exactly(:once).and_call_original
+        expect(dogs[1]).to receive(:emit_event).exactly(:once)
 
-        @handler.run_report_unsafe(@run_status)
+        handler.run_report_unsafe(@run_status)
       end
     end
 
     context 'sets tags' do
       it 'puts the tags for the current node on the first endpoint' do
-        expect(@dogs[0]).to receive(:update_tags).exactly(:once).and_call_original
+        expect(dogs[0]).to receive(:update_tags).exactly(:once)
 
-        @handler.run_report_unsafe(@run_status)
+        handler.run_report_unsafe(@run_status)
       end
 
       it 'puts the tags for the current node on the second endpoint' do
-        expect(@dogs[1]).to receive(:update_tags).exactly(:once).and_call_original
+        expect(dogs[1]).to receive(:update_tags).exactly(:once)
 
-        @handler.run_report_unsafe(@run_status)
+        handler.run_report_unsafe(@run_status)
       end
     end
   end

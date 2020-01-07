@@ -1,7 +1,7 @@
 # encoding: utf-8
 require 'spec_helper'
 
-describe Chef::Handler::Datadog, :vcr => :new_episodes do
+describe Chef::Handler::Datadog, vcr: :new_episodes do
   # The #report method currently long and clunky, and we need to simulate a
   # Chef run to test all aspects of this, as well as push values into the test.
   before(:all) do
@@ -18,18 +18,18 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
   before(:each) do
     @handler = Chef::Handler::Datadog.new(
-      :api_key         => API_KEY,
-      :application_key => APPLICATION_KEY,
+      api_key: API_KEY,
+      application_key: APPLICATION_KEY,
     )
   end
 
   describe 'initialize' do
     it 'should allow config hash to have string keys' do
       Chef::Handler::Datadog.new(
-        'api_key'         => API_KEY,
-        'application_key' => APPLICATION_KEY,
-        'tag_prefix'      => 'tag',
-        'scope_prefix'    => nil
+        api_key: API_KEY,
+        application_key: APPLICATION_KEY,
+        tag_prefix: 'tag',
+        scope_prefix: nil
       )
     end
   end
@@ -57,7 +57,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     context 'emits metrics' do
       it 'reports metrics' do
         expect(a_request(:post, METRICS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] }
+          query: { api_key: @handler.config[:api_key] }
         )).to have_been_made.times(5)
       end
     end
@@ -65,18 +65,18 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
     context 'emits events' do
       it 'posts an event' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] },
-          :body => hash_including(:msg_text => 'Chef updated 0 resources out of 0 resources total.',
-                                  :msg_title => "Chef completed in 5 seconds on #{@node.name} ",
-                                  :tags => ['env:testing']),
+          query: { api_key: @handler.config[:api_key] },
+          body: hash_including(msg_text: 'Chef updated 0 resources out of 0 resources total.',
+                               msg_title: "Chef completed in 5 seconds on #{@node.name} ",
+                               tags: ['env:testing']),
         )).to have_been_made.times(1)
       end
 
       it 'sets priority correctly' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] },
-          :body => hash_including(:alert_type => 'success',
-                                  :priority => 'low'),
+          query: { api_key: @handler.config[:api_key] },
+          body: hash_including(alert_type: 'success',
+                               priority: 'low'),
         )).to have_been_made.times(1)
       end
     end
@@ -86,15 +86,15 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         # We no longer need to query the tag api for current tags,
         # rather udpate only the tags for the designated source type
         expect(a_request(:get, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
         )).to have_been_made.times(0)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => { 'tags' => ['env:testing'] },
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: { tags: ['env:testing'] },
         )).to have_been_made.times(1)
       end
     end
@@ -105,7 +105,7 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @node = Chef::Node.build('chef.handler.datadog.test-ec2')
       @node.send(:chef_environment, 'testing')
 
-      @node.automatic_attrs['ec2'] = { :instance_id => 'i-123456' }
+      @node.automatic_attrs['ec2'] = { instance_id: 'i-123456' }
 
       @run_context = Chef::RunContext.new(@node, {}, @events)
       @run_status = Chef::RunStatus.new(@node, @events)
@@ -120,9 +120,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @handler.run_report_unsafe(@run_status)
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
-        :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on i-123456 ',
-                                :host => 'i-123456'),
+        query: { api_key: @handler.config[:api_key] },
+        body: hash_including(msg_title: 'Chef completed in 5 seconds on i-123456 ',
+                             host: 'i-123456'),
       )).to have_been_made.times(1)
     end
 
@@ -131,9 +131,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @handler.run_report_unsafe(@run_status)
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
-        :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on i-123456 ',
-                                :host => 'i-123456'),
+        query: { api_key: @handler.config[:api_key] },
+        body: hash_including(msg_title: 'Chef completed in 5 seconds on i-123456 ',
+                             host: 'i-123456'),
       )).to have_been_made.times(1)
     end
 
@@ -142,9 +142,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @handler.run_report_unsafe(@run_status)
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
-        :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} ",
-                                :host => @node.name),
+        query: { api_key: @handler.config[:api_key] },
+        body: hash_including(msg_title: "Chef completed in 5 seconds on #{@node.name} ",
+                             host: @node.name),
       )).to have_been_made.times(1)
     end
   end
@@ -167,9 +167,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @handler.run_report_unsafe(@run_status)
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
-        :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => "Chef completed in 5 seconds on #{@node.name} ",
-                                :host => @node.name),
+        query: { api_key: @handler.config[:api_key] },
+        body: hash_including(msg_title: "Chef completed in 5 seconds on #{@node.name} ",
+                             host: @node.name),
       )).to have_been_made.times(1)
     end
 
@@ -178,9 +178,9 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @handler.run_report_unsafe(@run_status)
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
-        :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => 'Chef completed in 5 seconds on my-imaginary-hostname.local ',
-                                :host => 'my-imaginary-hostname.local'),
+        query: { api_key: @handler.config[:api_key] },
+        body: hash_including(msg_title: 'Chef completed in 5 seconds on my-imaginary-hostname.local ',
+                             host: 'my-imaginary-hostname.local'),
       )).to have_been_made.times(1)
     end
   end
@@ -210,10 +210,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
             'env:hostile', 'role:highlander', 'tag:the_one_and_only', 'tag:datacenter:my-cloud'
             ]),
         )).to have_been_made.times(1)
@@ -225,10 +225,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
             'env:hostile', 'role:highlander', 'custom-prefix-the_one_and_only', 'custom-prefix-datacenter:my-cloud'
             ]),
          )).to have_been_made.times(1)
@@ -240,10 +240,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
             'env:hostile', 'role:highlander', 'the_one_and_only', 'datacenter:my-cloud'
             ]),
          )).to have_been_made.times(1)
@@ -254,10 +254,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
             'custom-prefix-env:hostile', 'custom-prefix-role:highlander'
             ]),
          )).to have_been_made.times(1)
@@ -268,10 +268,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
             'env:hostile', 'role:highlander'
             ]),
          )).to have_been_made.times(1)
@@ -283,10 +283,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
             'env:hostile', 'role:highlander'
             ]),
         )).to have_been_made.times(1)
@@ -300,10 +300,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
               'env:hostile', 'role:highlander', 'tag:allowed_tag'
             ]),
         )).to have_been_made.times(1)
@@ -316,10 +316,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
               'env:hostile', 'role:highlander', 'tag:allowed_tag', 'tag:not_allowed_tag'
             ]),
         )).to have_been_made.times(1)
@@ -337,10 +337,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
               'env:hostile', 'role:highlander'
             ]),
         )).to have_been_made.times(1)
@@ -359,10 +359,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
         @handler.run_report_unsafe(@run_status)
 
         expect(a_request(:put, HOST_TAG_ENDPOINT + @node.name).with(
-          :headers => { 'Dd-Api-Key' => @handler.config[:api_key],
-                        'Dd-Application-Key' => @handler.config[:application_key] },
-          :query => { 'source' => 'chef' },
-          :body => hash_including(:tags => [
+          headers: { 'Dd-Api-Key' => @handler.config[:api_key],
+                     'Dd-Application-Key' => @handler.config[:application_key] },
+          query: { source: 'chef' },
+          body: hash_including(tags: [
               'env:hostile', 'role:highlander', 'policy_group:the_policy_group', 'policy_name:the_policy_name'
             ]),
         )).to have_been_made.times(1)
@@ -524,16 +524,16 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
     it 'sets event title correctly' do
       expect(a_request(:post, EVENTS_ENDPOINT).with(
-        :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:msg_title => "Chef failed in 2 seconds on #{@node.name} "),
+        query: { api_key: @handler.config[:api_key] },
+        body: hash_including(msg_title: "Chef failed in 2 seconds on #{@node.name} "),
       )).to have_been_made.times(1)
     end
 
     it 'sets priority correctly' do
       expect(a_request(:post, EVENTS_ENDPOINT).with(
-        :query => { 'api_key' => @handler.config[:api_key] },
-        :body => hash_including(:alert_type => 'error',
-                                :priority => 'normal'),
+        query: { api_key: @handler.config[:api_key] },
+        body: hash_including(alert_type: 'error',
+                             priority: 'normal'),
       )).to have_been_made.times(1)
     end
 
@@ -542,8 +542,8 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
       @handler.run_report_unsafe(@run_status)
 
       expect(a_request(:post, EVENTS_ENDPOINT).with(
-        :query => { 'api_key' => @handler.config[:api_key] },
-        :body => /Alerting: @alice @bob/
+        query: { api_key: @handler.config[:api_key] },
+        body: /Alerting: @alice @bob/
       )).to have_been_made.times(1)
     end
   end
@@ -573,10 +573,10 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
     it 'posts an event' do
       expect(a_request(:post, EVENTS_ENDPOINT).with(
-        :query => { 'api_key' => @handler.config[:api_key] },
+        query: { api_key: @handler.config[:api_key] },
         # FIXME: msg_text is "\n$$$\n- [whiskers] (dynamically defined)\n\n$$$\n" - is this a bug?
-        :body => hash_including(#:msg_text => 'Chef updated 1 resources out of 2 resources total.',
-                                :msg_title => "Chef completed in 8 seconds on #{@node.name} "),
+        body: hash_including(#msg_text: 'Chef updated 1 resources out of 2 resources total.',
+                             msg_title: "Chef completed in 8 seconds on #{@node.name} "),
       )).to have_been_made.times(1)
     end
   end
@@ -596,15 +596,15 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       it 'only emits the run status metrics' do
         expect(a_request(:post, METRICS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] }
+          query: { api_key: @handler.config[:api_key] }
         )).to have_been_made.times(2)
       end
 
       it 'posts an event' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] },
-          :body => hash_including(:msg_text => 'Chef was unable to complete a run, an error during compilation may have occurred.',
-                                  :msg_title => "Chef failed during compile phase on #{@node.name} "),
+          query: { api_key: @handler.config[:api_key] },
+          body: hash_including(msg_text: 'Chef was unable to complete a run, an error during compilation may have occurred.',
+                               msg_title: "Chef failed during compile phase on #{@node.name} "),
         )).to have_been_made.times(1)
       end
     end
@@ -626,15 +626,15 @@ describe Chef::Handler::Datadog, :vcr => :new_episodes do
 
       it 'only emits the run status metrics' do
         expect(a_request(:post, METRICS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] }
+          query: { api_key: @handler.config[:api_key] }
         )).to have_been_made.times(2)
       end
 
       it 'posts an event' do
         expect(a_request(:post, EVENTS_ENDPOINT).with(
-          :query => { 'api_key' => @handler.config[:api_key] },
-          :body => hash_including(:msg_text => 'Chef was unable to complete a run, an error during compilation may have occurred.',
-                                  :msg_title => "Chef failed during compile phase on #{@node.name} "),
+          query: { api_key: @handler.config[:api_key] },
+          body: hash_including(msg_text: 'Chef was unable to complete a run, an error during compilation may have occurred.',
+                               msg_title: "Chef failed during compile phase on #{@node.name} "),
         )).to have_been_made.times(1)
       end
     end

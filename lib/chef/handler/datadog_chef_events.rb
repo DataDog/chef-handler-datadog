@@ -10,6 +10,9 @@ require_relative 'datadog_util'
 class DatadogChefEvents
   include DatadogUtil
 
+  attr_reader :event_title
+  attr_reader :event_body
+
   def initialize
     @hostname = nil
     @run_status = nil
@@ -22,14 +25,6 @@ class DatadogChefEvents
     #       handling of the event_body is a bit clunky and depends on the order of
     #       method calls
     @event_body = ''
-  end
-
-  def event_title
-    @event_title
-  end
-
-  def event_body
-    @event_body
   end
 
   # set the target hostname (chef node name)

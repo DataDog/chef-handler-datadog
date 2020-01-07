@@ -115,7 +115,7 @@ class DatadogChefTags
         break unless should_retry
       end
     rescue StandardError => e
-      Chef::Log.warn("Could not determine whether #{@hostname}'s tags were successfully submitted to Datadog: #{rc}. Error:\n#{e}")
+      Chef::Log.warn("Could not determine whether #{@hostname}'s tags were successfully submitted to Datadog: #{rc.inspect}. Error:\n#{e}")
     end
   end
 

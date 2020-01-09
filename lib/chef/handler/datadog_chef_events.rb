@@ -10,6 +10,9 @@ require_relative 'datadog_util'
 class DatadogChefEvents
   include DatadogUtil
 
+  attr_reader :event_title
+  attr_reader :event_body
+
   def initialize
     @hostname = nil
     @run_status = nil

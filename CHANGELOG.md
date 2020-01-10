@@ -1,6 +1,12 @@
 Changes
 =======
 
+# 0.13.0 / 2020-01-10
+
+* [MISC] Update dogapi gem version constraint and fix tests. [#119][]
+* [MISC] Use a single test Gemfile. [#117][]
+* [MISC] Move tests to CircleCI. [#116][]
+
 # 0.12.3 / 2019-11-19
 
 * [FEATURE] Use `api_url` to send Chef related data to extra endpoints. [#113][] [@Azoam][]
@@ -137,6 +143,9 @@ And all other versions were prior to this. See git history for more.
 [#104]: https://github.com/DataDog/chef-handler-datadog/issues/104
 [#109]: https://github.com/DataDog/chef-handler-datadog/issues/109
 [#113]: https://github.com/DataDog/chef-handler-datadog/issues/113
+[#116]: https://github.com/DataDog/chef-handler-datadog/issues/116
+[#117]: https://github.com/DataDog/chef-handler-datadog/issues/117
+[#119]: https://github.com/DataDog/chef-handler-datadog/issues/119
 [@ABrehm264]: https://github.com/ABrehm264
 [@Azoam]: https://github.com/Azoam
 [@DanielMuller]: https://github.com/DanielMuller

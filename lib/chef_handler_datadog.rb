@@ -2,5 +2,5 @@
 # Helper module for version number only.
 # Real deal in 'chef/handler/datadog.rb'
 module ChefHandlerDatadog
-  VERSION = '0.12.3'
+  VERSION = '0.13.0'
 end

@@ -3,9 +3,7 @@
 An Exception and Report Handler for Chef.
 
 [![Gem Version](https://badge.fury.io/rb/chef-handler-datadog.svg)](http://badge.fury.io/rb/chef-handler-datadog)
-[![CircleCI](https://circleci.com/gh/DataDog/chef-handler-datadog.svg?style=svg)](https://circleci.com/gh/DataDog/chef-handler-datadog)
-[![Code Climate](https://codeclimate.com/github/DataDog/chef-handler-datadog/badges/gpa.svg)](https://codeclimate.com/github/DataDog/chef-handler-datadog)
-[![Dependency Status](https://gemnasium.com/DataDog/chef-handler-datadog.svg)](https://gemnasium.com/DataDog/chef-handler-datadog)
+[![Build Status](https://img.shields.io/circleci/build/gh/DataDog/chef-handler-datadog.svg)](https://circleci.com/gh/DataDog/chef-handler-datadog)
 
 ## Using chef-handler-datadog
 

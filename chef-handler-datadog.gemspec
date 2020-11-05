@@ -9,7 +9,7 @@ Gem::Specification.new do |gem|
   gem.license       = 'BSD'
   gem.version       = ChefHandlerDatadog::VERSION
 
-  gem.files         = `git ls-files`.split($\) # rubocop:disable SpecialGlobalVars
+  gem.files         = `git ls-files`.split($\) # rubocop:disable Style/SpecialGlobalVars
   gem.executables   = gem.files.grep(%r{^bin\/}).map { |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)\/})
   gem.require_paths = ['lib']

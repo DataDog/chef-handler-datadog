@@ -3,18 +3,17 @@
 require File.expand_path('lib/chef_handler_datadog', __dir__)
 
 Gem::Specification.new do |gem|
-  gem.name                  = 'chef-handler-datadog'
-  gem.summary               = 'Chef Handler reports events and metrics to Datadog'
-  gem.description           = 'This Handler will report the events and metrics for a chef-client run to Datadog.'
-  gem.license               = 'BSD'
-  gem.version               = ChefHandlerDatadog::VERSION
+  gem.name             = 'chef-handler-datadog'
+  gem.summary          = 'Chef Handler reports events and metrics to Datadog'
+  gem.description      = 'This Handler will report the events and metrics for a chef-client run to Datadog.'
+  gem.license          = 'BSD'
+  gem.version          = ChefHandlerDatadog::VERSION
 
-  gem.required_ruby_version = '>= 2.3.0'
-  gem.files                 = `git ls-files`.split($\) # rubocop:disable Style/SpecialGlobalVars
-  gem.executables           = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
-  gem.test_files            = gem.files.grep(%r{^(test|spec|features)/})
-  gem.require_paths         = ['lib']
-  gem.extra_rdoc_files      = ['README.md', 'LICENSE.txt']
+  gem.files            = `git ls-files`.split($\) # rubocop:disable Style/SpecialGlobalVars
+  gem.executables      = gem.files.grep(%r{^bin/}).map { |f| File.basename(f) }
+  gem.test_files       = gem.files.grep(%r{^(test|spec|features)/})
+  gem.require_paths    = ['lib']
+  gem.extra_rdoc_files = ['README.md', 'LICENSE.txt']
 
   gem.add_dependency 'dogapi', '~> 1.42.0'
 

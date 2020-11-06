@@ -1,6 +1,11 @@
 Changes
 =======
 
+# 0.14.0 / 2020-01-10
+
+* [MISC] Update dogapi gem dependency from 1.38 to 1.42. [#124][]
+* [MISC] Update rack gem dependency from 2.0.8 to 2.2.3. [#123][]
+
 # 0.13.0 / 2020-01-10
 
 * [MISC] Update dogapi gem version constraint and fix tests. [#119][]
@@ -146,6 +151,8 @@ And all other versions were prior to this. See git history for more.
 [#116]: https://github.com/DataDog/chef-handler-datadog/issues/116
 [#117]: https://github.com/DataDog/chef-handler-datadog/issues/117
 [#119]: https://github.com/DataDog/chef-handler-datadog/issues/119
+[#123]: https://github.com/DataDog/chef-handler-datadog/issues/123
+[#124]: https://github.com/DataDog/chef-handler-datadog/issues/124
 [@ABrehm264]: https://github.com/ABrehm264
 [@Azoam]: https://github.com/Azoam
 [@DanielMuller]: https://github.com/DanielMuller

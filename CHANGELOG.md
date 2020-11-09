@@ -1,7 +1,7 @@
 Changes
 =======
 
-# 0.14.0 / 2020-01-10
+# 0.14.0 / 2020-11-09
 
 * [MISC] Update dogapi gem dependency from 1.38 to 1.42. [#124][]
 * [MISC] Update rack gem dependency from 2.0.8 to 2.2.3. [#123][]

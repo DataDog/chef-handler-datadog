@@ -129,15 +129,19 @@ class Chef
       def prepare_the_pack
         dogs = []
         endpoints.each do |url, api_key, app_key|
-          dogs.push(Dogapi::Client.new(
-                      api_key,
-                      app_key,
-                      nil,   # host
-                      nil,   # device
-                      false, # silent
-                      nil,   # timeout
-                      url
-          ))
+          begin
+            dogs.push(Dogapi::Client.new(
+                        api_key,
+                        app_key,
+                        nil,   # host
+                        nil,   # device
+                        false, # silent
+                        nil,   # timeout
+                        url
+            ))
+          rescue => e
+            Chef::Log.error("Could not create API Client '#{url}'\n #{e.to_s}")
+          end
         end
         dogs
       end

@@ -192,6 +192,24 @@ describe Chef::Handler::Datadog, vcr: :new_episodes do
                              host: 'my-imaginary-hostname.local'),
       )).to have_been_made.times(1)
     end
+
+    describe 'when dogapi-rb fails to calculate a hostname' do
+      before(:each) do 
+          allow(Dogapi::Client).to receive(:new).and_raise("getaddrinfo: Name or service not known")
+
+          @handler = Chef::Handler::Datadog.new(
+            api_key: API_KEY,
+            application_key: APPLICATION_KEY,
+          )
+      end
+
+      it 'the reporter should not fail the chef run' do
+        @handler.config[:hostname] = 'my-imaginary-hostname.local'
+        @handler.run_report_unsafe(@run_status)
+
+        expect(a_request(:post, EVENTS_ENDPOINT)).to have_been_made.times(0)
+      end
+    end
   end
 
   context 'tags' do

@@ -1,6 +1,10 @@
 Changes
 =======
 
+# 0.15.0 / 2020-12-10
+
+* [FEATURE] Allow skipping SSL verification [#130][]
+
 # 0.14.0 / 2020-11-09
 
 * [MISC] Update dogapi gem dependency from 1.38 to 1.42. [#124][]
@@ -153,6 +157,7 @@ And all other versions were prior to this. See git history for more.
 [#119]: https://github.com/DataDog/chef-handler-datadog/issues/119
 [#123]: https://github.com/DataDog/chef-handler-datadog/issues/123
 [#124]: https://github.com/DataDog/chef-handler-datadog/issues/124
+[#130]: https://github.com/DataDog/chef-handler-datadog/issues/130
 [@ABrehm264]: https://github.com/ABrehm264
 [@Azoam]: https://github.com/Azoam
 [@DanielMuller]: https://github.com/DanielMuller

@@ -137,7 +137,8 @@ class Chef
                         nil,   # device
                         false, # silent
                         nil,   # timeout
-                        url
+                        url,
+                        config[:skip_ssl_validation]
             ))
           rescue => e
             Chef::Log.error("Could not create API Client '#{url}'\n #{e.to_s}")

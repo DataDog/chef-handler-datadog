@@ -1,13 +1,14 @@
 version: 2
 jobs:
   ### Chef 12.0
-  specs-ruby23-chef-120: &specs
-    machine: true
+  specs-ruby24-chef-120: &specs
+    machine:
+      image: ubuntu-2004:202201-02
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '12.0'
-      RUBY_VERSION: '2.3.8'
+      RUBY_VERSION: '2.4.9'
     steps:
       - checkout
       - run:
@@ -23,14 +24,6 @@ jobs:
           name: Run tests
           command: rvm $RUBY_VERSION --verbose do bundle exec rake
 
-  specs-ruby24-chef-120:
-    <<: *specs
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '12.0'
-      RUBY_VERSION: '2.4.9'
-
   specs-ruby25-chef-120:
     <<: *specs
     environment:
@@ -40,14 +33,6 @@ jobs:
       RUBY_VERSION: '2.5.1'
 
   ### Chef 12.7
-  specs-ruby23-chef-127:
-    <<: *specs
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '12.7.0'
-      RUBY_VERSION: '2.3.8'
-
   specs-ruby24-chef-127:
     <<: *specs
     environment:
@@ -65,14 +50,6 @@ jobs:
       RUBY_VERSION: '2.5.1'
 
   ### Chef 13
-  specs-ruby23-chef-130:
-    <<: *specs
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '13.0'
-      RUBY_VERSION: '2.3.8'
-
   specs-ruby24-chef-130:
     <<: *specs
     environment:
@@ -117,7 +94,8 @@ jobs:
       RUBY_VERSION: '2.5.1'
 
   verify-gemfile.lock-dependencies:
-    machine: true
+    machine:
+      image: ubuntu-2004:202201-02
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
@@ -141,15 +119,12 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - specs-ruby23-chef-120
       - specs-ruby24-chef-120
       - specs-ruby25-chef-120
 
-      - specs-ruby23-chef-127
       - specs-ruby24-chef-127
       - specs-ruby25-chef-127
 
-      - specs-ruby23-chef-130
       - specs-ruby24-chef-130
       - specs-ruby25-chef-130
 

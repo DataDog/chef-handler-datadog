@@ -60,7 +60,9 @@ jobs:
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: << parameters.chef-version >>
+      # Note: Don't set CHEF_VERSION here. The appraisal gemfiles handle the Chef version.
+      # Setting CHEF_VERSION would affect the main Gemfile's mixlib-shellout constraint,
+      # causing conflicts when generating lockfiles for all Chef versions.
     steps:
       - checkout
       - run:
@@ -75,8 +77,8 @@ jobs:
           name: Install gem dependencies
           command: bundle install
       - run:
-          name: Generate appraisals
-          command: bundle exec appraisal install
+          name: Install appraisal dependencies
+          command: bundle exec appraisal chef-<< parameters.chef-version >> bundle install
       - run:
           name: Run tests with appraisal
           command: bundle exec appraisal chef-<< parameters.chef-version >> rspec

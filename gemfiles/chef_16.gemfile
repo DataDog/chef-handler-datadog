@@ -2,7 +2,9 @@
 
 source "https://rubygems.org"
 
-gem "chef", "~> 16"
+# Chef 16 requires >= 16.5 because chef-utils < 16.5 lacks dsl/default_paths
+# which is needed by mixlib-shellout >= 3.1 (required by ohai 16.x)
+gem "chef", ">= 16.5", "< 17"
 
 group :localdev do
   gem "guard"

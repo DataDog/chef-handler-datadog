@@ -10,8 +10,8 @@ gemspec
 unless ENV['APPRAISAL_INITIALIZED']
   chef_version = ENV.fetch('CHEF_VERSION', '18.0').to_f
   gem 'chef', "~> #{chef_version}"
-  # mixlib-shellout >= 3.3 requires chef-utils which has compatibility issues with Chef < 17
-  gem 'mixlib-shellout', '< 3.3' if chef_version < 17.0
+  # mixlib-shellout >= 3.2 requires chef-utils/dsl/default_paths which doesn't exist in chef-utils bundled with Chef < 16.5
+  gem 'mixlib-shellout', '< 3.2' if chef_version < 17.0
 end
 
 group :localdev do

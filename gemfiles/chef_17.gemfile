@@ -12,4 +12,4 @@ group :localdev do
   gem "travis-lint"
 end
 
-gemspec :path => "../"
+gemspec path: "../"

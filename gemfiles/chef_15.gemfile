@@ -3,8 +3,6 @@
 source "https://rubygems.org"
 
 gem "chef", "~> 15"
-# mixlib-shellout >= 3.3 requires chef-utils which has compatibility issues with Chef < 17
-gem "mixlib-shellout", "< 3.3"
 
 group :localdev do
   gem "guard"
@@ -14,4 +12,4 @@ group :localdev do
   gem "travis-lint"
 end
 
-gemspec :path => "../"
+gemspec path: "../"

@@ -27,6 +27,22 @@ end
 
 The Datadog Docs on [Chef](http://docs.datadoghq.com/guides/chef/#deployhandler) has detailed instructions.
 
+## Compatibility
+
+This handler is tested against the following Chef Infra Client and Ruby version combinations:
+
+| Chef Version | Supported Ruby Versions |
+|--------------|-------------------------|
+| Chef 12      | 2.4                     |
+| Chef 13      | 2.4, 2.5                |
+| Chef 14      | 2.5, 2.6                |
+| Chef 15      | 2.5, 2.6, 2.7           |
+| Chef 16      | 2.6, 2.7                |
+| Chef 17      | 2.7, 3.0, 3.1, 3.2, 3.3 |
+| Chef 18      | 3.1, 3.2, 3.3           |
+
+**Note:** Chef Infra Client packages include their own embedded Ruby runtime. The versions listed above reflect the Ruby versions that are compatible with each Chef version. For production use, it's recommended to use the Ruby version bundled with your Chef Infra Client installation.
+
 ## Contributing to chef-handler-datadog
 
 See [CONTRIBUTING.md](CONTRIBUTING.md)

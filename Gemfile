@@ -7,7 +7,12 @@ gemspec
 
 # Only include chef directly when not running under Appraisal
 # (Appraisal manages the chef version via generated gemfiles)
-gem 'chef', "~> #{ENV.fetch('CHEF_VERSION', '18.0')}" unless ENV['APPRAISAL_INITIALIZED']
+unless ENV['APPRAISAL_INITIALIZED']
+  chef_version = ENV.fetch('CHEF_VERSION', '18.0').to_f
+  gem 'chef', "~> #{chef_version}"
+  # mixlib-shellout >= 3.3 requires chef-utils which has compatibility issues with Chef < 17
+  gem 'mixlib-shellout', '< 3.3' if chef_version < 17.0
+end
 
 group :localdev do
   gem 'guard'

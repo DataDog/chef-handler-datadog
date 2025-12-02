@@ -60,6 +60,7 @@ jobs:
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
+      CHEF_VERSION: << parameters.chef-version >>
     steps:
       - checkout
       - run:

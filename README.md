@@ -4,6 +4,12 @@ An Exception and Report Handler for Chef.
 
 [![Gem Version](https://badge.fury.io/rb/chef-handler-datadog.svg)](http://badge.fury.io/rb/chef-handler-datadog)
 [![Build Status](https://img.shields.io/circleci/build/gh/DataDog/chef-handler-datadog.svg)](https://circleci.com/gh/DataDog/chef-handler-datadog)
+[![Test Status](https://github.com/DataDog/chef-handler-datadog/workflows/Test/badge.svg)](https://github.com/DataDog/chef-handler-datadog/actions/workflows/test.yml)
+
+## Requirements
+
+- **Chef**: 12.7+ (tested with Chef 15, 16, 17, and 18)
+- **Ruby**: 3.1+ (required for Chef 18, recommended for all versions)
 
 ## Using chef-handler-datadog
 

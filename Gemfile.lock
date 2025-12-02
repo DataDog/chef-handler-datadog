@@ -438,7 +438,7 @@ GEM
     wmi-lite (1.0.7)
 
 PLATFORMS
-  arm64-darwin-24
+  ruby
 
 DEPENDENCIES
   appraisal (~> 2.5)

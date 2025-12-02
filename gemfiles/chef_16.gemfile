@@ -2,7 +2,9 @@
 
 source "https://rubygems.org"
 
-gem "chef", "~> 16"
+# Force >= 16.5 because bundler's resolver settles on 16.0.x otherwise,
+# and chef-utils < 16.5 lacks dsl/default_paths needed by mixlib-shellout >= 3.1
+gem "chef", ">= 16.5", "< 17"
 
 group :localdev do
   gem "guard"

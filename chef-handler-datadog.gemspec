@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'dogapi', '~> 1.44.0'
 
-  gem.add_development_dependency 'appraisal', '~> 2.0.1'
+  gem.add_development_dependency 'appraisal', '~> 2.5'
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'chef', '>= 12.7'
   gem.add_development_dependency 'dotenv'

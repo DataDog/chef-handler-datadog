@@ -15,6 +15,9 @@ jobs:
         type: string
       chef-version:
         type: string
+      bundler-version:
+        type: string
+        default: ""
     executor:
       name: ruby-executor
       ruby-version: << parameters.ruby-version >>
@@ -26,7 +29,12 @@ jobs:
       - checkout
       - run:
           name: Install bundler
-          command: gem install bundler
+          command: |
+            if [ -n "<< parameters.bundler-version >>" ]; then
+              gem install bundler -v "<< parameters.bundler-version >>"
+            else
+              gem install bundler
+            fi
       - run:
           name: Install gem dependencies
           command: bundle install
@@ -43,6 +51,9 @@ jobs:
         type: string
       ruby-version:
         type: string
+      bundler-version:
+        type: string
+        default: ""
     executor:
       name: ruby-executor
       ruby-version: << parameters.ruby-version >>
@@ -53,7 +64,12 @@ jobs:
       - checkout
       - run:
           name: Install bundler
-          command: gem install bundler
+          command: |
+            if [ -n "<< parameters.bundler-version >>" ]; then
+              gem install bundler -v "<< parameters.bundler-version >>"
+            else
+              gem install bundler
+            fi
       - run:
           name: Install gem dependencies
           command: bundle install
@@ -69,52 +85,63 @@ workflows:
   build_and_test:
     jobs:
       # Chef 12 (Ruby 2.1 - 2.3)
+      # The oldest available Ruby image in CircleCI is 2.4.
       - test:
-          name: test-ruby23-chef12
-          ruby-version: "2.3"
+          name: test-ruby24-chef12
+          ruby-version: "2.4"
           chef-version: "12.0"
+          bundler-version: "2.3.27"
 
       # Chef 13 (Ruby 2.3 - 2.5)
       - test:
           name: test-ruby24-chef13
           ruby-version: "2.4"
           chef-version: "13.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby25-chef13
           ruby-version: "2.5"
           chef-version: "13.0"
+          bundler-version: "2.3.27"
 
       # Chef 14 (Ruby 2.5 - 2.6)
       - test:
           name: test-ruby25-chef14
           ruby-version: "2.5"
           chef-version: "14.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby26-chef14
           ruby-version: "2.6"
           chef-version: "14.0"
+          bundler-version: "2.3.27"
 
       # Chef 15 (Ruby 2.5 - 3.2)
       - test:
           name: test-ruby25-chef15
           ruby-version: "2.5"
           chef-version: "15.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby26-chef15
           ruby-version: "2.6"
           chef-version: "15.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby27-chef15
           ruby-version: "2.7"
           chef-version: "15.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby30-chef15
           ruby-version: "3.0"
           chef-version: "15.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby31-chef15
           ruby-version: "3.1"
           chef-version: "15.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby32-chef15
           ruby-version: "3.2"
@@ -125,18 +152,22 @@ workflows:
           name: test-ruby26-chef16
           ruby-version: "2.6"
           chef-version: "16.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby27-chef16
           ruby-version: "2.7"
           chef-version: "16.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby30-chef16
           ruby-version: "3.0"
           chef-version: "16.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby31-chef16
           ruby-version: "3.1"
           chef-version: "16.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby32-chef16
           ruby-version: "3.2"
@@ -147,14 +178,17 @@ workflows:
           name: test-ruby27-chef17
           ruby-version: "2.7"
           chef-version: "17.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby30-chef17
           ruby-version: "3.0"
           chef-version: "17.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby31-chef17
           ruby-version: "3.1"
           chef-version: "17.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby32-chef17
           ruby-version: "3.2"
@@ -169,6 +203,7 @@ workflows:
           name: test-ruby31-chef18
           ruby-version: "3.1"
           chef-version: "18.0"
+          bundler-version: "2.3.27"
       - test:
           name: test-ruby32-chef18
           ruby-version: "3.2"
@@ -182,15 +217,18 @@ workflows:
       - test-appraisals:
           name: appraisals-chef12
           chef-version: "12"
-          ruby-version: "2.3"
+          ruby-version: "2.4"
+          bundler-version: "2.3.27"
       - test-appraisals:
           name: appraisals-chef13
           chef-version: "13"
           ruby-version: "2.5"
+          bundler-version: "2.3.27"
       - test-appraisals:
           name: appraisals-chef14
           chef-version: "14"
           ruby-version: "2.6"
+          bundler-version: "2.3.27"
       - test-appraisals:
           name: appraisals-chef15
           chef-version: "15"

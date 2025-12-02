@@ -22,7 +22,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.8)
       public_suffix (>= 2.0.2, < 8.0)
-    appraisal (2.0.2)
+    appraisal (2.5.0)
       bundler
       rake
       thor (>= 0.14.0)
@@ -441,7 +441,7 @@ PLATFORMS
   arm64-darwin-24
 
 DEPENDENCIES
-  appraisal (~> 2.0.1)
+  appraisal (~> 2.5)
   bundler
   chef (~> 18.0)
   chef-handler-datadog!

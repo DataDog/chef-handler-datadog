@@ -1,36 +1,30 @@
-version: 2
+version: 2.1
 jobs:
   ### Chef 12.0
   specs-ruby24-chef-120: &specs
-    machine:
-      image: ubuntu-2204:current
+    docker:
+      - image: cimg/ruby:2.4
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '12.0'
-      RUBY_VERSION: '2.4.9'
     steps:
       - checkout
       - run:
-          name: Install Ruby versions
-          command: rvm install $RUBY_VERSION
-      - run:
-          name: Install bundler
-          command: rvm $RUBY_VERSION --verbose do gem install bundler:1.17.3
-      - run:
           name: Install gem dependencies
-          command: rm Gemfile.lock && rvm $RUBY_VERSION --verbose do bundle install --path .bundle
+          command: rm Gemfile.lock && bundle install --path .bundle
       - run:
           name: Run tests
-          command: rvm $RUBY_VERSION --verbose do bundle exec rake
+          command: bundle exec rake
 
   specs-ruby25-chef-120:
     <<: *specs
+    docker:
+      - image: cimg/ruby:2.5
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '12.0'
-      RUBY_VERSION: '2.5.1'
 
   ### Chef 12.7
   specs-ruby24-chef-127:
@@ -39,15 +33,15 @@ jobs:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '12.7.0'
-      RUBY_VERSION: '2.4.9'
 
   specs-ruby25-chef-127:
     <<: *specs
+    docker:
+      - image: cimg/ruby:2.5
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '12.7.0'
-      RUBY_VERSION: '2.5.1'
 
   ### Chef 13
   specs-ruby24-chef-130:
@@ -56,67 +50,49 @@ jobs:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '13.0'
-      RUBY_VERSION: '2.4.9'
 
   specs-ruby25-chef-130:
     <<: *specs
+    docker:
+      - image: cimg/ruby:2.5
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '13.0'
-      RUBY_VERSION: '2.5.1'
 
   ### Chef 14
-  # Chef 14 depends on ruby >= 2.4
-  #
-  # specs-ruby23-chef-140:
-  #   <<: *specs
-  #   environment:
-  #     API_KEY: somefakeapikey
-  #     APPLICATION_KEY: somefakeapplicationkey
-  #     CHEF_VERSION: '14.0'
-  #     RUBY_VERSION: '2.3.8'
-
   specs-ruby24-chef-140:
     <<: *specs
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '14.0'
-      RUBY_VERSION: '2.4.9'
 
   specs-ruby25-chef-140:
     <<: *specs
+    docker:
+      - image: cimg/ruby:2.5
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '14.0'
-      RUBY_VERSION: '2.5.1'
 
   verify-gemfile.lock-dependencies:
-    machine:
-      image: ubuntu-2204:current
+    docker:
+      - image: cimg/ruby:2.5
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
-      RUBY_VERSION: '2.5.1'
     steps:
       - checkout
       - run:
-          name: Install Ruby versions
-          command: rvm install $RUBY_VERSION
-      - run:
-          name: Install bundler
-          command: rvm $RUBY_VERSION --verbose do gem install bundler:1.17.3
-      - run:
           name: Install gem dependencies
-          command: rvm $RUBY_VERSION --verbose do bundle install --path .bundle
+          command: bundle install --path .bundle
       - run:
           name: Run tests
-          command: rvm $RUBY_VERSION --verbose do bundle exec rake
+          command: bundle exec rake
 
 workflows:
-  version: 2
   build_and_test:
     jobs:
       - specs-ruby24-chef-120

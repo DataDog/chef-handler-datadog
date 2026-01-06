@@ -77,7 +77,7 @@ jobs:
       APPLICATION_KEY: somefakeapplicationkey
       CHEF_VERSION: '14.0'
 
-  verify-gemfile.lock-dependencies:
+  verify-gemfile-lock-dependencies:
     docker:
       - image: cimg/ruby:2.5
     environment:
@@ -106,4 +106,4 @@ workflows:
 
       - specs-ruby24-chef-140
       - specs-ruby25-chef-140
-      - verify-gemfile.lock-dependencies
+      - verify-gemfile-lock-dependencies

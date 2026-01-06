@@ -17,6 +17,12 @@ If you'd like to run the test suite, fix a bug or add a feature, please follow t
   Running the test suite will _not_ make calls to Datadog for existing tests, see `spec/support/cassettes/` for more.
 
 * Run `rake` to execute tests, ensure they pass
+* To test with a specific Chef version, use: `CHEF_VERSION=18.0 bundle install && bundle exec rspec`
+* To test with all supported Chef versions using Appraisal:
+  * Generate appraisal gemfiles: `bundle exec appraisal generate`
+  * Install dependencies: `bundle exec appraisal install`
+  * Run tests for all versions: `bundle exec appraisal rspec`
+  * Run tests for a specific version: `bundle exec appraisal chef-18 rspec`
 * Commit and push until you are happy with your contribution
 * Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
 * Please try not to mess with the `Rakefile`, version, or history.

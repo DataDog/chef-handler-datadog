@@ -1,133 +1,224 @@
-version: 2
+version: 2.1
+
+executors:
+  ruby-executor:
+    docker:
+      - image: cimg/ruby:<< parameters.ruby-version >>
+    parameters:
+      ruby-version:
+        type: string
+
 jobs:
-  ### Chef 12.0
-  specs-ruby24-chef-120: &specs
-    machine:
-      image: ubuntu-2004:202201-02
+  test:
+    parameters:
+      ruby-version:
+        type: string
+      chef-version:
+        type: string
+      bundler-version:
+        type: string
+        default: ""
+    executor:
+      name: ruby-executor
+      ruby-version: << parameters.ruby-version >>
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '12.0'
-      RUBY_VERSION: '2.4.9'
+      CHEF_VERSION: << parameters.chef-version >>
     steps:
       - checkout
       - run:
-          name: Install Ruby versions
-          command: rvm install $RUBY_VERSION
-      - run:
           name: Install bundler
-          command: rvm $RUBY_VERSION --verbose do gem install bundler:1.17.3
+          command: |
+            if [ -n "<< parameters.bundler-version >>" ]; then
+              gem install bundler -v "<< parameters.bundler-version >>"
+            else
+              gem install bundler
+            fi
       - run:
           name: Install gem dependencies
-          command: rm Gemfile.lock && rvm $RUBY_VERSION --verbose do bundle install --path .bundle
+          command: bundle install
+      - run:
+          name: Run RuboCop
+          command: bundle exec rake cops || true
       - run:
           name: Run tests
-          command: rvm $RUBY_VERSION --verbose do bundle exec rake
+          command: bundle exec rspec
 
-  specs-ruby25-chef-120:
-    <<: *specs
+  test-appraisals:
+    parameters:
+      chef-version:
+        type: string
+      ruby-version:
+        type: string
+      bundler-version:
+        type: string
+        default: ""
+    executor:
+      name: ruby-executor
+      ruby-version: << parameters.ruby-version >>
     environment:
       API_KEY: somefakeapikey
       APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '12.0'
-      RUBY_VERSION: '2.5.1'
-
-  ### Chef 12.7
-  specs-ruby24-chef-127:
-    <<: *specs
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '12.7.0'
-      RUBY_VERSION: '2.4.9'
-
-  specs-ruby25-chef-127:
-    <<: *specs
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '12.7.0'
-      RUBY_VERSION: '2.5.1'
-
-  ### Chef 13
-  specs-ruby24-chef-130:
-    <<: *specs
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '13.0'
-      RUBY_VERSION: '2.4.9'
-
-  specs-ruby25-chef-130:
-    <<: *specs
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '13.0'
-      RUBY_VERSION: '2.5.1'
-
-  ### Chef 14
-  # Chef 14 depends on ruby >= 2.4
-  #
-  # specs-ruby23-chef-140:
-  #   <<: *specs
-  #   environment:
-  #     API_KEY: somefakeapikey
-  #     APPLICATION_KEY: somefakeapplicationkey
-  #     CHEF_VERSION: '14.0'
-  #     RUBY_VERSION: '2.3.8'
-
-  specs-ruby24-chef-140:
-    <<: *specs
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '14.0'
-      RUBY_VERSION: '2.4.9'
-
-  specs-ruby25-chef-140:
-    <<: *specs
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      CHEF_VERSION: '14.0'
-      RUBY_VERSION: '2.5.1'
-
-  verify-gemfile.lock-dependencies:
-    machine:
-      image: ubuntu-2004:202201-02
-    environment:
-      API_KEY: somefakeapikey
-      APPLICATION_KEY: somefakeapplicationkey
-      RUBY_VERSION: '2.5.1'
+      # Set CHEF_VERSION so the main Gemfile resolves with a compatible Chef version
+      # for the initial bundle install. The appraisal gemfiles handle the actual test version.
+      CHEF_VERSION: << parameters.chef-version >>.0
     steps:
       - checkout
       - run:
-          name: Install Ruby versions
-          command: rvm install $RUBY_VERSION
-      - run:
           name: Install bundler
-          command: rvm $RUBY_VERSION --verbose do gem install bundler:1.17.3
+          command: |
+            if [ -n "<< parameters.bundler-version >>" ]; then
+              gem install bundler -v "<< parameters.bundler-version >>"
+            else
+              gem install bundler
+            fi
       - run:
           name: Install gem dependencies
-          command: rvm $RUBY_VERSION --verbose do bundle install --path .bundle
+          command: bundle install
       - run:
-          name: Run tests
-          command: rvm $RUBY_VERSION --verbose do bundle exec rake
+          name: Install appraisal dependencies
+          command: bundle exec appraisal chef-<< parameters.chef-version >> bundle install
+      - run:
+          name: Run tests with appraisal
+          command: bundle exec appraisal chef-<< parameters.chef-version >> rspec
 
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - specs-ruby24-chef-120
-      - specs-ruby25-chef-120
+      # Chef 12 (Ruby 2.1 - 2.3)
+      # The oldest available Ruby image in CircleCI is 2.4.
+      - test:
+          name: test-ruby24-chef12
+          ruby-version: "2.4"
+          chef-version: "12.0"
+          bundler-version: "2.3.27"
 
-      - specs-ruby24-chef-127
-      - specs-ruby25-chef-127
+      # Chef 13 (Ruby 2.3 - 2.5)
+      - test:
+          name: test-ruby24-chef13
+          ruby-version: "2.4"
+          chef-version: "13.0"
+          bundler-version: "2.3.27"
+      - test:
+          name: test-ruby25-chef13
+          ruby-version: "2.5"
+          chef-version: "13.0"
+          bundler-version: "2.3.27"
 
-      - specs-ruby24-chef-130
-      - specs-ruby25-chef-130
+      # Chef 14 (Ruby 2.5 - 2.6)
+      - test:
+          name: test-ruby25-chef14
+          ruby-version: "2.5"
+          chef-version: "14.0"
+          bundler-version: "2.3.27"
+      - test:
+          name: test-ruby26-chef14
+          ruby-version: "2.6"
+          chef-version: "14.0"
+          bundler-version: "2.3.27"
 
-      - specs-ruby24-chef-140
-      - specs-ruby25-chef-140
-      - verify-gemfile.lock-dependencies
+      # Chef 15 (Ruby 2.5 - 2.7)
+      - test:
+          name: test-ruby25-chef15
+          ruby-version: "2.5"
+          chef-version: "15.0"
+          bundler-version: "2.3.27"
+      - test:
+          name: test-ruby26-chef15
+          ruby-version: "2.6"
+          chef-version: "15.0"
+          bundler-version: "2.3.27"
+      - test:
+          name: test-ruby27-chef15
+          ruby-version: "2.7"
+          chef-version: "15.0"
+          bundler-version: "2.3.27"
+
+      # Chef 16 (Ruby 2.6 - 2.7)
+      - test:
+          name: test-ruby26-chef16
+          ruby-version: "2.6"
+          chef-version: "16.0"
+          bundler-version: "2.3.27"
+      - test:
+          name: test-ruby27-chef16
+          ruby-version: "2.7"
+          chef-version: "16.0"
+          bundler-version: "2.3.27"
+
+      # Chef 17 (Ruby 2.7 - 3.3)
+      - test:
+          name: test-ruby27-chef17
+          ruby-version: "2.7"
+          chef-version: "17.0"
+          bundler-version: "2.3.27"
+      - test:
+          name: test-ruby30-chef17
+          ruby-version: "3.0"
+          chef-version: "17.0"
+          bundler-version: "2.3.27"
+      - test:
+          name: test-ruby31-chef17
+          ruby-version: "3.1"
+          chef-version: "17.0"
+          bundler-version: "2.3.27"
+      - test:
+          name: test-ruby32-chef17
+          ruby-version: "3.2"
+          chef-version: "17.0"
+      - test:
+          name: test-ruby33-chef17
+          ruby-version: "3.3"
+          chef-version: "17.0"
+
+      # Chef 18 (Ruby 3.1 - 3.3)
+      - test:
+          name: test-ruby31-chef18
+          ruby-version: "3.1"
+          chef-version: "18.0"
+          bundler-version: "2.3.27"
+      - test:
+          name: test-ruby32-chef18
+          ruby-version: "3.2"
+          chef-version: "18.0"
+      - test:
+          name: test-ruby33-chef18
+          ruby-version: "3.3"
+          chef-version: "18.0"
+
+      # Appraisals tests
+      - test-appraisals:
+          name: appraisals-chef12
+          chef-version: "12"
+          ruby-version: "2.4"
+          bundler-version: "2.3.27"
+      - test-appraisals:
+          name: appraisals-chef13
+          chef-version: "13"
+          ruby-version: "2.5"
+          bundler-version: "2.3.27"
+      - test-appraisals:
+          name: appraisals-chef14
+          chef-version: "14"
+          ruby-version: "2.6"
+          bundler-version: "2.3.27"
+      - test-appraisals:
+          name: appraisals-chef15
+          chef-version: "15"
+          ruby-version: "2.7"
+          bundler-version: "2.3.27"
+      - test-appraisals:
+          name: appraisals-chef16
+          chef-version: "16"
+          ruby-version: "2.7"
+          bundler-version: "2.3.27"
+      - test-appraisals:
+          name: appraisals-chef17
+          chef-version: "17"
+          ruby-version: "3.2"
+      - test-appraisals:
+          name: appraisals-chef18
+          chef-version: "18"
+          ruby-version: "3.2"

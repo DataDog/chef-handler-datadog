@@ -1,6 +1,22 @@
 Changes
 =======
 
+# 0.16.0 / 2026-02-18
+
+* [MISC] Update dependencies and version compatibility [#148][]
+* [MISC] Remove agent-delivery from CODEOWNERS [#147][]
+* [MISC] Pin GitHub Actions to specific SHA versions for enhanced security [#145][]
+* [MISC] Transfer ownership to container-ecosystems [#144][]
+* [MISC] Reduce workflow token permission [#143][]
+* [MISC] Updates barx to agent-delivery in codeowners [#142][]
+* [MISC] Update CODEOWNERS [#141][]
+* [MISC] Fix CI [#140][]
+* [MISC] Add CODEOWNERS [AP-2367] [#139][]
+* [MISC] Upgrade CodeQL Github Action to v2 [#137][]
+* [MISC] Use https instead of http to download dependencies [#136][]
+* [MISC] Bump rack from 2.2.3 to 2.2.4 [#135][]
+* [MISC] Setting up codescanning for chef-handler-datadog [#134][]
+
 # 0.15.0 / 2020-12-10
 
 * [FEATURE] Allow skipping SSL verification [#130][]
@@ -158,6 +174,19 @@ And all other versions were prior to this. See git history for more.
 [#123]: https://github.com/DataDog/chef-handler-datadog/issues/123
 [#124]: https://github.com/DataDog/chef-handler-datadog/issues/124
 [#130]: https://github.com/DataDog/chef-handler-datadog/issues/130
+[#134]: https://github.com/DataDog/chef-handler-datadog/issues/134
+[#135]: https://github.com/DataDog/chef-handler-datadog/issues/135
+[#136]: https://github.com/DataDog/chef-handler-datadog/issues/136
+[#137]: https://github.com/DataDog/chef-handler-datadog/issues/137
+[#139]: https://github.com/DataDog/chef-handler-datadog/issues/139
+[#140]: https://github.com/DataDog/chef-handler-datadog/issues/140
+[#141]: https://github.com/DataDog/chef-handler-datadog/issues/141
+[#142]: https://github.com/DataDog/chef-handler-datadog/issues/142
+[#143]: https://github.com/DataDog/chef-handler-datadog/issues/143
+[#144]: https://github.com/DataDog/chef-handler-datadog/issues/144
+[#145]: https://github.com/DataDog/chef-handler-datadog/issues/145
+[#147]: https://github.com/DataDog/chef-handler-datadog/issues/147
+[#148]: https://github.com/DataDog/chef-handler-datadog/issues/148
 [@ABrehm264]: https://github.com/ABrehm264
 [@Azoam]: https://github.com/Azoam
 [@DanielMuller]: https://github.com/DanielMuller

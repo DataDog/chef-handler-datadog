@@ -1,8 +1,8 @@
 PATH
   remote: .
   specs:
-    chef-handler-datadog (0.15.0)
-      dogapi (~> 1.44.0)
+    chef-handler-datadog (0.16.0)
+      dogapi (~> 1.45.0)
 
 GEM
   remote: https://rubygems.org/
@@ -146,7 +146,7 @@ GEM
     date (3.5.0)
     diff-lcs (1.5.1)
     docile (1.4.1)
-    dogapi (1.44.0)
+    dogapi (1.45.0)
       multi_json
     domain_name (0.6.20240107)
     dotenv (3.1.8)
